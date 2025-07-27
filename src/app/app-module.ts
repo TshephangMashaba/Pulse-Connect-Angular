@@ -4,17 +4,30 @@ import { BrowserModule, provideClientHydration, withEventReplay } from '@angular
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
 import { HomePageComponent } from './home-page/home-page.component';
+import { NavBarComponent } from './UI Folder/nav-bar/nav-bar.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
 
     App,
-    HomePageComponent
+    HomePageComponent,
+    NavBarComponent
 
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+     BrowserModule,
+    AppRoutingModule,
+    BrowserModule,
+    FormsModule,
+    ReactiveFormsModule,
+    CommonModule,
+    HttpClientModule,
+
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),

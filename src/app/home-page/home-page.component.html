@@ -1,3 +1,43 @@
-<p>
-  home-page works!
-</p>
+<app-nav-bar></app-nav-bar>
+
+<div id="home" class="gif-container h-screen relative overflow-hidden">
+  <!-- Fade-out previous image -->
+  <img
+    *ngIf="previousIndex !== null"
+    [src]="images[previousIndex]"
+    class="image absolute fade-out"
+  />
+
+  <!-- Fade-in current image -->
+  <img
+    [src]="images[currentIndex]"
+    class="image absolute fade-in"
+  />
+
+  <!-- Overlay Text -->
+  <div class="text-overlay z-10 text-white pb-20"> <!-- Added pb-20 here -->
+    <h1 style="font-size: 4rem; font-family: Arial, Helvetica, sans-serif">
+      PULSE <br />
+      CONNECT
+    </h1>
+    <br />
+    <p style="font-size: 1.1rem">
+       Health Information To You in a Heartbeat!
+    </p>
+    <br /><br />
+    <a href="/application-form" class="btn" appHideIfClosed="hide">
+      <button type="button" appHideIfClosed="hide">Get Started</button>
+    </a>
+  </div>
+  
+  <!-- Mouse Scroll Indicator - Now properly at bottom -->
+  <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-20">
+    <div class="mouse">
+      <div class="wheel"></div>
+    </div>
+    <div class="arrows">
+      <span class="arrow"></span>
+      <span class="arrow"></span>
+    </div>
+  </div>
+</div>
