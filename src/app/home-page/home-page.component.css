@@ -131,3 +131,15 @@
   cursor: pointer;
   transition: background 0.3s;
     }
+
+
+/* Glow Map */
+
+ .glow-effect {
+    filter: drop-shadow(0 0 10px rgba(43, 255, 0, 0.7));
+    transition: filter 0.3s ease;
+  }
+  
+  .glow-effect:hover {
+    filter: drop-shadow(0 0 15px rgba(0, 255, 55, 0.9));
+  }
