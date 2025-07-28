@@ -5,9 +5,6 @@ import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
 import { HomePageComponent } from './home-page/home-page.component';
 import { NavBarComponent } from './UI Folder/nav-bar/nav-bar.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -19,15 +16,7 @@ import { HttpClientModule } from '@angular/common/http';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
-     BrowserModule,
-    AppRoutingModule,
-    BrowserModule,
-    FormsModule,
-    ReactiveFormsModule,
-    CommonModule,
-    HttpClientModule,
-
+    AppRoutingModule
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),
