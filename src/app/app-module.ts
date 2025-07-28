@@ -5,18 +5,26 @@ import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
 import { HomePageComponent } from './home-page/home-page.component';
 import { NavBarComponent } from './UI Folder/nav-bar/nav-bar.component';
+import { RegisterComponent } from './register/register.component';
+import { log } from 'console';
+import { LogInComponent } from './log-in/log-in.component';
+import { UserDashboardComponent } from './user-dashboard/user-dashboard.component';
 
 @NgModule({
   declarations: [
 
     App,
     HomePageComponent,
-    NavBarComponent
+    NavBarComponent,
+    UserDashboardComponent
 
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    RegisterComponent,
+    LogInComponent,
+  
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),
