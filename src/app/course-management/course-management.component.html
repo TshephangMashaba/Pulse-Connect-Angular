@@ -1,0 +1,547 @@
+
+    <!-- Admin Navigation -->
+    <nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200">
+        <div class="px-3 py-3 lg:px-5 lg:pl-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center justify-start">
+                    <button data-drawer-target="admin-sidebar" data-drawer-toggle="admin-sidebar" aria-controls="admin-sidebar" type="button" class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none">
+                        <span class="sr-only">Open sidebar</span>
+                        <i class="fas fa-bars w-6 h-6"></i>
+                    </button>
+                    <a href="#" class="flex ml-2 md:mr-24">
+                        <img src="/Pulse Connect.png" class="h-8 mr-3" alt="Pulse Connect Logo" />
+                        <span class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap">Pulse Admin</span>
+                    </a>
+                </div>
+                <div class="flex items-center">
+                    <div class="flex items-center ml-3">
+                        <div>
+                            <button type="button" class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300" aria-expanded="false" data-dropdown-toggle="dropdown-user">
+                                <span class="sr-only">Open user menu</span>
+                                <img class="w-8 h-8 rounded-full" src="https://randomuser.me/api/portraits/women/32.jpg" alt="user photo">
+                            </button>
+                        </div>
+                        <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow" id="dropdown-user">
+                            <div class="px-4 py-3" role="none">
+                                <p class="text-sm text-gray-900" role="none">Admin User</p>
+                                <p class="text-sm font-medium text-gray-900 truncate" role="none">admin pulseconnect.org</p>
+                            </div>
+                            <ul class="py-1" role="none">
+                                <li>
+                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Settings</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Sign out</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Admin Sidebar -->
+    <aside id="admin-sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 md:translate-x-0" aria-label="Sidebar">
+        <div class="h-full px-3 pb-4 overflow-y-auto bg-white">
+            <ul class="space-y-2 font-medium">
+                <li>
+                    <a href="#" class="sidebar-item active flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+                        <i class="fas fa-tachometer-alt text-gray-500 group-hover:text-green-600"></i>
+                        <span class="ml-3">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="sidebar-item flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+                        <i class="fas fa-users text-gray-500 group-hover:text-green-600"></i>
+                        <span class="ml-3">Users</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="sidebar-item flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+                        <i class="fas fa-book-open text-gray-500 group-hover:text-green-600"></i>
+                        <span class="ml-3">Courses</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="sidebar-item flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+                        <i class="fas fa-certificate text-gray-500 group-hover:text-green-600"></i>
+                        <span class="ml-3">Certificates</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="sidebar-item flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+                        <i class="fas fa-chart-bar text-gray-500 group-hover:text-green-600"></i>
+                        <span class="ml-3">Analytics</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="sidebar-item flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+                        <i class="fas fa-comments text-gray-500 group-hover:text-green-600"></i>
+                        <span class="ml-3">Community</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="sidebar-item flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+                        <i class="fas fa-cog text-gray-500 group-hover:text-green-600"></i>
+                        <span class="ml-3">Settings</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </aside>
+    <main class="md:ml-64 pt-20">
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-8">
+    <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+      <i class="fas fa-plus mr-2"></i> Create New Course
+    </button>
+  </div>
+
+  <!-- Courses List -->
+  <div class="bg-white shadow rounded-lg overflow-hidden mb-8">
+    <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+      <h2 class="text-lg font-medium text-gray-900">All Courses</h2>
+      <div class="relative w-64">
+        <input type="text" placeholder="Search courses..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg w-full focus:ring-green-500 focus:border-green-500">
+        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+      </div>
+    </div>
+    
+    <div class="divide-y divide-gray-200">
+      <!-- Course 1 -->
+      <div class="p-6 hover:bg-gray-50">
+        <div class="flex items-start justify-between">
+          <div class="flex items-start">
+            <div class="flex-shrink-0 bg-green-100 p-3 rounded-lg mr-4">
+              <i class="fas fa-first-aid text-green-600 text-xl"></i>
+            </div>
+            <div>
+              <h3 class="text-lg font-bold text-gray-900 mb-1">HIV/AIDS Prevention</h3>
+              <p class="text-sm text-gray-500 mb-2">5 chapters • 12 lessons • 1 quiz</p>
+              <div class="flex items-center text-sm">
+                <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full mr-2">Active</span>
+                <span class="text-gray-500">Last updated: 2 days ago</span>
+              </div>
+            </div>
+          </div>
+          <div class="flex space-x-2">
+            <button class="p-2 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-lg">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg">
+              <i class="fas fa-trash"></i>
+            </button>
+            <button class="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Course 2 -->
+      <div class="p-6 hover:bg-gray-50">
+        <div class="flex items-start justify-between">
+          <div class="flex items-start">
+            <div class="flex-shrink-0 bg-blue-100 p-3 rounded-lg mr-4">
+              <i class="fas fa-brain text-blue-600 text-xl"></i>
+            </div>
+            <div>
+              <h3 class="text-lg font-bold text-gray-900 mb-1">Mental Health Awareness</h3>
+              <p class="text-sm text-gray-500 mb-2">4 chapters • 8 lessons • 1 quiz</p>
+              <div class="flex items-center text-sm">
+                <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full mr-2">Draft</span>
+                <span class="text-gray-500">Last updated: 1 week ago</span>
+              </div>
+            </div>
+          </div>
+          <div class="flex space-x-2">
+            <button class="p-2 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-lg">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg">
+              <i class="fas fa-trash"></i>
+            </button>
+            <button class="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+  <!-- Course Detail Modal (hidden by default) -->
+  <div class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50 hidden" id="course-modal">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+      <div class="p-6">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-2xl font-bold text-gray-900">Edit Course: HIV/AIDS Prevention</h3>
+          <button class="text-gray-400 hover:text-gray-500" id="close-modal">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        
+        <!-- Course Info Tabs -->
+        <div class="border-b border-gray-200">
+          <div class="flex space-x-8">
+            <button class="py-4 px-1 font-medium text-sm border-b-2 border-green-500 text-green-600">
+              Basic Info
+            </button>
+            <button class="py-4 px-1 font-medium text-sm border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
+              Chapters & Lessons
+            </button>
+            <button class="py-4 px-1 font-medium text-sm border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
+              Quiz
+            </button>
+            <button class="py-4 px-1 font-medium text-sm border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
+              Settings
+            </button>
+          </div>
+        </div>
+        
+        <!-- Basic Info Tab Content -->
+        <div class="py-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Course Title</label>
+              <input type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-green-500 focus:border-green-500" value="HIV/AIDS Prevention">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+              <select class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-green-500 focus:border-green-500">
+                <option>Health</option>
+                <option>Safety</option>
+                <option>Mental Health</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Course Icon</label>
+              <div class="flex items-center">
+                <div class="bg-green-100 p-3 rounded-lg mr-4">
+                  <i class="fas fa-first-aid text-green-600 text-xl"></i>
+                </div>
+                <select class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-green-500 focus:border-green-500">
+                  <option value="fa-first-aid">First Aid</option>
+                  <option value="fa-heartbeat">Heartbeat</option>
+                  <option value="fa-medkit">Medkit</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+              <select class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-green-500 focus:border-green-500">
+                <option>Active</option>
+                <option>Draft</option>
+                <option>Archived</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="mb-6">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <textarea rows="4" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-green-500 focus:border-green-500">Learn essential prevention techniques, treatment options, and how to support affected community members.</textarea>
+          </div>
+          
+          <div class="flex justify-end space-x-3">
+            <button class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+              Cancel
+            </button>
+            <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+              Save Changes
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chapters & Lessons Management Modal -->
+  <div class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50 hidden" id="chapters-modal">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+      <div class="p-6">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-2xl font-bold text-gray-900">Manage Chapters & Lessons</h3>
+          <button class="text-gray-400 hover:text-gray-500" id="close-chapters-modal">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        
+        <!-- Add New Chapter -->
+        <div class="bg-gray-50 p-4 rounded-lg mb-6">
+          <div class="flex items-center justify-between">
+            <h4 class="font-medium text-gray-900">Add New Chapter</h4>
+            <button class="px-3 py-1 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm">
+              <i class="fas fa-plus mr-1"></i> Add Chapter
+            </button>
+          </div>
+        </div>
+        
+        <!-- Chapters List -->
+        <div class="space-y-4">
+          <!-- Chapter 1 -->
+          <div class="border border-gray-200 rounded-lg overflow-hidden">
+            <div class="bg-gray-50 px-4 py-3 flex items-center justify-between">
+              <div class="flex items-center">
+                <button class="text-gray-500 hover:text-gray-700 mr-3">
+                  <i class="fas fa-grip-vertical"></i>
+                </button>
+                <h4 class="font-medium text-gray-900">Chapter 1: Understanding HIV/AIDS</h4>
+              </div>
+              <div class="flex space-x-2">
+                <button class="text-gray-500 hover:text-green-600">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="text-gray-500 hover:text-red-600">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+            
+            <!-- Lessons in Chapter 1 -->
+            <div class="divide-y divide-gray-200">
+              <div class="px-4 py-3 flex items-center justify-between">
+                <div class="flex items-center">
+                  <button class="text-gray-500 hover:text-gray-700 mr-3">
+                    <i class="fas fa-grip-vertical"></i>
+                  </button>
+                  <span class="text-sm text-gray-700">Lesson 1.1: HIV Basics</span>
+                </div>
+                <div class="flex space-x-2">
+                  <button class="text-gray-500 hover:text-green-600">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="text-gray-500 hover:text-red-600">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+              
+              <div class="px-4 py-3 bg-gray-50 flex items-center justify-between">
+                <div class="flex items-center">
+                  <button class="text-gray-500 hover:text-gray-700 mr-3">
+                    <i class="fas fa-grip-vertical"></i>
+                  </button>
+                  <span class="text-sm text-gray-700">Lesson 1.2: Transmission Methods</span>
+                </div>
+                <div class="flex space-x-2">
+                  <button class="text-gray-500 hover:text-green-600">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="text-gray-500 hover:text-red-600">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+              
+              <!-- Add New Lesson -->
+              <div class="px-4 py-3 flex justify-center">
+                <button class="text-sm text-green-600 hover:text-green-700 font-medium">
+                  <i class="fas fa-plus mr-1"></i> Add Lesson
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Chapter 2 -->
+          <div class="border border-gray-200 rounded-lg overflow-hidden">
+            <div class="bg-gray-50 px-4 py-3 flex items-center justify-between">
+              <div class="flex items-center">
+                <button class="text-gray-500 hover:text-gray-700 mr-3">
+                  <i class="fas fa-grip-vertical"></i>
+                </button>
+                <h4 class="font-medium text-gray-900">Chapter 2: Prevention Methods</h4>
+              </div>
+              <div class="flex space-x-2">
+                <button class="text-gray-500 hover:text-green-600">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="text-gray-500 hover:text-red-600">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+            
+            <!-- Lessons in Chapter 2 -->
+            <div class="divide-y divide-gray-200">
+              <div class="px-4 py-3 flex items-center justify-between">
+                <div class="flex items-center">
+                  <button class="text-gray-500 hover:text-gray-700 mr-3">
+                    <i class="fas fa-grip-vertical"></i>
+                  </button>
+                  <span class="text-sm text-gray-700">Lesson 2.1: Safe Practices</span>
+                </div>
+                <div class="flex space-x-2">
+                  <button class="text-gray-500 hover:text-green-600">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="text-gray-500 hover:text-red-600">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+              
+              <!-- Add New Lesson -->
+              <div class="px-4 py-3 flex justify-center">
+                <button class="text-sm text-green-600 hover:text-green-700 font-medium">
+                  <i class="fas fa-plus mr-1"></i> Add Lesson
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="flex justify-end mt-6">
+          <button class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+            Cancel
+          </button>
+          <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 ml-3">
+            Save Changes
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quiz Management Modal -->
+  <div class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50 hidden" id="quiz-modal">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+      <div class="p-6">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-2xl font-bold text-gray-900">Course Quiz: HIV/AIDS Prevention</h3>
+          <button class="text-gray-400 hover:text-gray-500" id="close-quiz-modal">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        
+        <!-- Quiz Settings -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Passing Score (%)</label>
+            <input type="number" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-green-500 focus:border-green-500" value="70">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Attempts Allowed</label>
+            <input type="number" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-green-500 focus:border-green-500" value="3">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Time Limit (minutes)</label>
+            <input type="number" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-green-500 focus:border-green-500" value="30">
+          </div>
+          <div class="flex items-end">
+            <div class="flex items-center h-5">
+              <input type="checkbox" class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded">
+            </div>
+            <div class="ml-3 text-sm">
+              <label class="font-medium text-gray-700">Show correct answers after submission</label>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Questions Section -->
+        <div class="border-t border-gray-200 pt-6">
+          <div class="flex justify-between items-center mb-4">
+            <h4 class="text-lg font-medium text-gray-900">Quiz Questions</h4>
+            <button class="px-3 py-1 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm">
+              <i class="fas fa-plus mr-1"></i> Add Question
+            </button>
+          </div>
+          
+          <!-- Question 1 -->
+          <div class="bg-gray-50 p-4 rounded-lg mb-4">
+            <div class="flex justify-between items-start mb-3">
+              <div class="flex items-center">
+                <span class="font-medium mr-2">Question 1:</span>
+                <span class="text-sm text-gray-500">Multiple Choice</span>
+              </div>
+              <div class="flex space-x-2">
+                <button class="text-gray-500 hover:text-green-600">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="text-gray-500 hover:text-red-600">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+            
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Question Text</label>
+              <input type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-green-500 focus:border-green-500" value="Which of these is NOT a common mode of HIV transmission?">
+            </div>
+            
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Options</label>
+              
+              <div class="flex items-center">
+                <input type="radio" name="q1" class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 mr-3">
+                <input type="text" class="flex-1 border border-gray-300 rounded-lg px-3 py-2 focus:ring-green-500 focus:border-green-500" value="Sharing needles">
+              </div>
+              
+              <div class="flex items-center">
+                <input type="radio" name="q1" class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 mr-3">
+                <input type="text" class="flex-1 border border-gray-300 rounded-lg px-3 py-2 focus:ring-green-500 focus:border-green-500" value="Unprotected sexual contact">
+              </div>
+              
+              <div class="flex items-center">
+                <input type="radio" name="q1" checked class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 mr-3">
+                <input type="text" class="flex-1 border border-gray-300 rounded-lg px-3 py-2 focus:ring-green-500 focus:border-green-500" value="Casual contact like hugging">
+                <span class="ml-2 text-xs text-green-600">Correct Answer</span>
+              </div>
+              
+              <div class="flex items-center">
+                <input type="radio" name="q1" class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 mr-3">
+                <input type="text" class="flex-1 border border-gray-300 rounded-lg px-3 py-2 focus:ring-green-500 focus:border-green-500" value="Mother to child during birth">
+              </div>
+            </div>
+          </div>
+          
+          <!-- Question 2 -->
+          <div class="bg-gray-50 p-4 rounded-lg">
+            <div class="flex justify-between items-start mb-3">
+              <div class="flex items-center">
+                <span class="font-medium mr-2">Question 2:</span>
+                <span class="text-sm text-gray-500">True/False</span>
+              </div>
+              <div class="flex space-x-2">
+                <button class="text-gray-500 hover:text-green-600">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="text-gray-500 hover:text-red-600">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+            
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Question Text</label>
+              <input type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-green-500 focus:border-green-500" value="PrEP is 100% effective at preventing HIV transmission.">
+            </div>
+            
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Options</label>
+              
+              <div class="flex items-center">
+                <input type="radio" name="q2" class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 mr-3">
+                <label>True</label>
+              </div>
+              
+              <div class="flex items-center">
+                <input type="radio" name="q2" checked class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 mr-3">
+                <label>False</label>
+                <span class="ml-2 text-xs text-green-600">Correct Answer</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="flex justify-end mt-6">
+          <button class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+            Cancel
+          </button>
+          <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 ml-3">
+            Save Quiz
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>

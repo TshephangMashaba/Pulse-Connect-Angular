@@ -14,6 +14,7 @@ import { CertificatesComponent } from './certificates/certificates.component';
 import { CommunityComponent } from './community/community.component';
 import { CourseViewComponent } from './course-view/course-view.component';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
+import { CourseManagementComponent } from './course-management/course-management.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.compo
   CertificatesComponent,
   CommunityComponent,
   CourseViewComponent,
-  AdminDashboardComponent
+  AdminDashboardComponent,
+  CourseManagementComponent
 
   ],
   imports: [
@@ -34,6 +36,7 @@ import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.compo
     AppRoutingModule,
     RegisterComponent,
     LogInComponent,
+
 
   
   ],

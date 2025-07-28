@@ -9,6 +9,7 @@ import { CertificatesComponent } from './certificates/certificates.component';
 import { CommunityComponent } from './community/community.component';
 import { CourseViewComponent } from './course-view/course-view.component';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
+import { CourseManagementComponent } from './course-management/course-management.component';
 
 const routes: Routes = [
   { 
@@ -51,6 +52,10 @@ const routes: Routes = [
   {
     path: 'admin-dashboard',
     component: AdminDashboardComponent
+  },
+  {
+    path: 'manage-courses',
+    component: CourseManagementComponent
   }
 
 ];
