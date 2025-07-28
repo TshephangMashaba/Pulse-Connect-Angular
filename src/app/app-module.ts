@@ -9,6 +9,7 @@ import { RegisterComponent } from './register/register.component';
 import { log } from 'console';
 import { LogInComponent } from './log-in/log-in.component';
 import { UserDashboardComponent } from './user-dashboard/user-dashboard.component';
+import { CoursesComponent } from './courses/courses.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { UserDashboardComponent } from './user-dashboard/user-dashboard.componen
     App,
     HomePageComponent,
     NavBarComponent,
-    UserDashboardComponent
+    UserDashboardComponent,
+  CoursesComponent
 
   ],
   imports: [
@@ -24,6 +26,7 @@ import { UserDashboardComponent } from './user-dashboard/user-dashboard.componen
     AppRoutingModule,
     RegisterComponent,
     LogInComponent,
+
   
   ],
   providers: [

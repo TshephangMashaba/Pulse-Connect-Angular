@@ -4,6 +4,7 @@ import { HomePageComponent } from './home-page/home-page.component';
 import { RegisterComponent } from './register/register.component';
 import { LogInComponent } from './log-in/log-in.component';
 import { UserDashboardComponent } from './user-dashboard/user-dashboard.component';
+import { CoursesComponent } from './courses/courses.component';
 
 const routes: Routes = [
   { 
@@ -26,6 +27,10 @@ const routes: Routes = [
   {
     path: 'my-dashboard',
     component: UserDashboardComponent
+  },
+  {
+    path: 'courses',
+    component: CoursesComponent
   }
 
 ];
