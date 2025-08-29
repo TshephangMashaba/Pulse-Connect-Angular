@@ -1,82 +1,327 @@
-.image-container {
-  position: relative;
+/* home-page.component.css */
+.hero-section {
+  height: 100vh;
   width: 100%;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.dark-overlay {
+.background-gradient {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* 0.5 = 50% opacity */
-  z-index: 1;
+  background: linear-gradient(135deg, #0a5540 0%, #0c9463 30%, #1abc9c 70%, #0c9463 100%);
+  z-index: 0;
 }
 
-.text-overlay {
+.wave-layer {
   position: absolute;
-  z-index: 2;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
+  bottom: 0;
+  left: 0;
   width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 
-.text-overlay h1 {
-  margin: 0;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+.wave {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 200%;
+  border-radius: 45% 46% 42% 53%;
+  animation: waveAnimation 18s linear infinite;
+  transform-origin: center bottom;
 }
 
-.text-overlay p {
-  margin: 0;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+/* Deep Ocean Waves (dark greens) */
+.deep-waves {
+  z-index: 1;
+  opacity: 0.5;
 }
 
-/* Mouse scroll animation */
+.deep-wave-1 {
+  height: 45%;
+  background: linear-gradient(90deg, #083c2b 0%, #0a5540 50%, #083c2b 100%);
+  animation-delay: 0s;
+  bottom: -10%;
+  opacity: 0.6;
+}
+
+.deep-wave-2 {
+  height: 40%;
+  background: linear-gradient(90deg, #0a5540 0%, #0c9463 50%, #0a5540 100%);
+  animation-delay: -6s;
+  bottom: -5%;
+  opacity: 0.5;
+  border-radius: 43% 42% 46% 41%;
+}
+
+.deep-wave-3 {
+  height: 35%;
+  background: linear-gradient(90deg, #0c9463 0%, #0a5540 50%, #0c9463 100%);
+  animation-delay: -12s;
+  bottom: 0;
+  opacity: 0.4;
+  border-radius: 40% 47% 44% 45%;
+}
+
+/* Mid-Depth Waves (medium greens) */
+.mid-waves {
+  z-index: 2;
+  opacity: 0.7;
+}
+
+.mid-wave-1 {
+  height: 40%;
+  background: linear-gradient(90deg, #0c9463 0%, #16a085 50%, #0c9463 100%);
+  animation-delay: -2s;
+  bottom: -8%;
+  opacity: 0.7;
+}
+
+.mid-wave-2 {
+  height: 35%;
+  background: linear-gradient(90deg, #16a085 0%, #1abc9c 50%, #16a085 100%);
+  animation-delay: -8s;
+  bottom: -3%;
+  opacity: 0.6;
+  border-radius: 43% 42% 46% 41%;
+}
+
+.mid-wave-3 {
+  height: 30%;
+  background: linear-gradient(90deg, #1abc9c 0%, #16a085 50%, #1abc9c 100%);
+  animation-delay: -14s;
+  bottom: 2%;
+  opacity: 0.5;
+  border-radius: 40% 47% 44% 45%;
+}
+
+/* Surface Waves (light greens) */
+.surface-waves {
+  z-index: 3;
+  opacity: 0.8;
+}
+
+.surface-wave-1 {
+  height: 35%;
+  background: linear-gradient(90deg, #1abc9c 0%, #2ecc71 50%, #1abc9c 100%);
+  animation-delay: -4s;
+  bottom: -6%;
+  opacity: 0.8;
+}
+
+.surface-wave-2 {
+  height: 30%;
+  background: linear-gradient(90deg, #2ecc71 0%, #3dd983 50%, #2ecc71 100%);
+  animation-delay: -10s;
+  bottom: -1%;
+  opacity: 0.7;
+  border-radius: 43% 42% 46% 41%;
+}
+
+.surface-wave-3 {
+  height: 25%;
+  background: linear-gradient(90deg, #3dd983 0%, #2ecc71 50%, #3dd983 100%);
+  animation-delay: -16s;
+  bottom: 4%;
+  opacity: 0.6;
+  border-radius: 40% 47% 44% 45%;
+}
+
+@keyframes waveAnimation {
+  0% {
+    transform: translateX(0) rotate(0deg);
+  }
+  50% {
+    transform: translateX(-25%) rotate(1deg);
+  }
+  100% {
+    transform: translateX(-50%) rotate(0deg);
+  }
+}
+
+/* Light Reflections */
+.light-reflections {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 4;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.light-spot {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
+  animation: lightMovement 20s infinite alternate;
+}
+
+.light-1 {
+  width: 300px;
+  height: 300px;
+  top: 10%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.light-2 {
+  width: 200px;
+  height: 200px;
+  top: 30%;
+  left: 70%;
+  animation-delay: -7s;
+}
+
+.light-3 {
+  width: 250px;
+  height: 250px;
+  top: 60%;
+  left: 40%;
+  animation-delay: -14s;
+}
+
+@keyframes lightMovement {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(100px, 50px);
+  }
+}
+
+.floating-icons {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  overflow: hidden;
+}
+
+.icon {
+  position: absolute;
+  color: rgba(255, 255, 255, 0.7);
+  animation: float 15s linear infinite;
+  z-index: 5;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0;
+  }
+  5% {
+    opacity: 0.8;
+  }
+  95% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.hero-content {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  color: white;
+  max-width: 800px;
+  padding: 0 20px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.hero-content h1 {
+  font-size: 4.5rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  letter-spacing: 2px;
+}
+
+.hero-content p {
+  font-size: 1.5rem;
+  margin-bottom: 40px;
+  font-weight: 300;
+}
+
+.cta-button {
+  display: inline-block;
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  color: white;
+  padding: 15px 40px;
+  border-radius: 50px;
+  font-size: 1.2rem;
+  font-weight: 500;
+  text-decoration: none;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  animation: pulse 2s infinite;
+  position: relative;
+  z-index: 11;
+}
+
+.cta-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+  background: linear-gradient(135deg, #27ae60, #2ecc71);
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 15px rgba(46, 204, 113, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(46, 204, 113, 0);
+  }
+}
+
+.scroll-indicator {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  color: white;
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
 .mouse {
-  width: 24px;
+  width: 26px;
   height: 40px;
   border: 2px solid white;
-  border-radius: 12px;
-  display: flex;
-  justify-content: center;
-  padding-top: 4px;
+  border-radius: 15px;
+  margin-bottom: 5px;
+  position: relative;
 }
 
 .wheel {
   width: 4px;
   height: 8px;
-  background-color: white;
+  background: white;
   border-radius: 2px;
+  position: absolute;
+  top: 8px;
+  left: calc(50% - 2px);
   animation: scroll 2s infinite;
-}
-
-.arrows {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 8px;
-}
-
-.arrow {
-  width: 8px;
-  height: 8px;
-  border-right: 2px solid white;
-  border-bottom: 2px solid white;
-  transform: rotate(45deg);
-  margin: -4px;
-  animation: arrow-bounce 1s infinite alternate;
-}
-
-.arrow:nth-child(2) {
-  animation-delay: 0.2s;
 }
 
 @keyframes scroll {
@@ -85,55 +330,48 @@
     opacity: 1;
   }
   100% {
-    transform: translateY(10px);
+    transform: translateY(12px);
     opacity: 0;
   }
 }
 
-@keyframes arrow-bounce {
-  0% {
-    opacity: 0;
-  }
-  50% {
-    opacity: 0.5;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-  /* Add this to your CSS */
-  .btn {
-    animation: pulse 2s infinite;
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero-content h1 {
+    font-size: 3rem;
   }
   
-  @keyframes pulse {
-    0% {
-      box-shadow: 0 0 0 0 rgba(10, 255, 75, 0.785);
-      
-    }
-    70% {
-      box-shadow: 0 0 0 15px rgba(136, 34, 244, 0);
-    }
-    100% {
-      box-shadow: 0 0 0 0 rgba(37, 167, 251, 0);
-    }
+  .hero-content p {
+    font-size: 1.2rem;
   }
+  
+  .cta-button {
+    padding: 12px 30px;
+    font-size: 1rem;
+  }
+  
+  .light-spot {
+    transform: scale(0.7);
+  }
+}
 
-
-
-  .btn {
-  background: linear-gradient(90deg, #36a03d, #5effa9);
-  border: none;
-  color: white;
-  padding: 15px 30px;
-  font-size: 1.2rem;
-  border-radius: 30px;
-  cursor: pointer;
-  transition: background 0.3s;
-    }
-
-
+@media (max-width: 480px) {
+  .hero-content h1 {
+    font-size: 2.5rem;
+  }
+  
+  .hero-content p {
+    font-size: 1rem;
+  }
+  
+  .scroll-indicator {
+    bottom: 20px;
+  }
+  
+  .light-spot {
+    transform: scale(0.5);
+  }
+}
 /* Glow Map */
 
  .glow-effect {

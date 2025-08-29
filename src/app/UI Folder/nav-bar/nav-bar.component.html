@@ -1,48 +1,52 @@
-<nav class="bg-white border-gray-200 sticky top-0 z-10 shadow-sm">
+<nav class="bg-white border-gray-200 fixed top-0 left-0 right-0 z-50 shadow-sm w-full">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-16">
       <!-- Logo on the left -->
-      <a href="/home" class="flex items-center">
-        <img src="/Pulse Connect.png" class="h-10 mr-3" alt="Pulse Connect Logo" />
-      </a>
+      <div class="flex-shrink-0">
+        <a href="/home" class="flex items-center">
+          <img src="/Pulse Connect.png" class="h-10 mr-3" alt="Pulse Connect Logo" />
+        </a>
+      </div>
 
-      <!-- Centered navigation - hidden on mobile -->
-      <div class="hidden md:flex md:mx-auto">
+      <!-- Right-aligned navigation - hidden on mobile -->
+      <div class="hidden md:flex md:items-center md:space-x-6">
         <ul class="flex space-x-8">
           <li>
-            <a href="/home" class="border-green-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-              <i class="fas fa-home mr-2"></i> Home
+            <a href="/home" class="border-green-500 text-green-700 px-3 py-2 border-b-2 text-sm font-medium transition-colors duration-200">
+              Home
             </a>
           </li>
           <li>
-            <a href="/community" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-              <i class="fas fa-comments mr-2"></i> Community
+            <a href="/community" class="border-transparent text-gray-600 hover:border-green-300 hover:text-green-700 px-3 py-2 border-b-2 text-sm font-medium transition-colors duration-200">
+              Community
             </a>
           </li>
           <li>
-            <a href="/courses" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-              <i class="fas fa-book-open mr-2"></i> Courses
+            <a href="/courses" class="border-transparent text-gray-600 hover:border-green-300 hover:text-green-700 px-3 py-2 border-b-2 text-sm font-medium transition-colors duration-200">
+              Courses
             </a>
           </li>
           <li>
-            <a href="/contact" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-              <i class="fas fa-envelope mr-2"></i> Contact Us
+            <a href="/contact" class="border-transparent text-gray-600 hover:border-green-300 hover:text-green-700 px-3 py-2 border-b-2 text-sm font-medium transition-colors duration-200">
+              Contact Us
             </a>
           </li>
         </ul>
+        
+        <!-- Login/Register buttons -->
+        <div class="flex items-center space-x-3 ml-6">
+          <a href="/login" class="px-4 py-2 border border-green-600 text-green-600 rounded-lg hover:bg-green-50 transition-colors duration-200 text-sm font-medium">
+            Log In
+          </a>
+          <a href="/register" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 text-sm font-medium">
+            Register
+          </a>
+        </div>
       </div>
 
-      <!-- Login/Register buttons on the right -->
-      <div class="flex items-center space-x-4">
-        <a href="/login" class="px-4 py-2 border border-green-600 text-green-600 rounded-lg hover:bg-green-50 transition-colors text-sm font-medium hidden md:block">
-          Log In
-        </a>
-        <a href="/register" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium hidden md:block">
-          Register
-        </a>
-        
-        <!-- Flowbite mobile menu button -->
-        <button data-collapse-toggle="mobile-menu" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200">
+      <!-- Mobile menu button -->
+      <div class="flex md:hidden">
+        <button (click)="toggleMobileMenu()" type="button" class="inline-flex items-center justify-center p-2 w-10 h-10 text-sm text-gray-600 rounded-lg hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-200 transition-colors" [attr.aria-expanded]="isMobileMenuOpen">
           <span class="sr-only">Open main menu</span>
           <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
@@ -52,27 +56,27 @@
     </div>
   </div>
 
-  <!-- Flowbite mobile menu -->
-  <div class="md:hidden hidden" id="mobile-menu">
+  <!-- Mobile menu -->
+  <div class="md:hidden bg-white/95 backdrop-blur-md absolute top-16 left-0 right-0" [class.hidden]="!isMobileMenuOpen">
     <div class="pt-2 pb-3 space-y-1 px-4">
-      <a href="/home" class="bg-green-50 border-green-500 text-green-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
-        <i class="fas fa-home mr-2"></i> Home
+      <a href="/home" class="bg-green-50 border-green-500 text-green-700 block px-4 py-3 border-l-4 text-base font-medium rounded-md" (click)="closeMobileMenu()">
+        Home
       </a>
-      <a href="/community" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
-        <i class="fas fa-comments mr-2"></i> Community
+      <a href="/community" class="border-transparent text-gray-600 hover:bg-green-50 hover:border-green-300 hover:text-green-700 block px-4 py-3 border-l-4 text-base font-medium rounded-md transition-colors" (click)="closeMobileMenu()">
+        Community
       </a>
-      <a href="/courses" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
-        <i class="fas fa-book-open mr-2"></i> Courses
+      <a href="/courses" class="border-transparent text-gray-600 hover:bg-green-50 hover:border-green-300 hover:text-green-700 block px-4 py-3 border-l-4 text-base font-medium rounded-md transition-colors" (click)="closeMobileMenu()">
+        Courses
       </a>
-      <a href="/contact" class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
-        <i class="fas fa-envelope mr-2"></i> Contact Us
+      <a href="/contact" class="border-transparent text-gray-600 hover:bg-green-50 hover:border-green-300 hover:text-green-700 block px-4 py-3 border-l-4 text-base font-medium rounded-md transition-colors" (click)="closeMobileMenu()">
+        Contact Us
       </a>
     </div>
-    <div class="pt-4 pb-3 border-t border-gray-200 px-4">
-      <a href="/login" class="w-full flex items-center justify-center px-4 py-2 border border-green-600 rounded-md shadow-sm text-base font-medium text-green-600 hover:bg-green-50 mb-2">
+    <div class="pt-4 pb-4 border-t border-gray-200 px-4 space-y-3">
+      <a href="/login" class="w-full flex items-center justify-center px-4 py-3 border border-green-600 rounded-lg text-base font-medium text-green-600 hover:bg-green-50 transition-colors" (click)="closeMobileMenu()">
         Log In
       </a>
-      <a href="/register" class="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-green-600 hover:bg-green-700">
+      <a href="/register" class="w-full flex items-center justify-center px-4 py-3 border border-transparent rounded-lg text-base font-medium text-white bg-green-600 hover:bg-green-700 transition-colors" (click)="closeMobileMenu()">
         Register
       </a>
     </div>
