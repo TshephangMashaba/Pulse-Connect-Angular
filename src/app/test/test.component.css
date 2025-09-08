@@ -1,0 +1,24 @@
+/* test.component.css */
+.test-question {
+  transition: all 0.2s ease;
+}
+
+.test-question:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.option-selected {
+  background-color: #eff6ff;
+  border-color: #3b82f6;
+}
+
+.test-result-passed {
+  background-color: #f0fdf4;
+  border-color: #22c55e;
+}
+
+.test-result-failed {
+  background-color: #fef2f2;
+  border-color: #ef4444;
+}

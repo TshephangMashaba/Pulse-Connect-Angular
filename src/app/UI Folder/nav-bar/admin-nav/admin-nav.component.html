@@ -1,0 +1,92 @@
+
+    <!-- Admin Navigation -->
+    <nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200">
+        <div class="px-3 py-3 lg:px-5 lg:pl-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center justify-start">
+                    <button data-drawer-target="admin-sidebar" data-drawer-toggle="admin-sidebar" aria-controls="admin-sidebar" type="button" class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none">
+                        <span class="sr-only">Open sidebar</span>
+                        <i class="fas fa-bars w-6 h-6"></i>
+                    </button>
+                    <a href="#" class="flex ml-2 md:mr-24">
+                        <img src="/Pulse Connect.png" class="h-8 mr-3" alt="Pulse Connect Logo" />
+                        <span class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap">Pulse Admin</span>
+                    </a>
+                </div>
+                <div class="flex items-center">
+                    <div class="flex items-center ml-3">
+                        <div>
+                            <button type="button" class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300" aria-expanded="false" data-dropdown-toggle="dropdown-user">
+                                <span class="sr-only">Open user menu</span>
+                                <img class="w-8 h-8 rounded-full" src="https://randomuser.me/api/portraits/women/32.jpg" alt="user photo">
+                            </button>
+                        </div>
+                        <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow" id="dropdown-user">
+                            <div class="px-4 py-3" role="none">
+                                <p class="text-sm text-gray-900" role="none">Admin User</p>
+                                <p class="text-sm font-medium text-gray-900 truncate" role="none">admin pulseconnect.org</p>
+                            </div>
+                            <ul class="py-1" role="none">
+                                <li>
+                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Settings</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Sign out</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Admin Sidebar -->
+    <aside id="admin-sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 md:translate-x-0" aria-label="Sidebar">
+        <div class="h-full px-3 pb-4 overflow-y-auto bg-white">
+            <ul class="space-y-2 font-medium">
+                <li>
+                    <a href="/admin-dashboard" class="sidebar-item active flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+                        <i class="fas fa-tachometer-alt text-gray-500 group-hover:text-green-600"></i>
+                        <span class="ml-3">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="sidebar-item flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+                        <i class="fas fa-users text-gray-500 group-hover:text-green-600"></i>
+                        <span class="ml-3">Users</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/manage-courses" class="sidebar-item flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+                        <i class="fas fa-book-open text-gray-500 group-hover:text-green-600"></i>
+                        <span class="ml-3">Courses</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="sidebar-item flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+                        <i class="fas fa-certificate text-gray-500 group-hover:text-green-600"></i>
+                        <span class="ml-3">Certificates</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="sidebar-item flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+                        <i class="fas fa-chart-bar text-gray-500 group-hover:text-green-600"></i>
+                        <span class="ml-3">Analytics</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/manage-community" class="sidebar-item flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+                        <i class="fas fa-comments text-gray-500 group-hover:text-green-600"></i>
+                        <span class="ml-3">Community</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="sidebar-item flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
+                        <i class="fas fa-cog text-gray-500 group-hover:text-green-600"></i>
+                        <span class="ml-3">Settings</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </aside>

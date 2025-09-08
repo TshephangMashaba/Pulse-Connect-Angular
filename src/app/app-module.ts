@@ -15,6 +15,16 @@ import { CommunityComponent } from './community/community.component';
 import { CourseViewComponent } from './course-view/course-view.component';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 import { CourseManagementComponent } from './course-management/course-management.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { RouterLink, RouterModule, RouterOutlet } from '@angular/router';
+import { UserNavComponent } from './UI Folder/user-nav/user-nav.component';
+import { TestComponent } from './test/test.component';
+import { AdminNavComponent } from './UI Folder/nav-bar/admin-nav/admin-nav.component';
+import { ManageCommunityComponent } from './manage-community/manage-community.component';
+
+
 
 @NgModule({
   declarations: [
@@ -28,17 +38,23 @@ import { CourseManagementComponent } from './course-management/course-management
   CommunityComponent,
   CourseViewComponent,
   AdminDashboardComponent,
-  CourseManagementComponent
+  CourseManagementComponent,
+      LogInComponent,
+      UserNavComponent,
+      TestComponent,
+      AdminNavComponent,
+      ManageCommunityComponent,
 
   ],
   imports: [
-    BrowserModule,
+  BrowserModule,
     AppRoutingModule,
-    RegisterComponent,
-    LogInComponent,
-
-
-  
+    FormsModule,
+    ReactiveFormsModule,
+    CommonModule,
+    HttpClientModule,
+    RouterModule,
+    RouterOutlet,
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),

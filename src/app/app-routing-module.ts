@@ -10,6 +10,7 @@ import { CommunityComponent } from './community/community.component';
 import { CourseViewComponent } from './course-view/course-view.component';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 import { CourseManagementComponent } from './course-management/course-management.component';
+import { ManageCommunityComponent } from './manage-community/manage-community.component';
 
 const routes: Routes = [
   { 
@@ -34,10 +35,6 @@ const routes: Routes = [
     component: UserDashboardComponent
   },
   {
-    path: 'courses',
-    component: CoursesComponent
-  },
-  {
     path: 'certificates',
     component: CertificatesComponent
   },
@@ -45,8 +42,11 @@ const routes: Routes = [
     path: 'community',
     component: CommunityComponent
   },
-  {
-    path: 'course-view', //needs to be id
+  { path: 'courses',
+    component: CoursesComponent
+  },
+
+  { path: 'course/:id',
     component: CourseViewComponent
   },
   {
@@ -56,7 +56,12 @@ const routes: Routes = [
   {
     path: 'manage-courses',
     component: CourseManagementComponent
+  },
+  {
+    path: 'manage-community',
+    component: ManageCommunityComponent
   }
+
 
 ];
 

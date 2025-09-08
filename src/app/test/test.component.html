@@ -1,0 +1,98 @@
+<!-- test.component.html -->
+<div class="bg-white rounded-xl shadow-sm p-6" *ngIf="test">
+  <div class="mb-6">
+    <h2 class="text-2xl font-bold text-gray-800 mb-2">{{ test.title }}</h2>
+    <p class="text-gray-600">{{ test.description }}</p>
+    <div class="mt-4 flex items-center text-sm text-gray-500">
+      <i class="fas fa-tasks mr-2"></i>
+      <span>{{ test.questions.length }} questions • Passing score: {{ test.passingScore }}%</span>
+    </div>
+  </div>
+
+  <!-- Progress bar -->
+  <div class="mb-6">
+    <div class="flex justify-between items-center mb-2">
+      <span class="text-sm font-medium text-gray-700">Progress</span>
+      <span class="text-sm text-gray-500">{{ getProgressPercentage() | number:'1.0-0' }}%</span>
+    </div>
+    <div class="w-full bg-gray-200 rounded-full h-2">
+      <div class="bg-green-500 h-2 rounded-full" [style.width]="getProgressPercentage() + '%'"></div>
+    </div>
+  </div>
+
+  <!-- Test questions -->
+  <div class="space-y-6">
+    <div *ngFor="let question of test.questions; let i = index" class="border border-gray-200 rounded-lg p-4">
+      <h3 class="text-lg font-medium text-gray-800 mb-3">
+        <span class="font-semibold">Q{{ i + 1 }}:</span> {{ question.questionText }}
+      </h3>
+      
+      <div class="space-y-2">
+        <div *ngFor="let option of question.options" 
+             class="flex items-center p-3 border border-gray-200 rounded-md hover:bg-gray-50 cursor-pointer"
+             [class.bg-blue-50]="userAnswers[question.id] === option.id"
+             [class.border-blue-300]="userAnswers[question.id] === option.id"
+             (click)="onAnswerSelect(question.id, option.id)">
+          <input type="radio" 
+                 [name]="'question_' + question.id" 
+                 [value]="option.id" 
+                 [checked]="userAnswers[question.id] === option.id"
+                 class="mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500">
+          <label class="text-gray-700 cursor-pointer">{{ option.optionText }}</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Submit button -->
+  <div class="mt-8">
+    <button (click)="submitTest()" 
+            [disabled]="!isAllQuestionsAnswered() || isSubmitting"
+            class="w-full px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors">
+      <span *ngIf="!isSubmitting">Submit Test</span>
+      <span *ngIf="isSubmitting">Submitting...</span>
+    </button>
+  </div>
+
+  <!-- Error message -->
+  <div *ngIf="errorMessage" class="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+    {{ errorMessage }}
+  </div>
+</div>
+
+<!-- Test results -->
+<div *ngIf="testResult" class="bg-white rounded-xl shadow-sm p-6 mt-6">
+  <div class="text-center">
+    <div class="w-20 h-20 mx-auto mb-4" 
+         [class.text-green-500]="testResult.isPassed"
+         [class.text-red-500]="!testResult.isPassed">
+      <i class="fas fa-3x" [class.fa-check-circle]="testResult.isPassed" [class.fa-times-circle]="!testResult.isPassed"></i>
+    </div>
+    
+    <h2 class="text-2xl font-bold mb-2" [class.text-green-600]="testResult.isPassed" [class.text-red-600]="!testResult.isPassed">
+      {{ testResult.isPassed ? 'Congratulations! You passed!' : 'Test Not Passed' }}
+    </h2>
+    
+    <p class="text-gray-600 mb-4">
+      Your score: <span class="font-bold">{{ testResult.score }}%</span> 
+      ({{ testResult.correctAnswers }}/{{ testResult.totalQuestions }} correct answers)
+    </p>
+    
+    <p class="text-sm text-gray-500">
+      Passing score: {{ testResult.passingScore }}% • 
+      Attempt date: {{ testResult.attemptDate | date:'medium' }}
+    </p>
+
+    <div class="mt-6">
+      <button (click)="testCompleted.emit(testResult.isPassed)"
+              class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+        Continue
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Loading state -->
+<div *ngIf="!test && !errorMessage" class="flex justify-center items-center h-64">
+  <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+</div>
