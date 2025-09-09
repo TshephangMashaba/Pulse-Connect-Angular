@@ -18,7 +18,7 @@ export class CertificateGeneratorService {
   
   // Logo paths - using actual file paths
   private readonly LOGO_PATHS = {
-    pulseConnect: '/4.png',
+    pulseConnect: '/2.png',
     sponsor1: '/UNESCO.png',
     sponsor2: '/ngo-sa.svg', 
     sponsor3: '/university-of-pretoria.jpg'
