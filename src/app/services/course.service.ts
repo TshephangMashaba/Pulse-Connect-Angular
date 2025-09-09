@@ -168,4 +168,25 @@ markChapterComplete(chapterId: string, minutesSpent: number): Observable<any> {
     const headers = this.getAuthHeaders();
     return this.http.get<TestAttempt[]>(`${this.apiUrl}/${courseId}/test-attempts`, { headers });
   }
+
+  // course.service.ts - Add these methods
+// course.service.ts - Update the certificate methods
+generateCertificate(testAttemptId: string): Observable<any> {
+  const headers = this.getAuthHeaders();
+  // CORRECT ENDPOINT: Use the certificates controller, not course
+  return this.http.post(`https://localhost:7142/api/certificates/generate`, {
+    testAttemptId: testAttemptId,
+    sendEmail: true
+  }, {
+    headers: headers
+  });
+}
+
+
+getCourseCertificates(courseId: string): Observable<any[]> {
+  const headers = this.getAuthHeaders();
+  return this.http.get<any[]>(`https://localhost:7142/api/certificates/course/${courseId}`, {
+    headers: headers
+  });
+}
 }

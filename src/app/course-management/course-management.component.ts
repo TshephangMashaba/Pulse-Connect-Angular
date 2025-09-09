@@ -170,13 +170,13 @@ export class CourseManagementComponent implements OnInit {
   isLoading = false;
   errorMessage = '';
   successMessage = '';
-
+ 
   // Modal states
   showCourseModal = false;
   showChaptersModal = false;
   showQuizModal = false;
   activeTab = 'basic';
-
+currentPreviewUrl: string = '';
   // Form models
   courseForm: CreateCourseDTO = {
     title: '',
@@ -360,36 +360,50 @@ export class CourseManagementComponent implements OnInit {
       }
     });
   }
-addChapter(courseId: string): void {
+  
+  addChapter(courseId: string): void {
   this.isLoading = true;
   
   const formData = new FormData();
-  formData.append('Title', this.chapterForm.title);
-  formData.append('Content', this.chapterForm.content);
-  formData.append('MediaUrl', this.chapterForm.mediaUrl);
-  formData.append('MediaType', this.chapterForm.mediaType);
+  formData.append('title', this.chapterForm.title); // lowercase
+  formData.append('content', this.chapterForm.content); // lowercase
   
+  // Only add mediaUrl if no file is selected
+  if (!this.selectedFile && this.chapterForm.mediaUrl) {
+    formData.append('mediaUrl', this.chapterForm.mediaUrl); // lowercase
+  }
+  
+  // MediaType will be auto-detected by backend if file is uploaded
   if (this.selectedFile) {
-    formData.append('MediaFile', this.selectedFile);
+    formData.append('mediaFile', this.selectedFile); // lowercase
+    // Let backend auto-detect media type
+  } else if (this.chapterForm.mediaType) {
+    formData.append('mediaType', this.chapterForm.mediaType); // lowercase
   }
 
   this.http.post<Chapter>(`https://localhost:7142/api/course/${courseId}/chapter`, formData, {
     headers: new HttpHeaders({
       'Authorization': `Bearer ${this.authService.getValidToken()}`
     })
-    // Remove Content-Type header to let browser set it with boundary
   }).subscribe({
     next: (chapter) => {
       this.selectedCourseChapters.push(chapter);
       this.resetChapterForm();
       this.selectedFile = null;
+      this.currentPreviewUrl = '';
       this.successMessage = 'Chapter added successfully!';
       this.isLoading = false;
       setTimeout(() => this.successMessage = '', 3000);
     },
     error: (error) => {
       console.error('Error adding chapter:', error);
-      this.errorMessage = 'Failed to add chapter';
+      if (error.error) {
+        this.errorMessage = error.error.message || 'Failed to add chapter';
+        // Log the full error for debugging
+        console.log('Full error response:', error.error);
+      } else {
+        this.errorMessage = 'Failed to add chapter';
+      }
       this.isLoading = false;
     }
   });
@@ -460,15 +474,21 @@ addChapter(courseId: string): void {
   }
 
 onFileSelected(event: any): void {
+  // Clean up previous URLs
+  this.cleanupObjectUrls();
+  
   const file = event.target.files[0];
   if (file) {
     this.selectedFile = file;
-    this.previewFile(file);
-    
-    // Auto-detect media type
     this.chapterForm.mediaType = this.getMediaTypeFromFile(file);
+    
+    // Create the preview URL immediately and store it
+    this.currentPreviewUrl = URL.createObjectURL(file);
+    this.objectUrls.push(this.currentPreviewUrl);
   }
 }
+
+
 
 previewFile(file: File): void {
   const reader = new FileReader();
@@ -488,17 +508,21 @@ previewFile(file: File): void {
   // For other file types, you might show an icon preview
 }
 
+ngOnDestroy(): void {
+  this.cleanupObjectUrls();
+}
 
 getFilePreviewUrl(): string {
-  if (!this.selectedFile) return '';
-  
-  if (this.selectedFile.type.startsWith('image/') || this.selectedFile.type.startsWith('video/')) {
-    return URL.createObjectURL(this.selectedFile);
-  }
-  
-  // Return appropriate icon for other file types
-  return '';
+  return this.currentPreviewUrl;
 }
+
+// Add method to clean up object URLs
+cleanupObjectUrls(): void {
+  this.objectUrls.forEach(url => URL.revokeObjectURL(url));
+  this.objectUrls = [];
+  this.currentPreviewUrl = '';
+}
+
 
 showFilePreview(previewUrl: string, fileType: string): void {
   // You can implement preview logic here
@@ -941,6 +965,7 @@ openCreateTestModal(course: Course): void {
     }
   }
 
+  private objectUrls: string[] = [];
 
 
 }

@@ -29,8 +29,11 @@
                     </button>
                     <div class="relative">
                         <button class="flex items-center space-x-2 focus:outline-none">
-                            <img class="h-8 w-8 rounded-full" src="/user-avatar.jpg" alt="Student">
-                            <span class="hidden md:inline">John Doe</span>
+                             <img class="w-8 h-8 rounded-full object-cover" 
+             [src]="user?.profilePhoto ? user?.profilePhoto : defaultAvatar" 
+             alt="User avatar"
+             (error)="handleImageError($event)"/>
+                           {{ user?.firstName }}
                             <i class="fas fa-chevron-down text-xs"></i>
                         </button>
                     </div>

@@ -1,158 +1,137 @@
 <app-user-nav></app-user-nav>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Page Header -->
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Page Header -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-800">My Certificates</h1>
+            <p class="text-gray-600">Your earned health education certifications from Pulse Connect</p>
+        </div>
+        <div class="mt-4 md:mt-0">
+            <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                <i class="fas fa-trophy mr-2"></i> View Achievements
+            </button>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="flex justify-center items-center h-64">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="errorMessage" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-8">
+        <p>{{ errorMessage }}</p>
+    </div>
+
+    <!-- Stats Section -->
+    <div *ngIf="!isLoading" class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white rounded-xl shadow-sm p-6 flex items-center">
+            <div class="p-3 rounded-full bg-green-50 text-green-600 mr-4">
+                <i class="fas fa-certificate text-xl"></i>
+            </div>
             <div>
-                <h1 class="text-3xl font-bold text-gray-800">My Certificates</h1>
-                <p class="text-gray-600">Your earned health education certifications from Pulse Connect</p>
-            </div>
-            <div class="mt-4 md:mt-0">
-                <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
-                    <i class="fas fa-trophy mr-2"></i> View Achievements
-                </button>
+                <p class="text-sm font-medium text-gray-500">Certificates Earned</p>
+                <p class="text-2xl font-bold">{{ certificates.length }}</p>
             </div>
         </div>
-
-        <!-- Stats Section -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
-            <div class="bg-white rounded-xl shadow-sm p-6 flex items-center">
-                <div class="p-3 rounded-full bg-green-50 text-green-600 mr-4">
-                    <i class="fas fa-certificate text-xl"></i>
-                </div>
-                <div>
-                    <p class="text-sm font-medium text-gray-500">Certificates Earned</p>
-                    <p class="text-2xl font-bold">3</p>
-                </div>
+        <div class="bg-white rounded-xl shadow-sm p-6 flex items-center">
+            <div class="p-3 rounded-full bg-blue-50 text-blue-600 mr-4">
+                <i class="fas fa-star text-xl"></i>
             </div>
-            <div class="bg-white rounded-xl shadow-sm p-6 flex items-center">
-                <div class="p-3 rounded-full bg-blue-50 text-blue-600 mr-4">
-                    <i class="fas fa-star text-xl"></i>
-                </div>
-                <div>
-                    <p class="text-sm font-medium text-gray-500">XP Points</p>
-                    <p class="text-2xl font-bold">1,250</p>
-                </div>
-            </div>
-            <div class="bg-white rounded-xl shadow-sm p-6 flex items-center">
-                <div class="p-3 rounded-full bg-purple-50 text-purple-600 mr-4">
-                    <i class="fas fa-medal text-xl"></i>
-                </div>
-                <div>
-                    <p class="text-sm font-medium text-gray-500">Badges Earned</p>
-                    <p class="text-2xl font-bold">2</p>
-                </div>
+            <div>
+                <p class="text-sm font-medium text-gray-500">XP Points</p>
+                <p class="text-2xl font-bold">{{ stats.xpPoints }}</p>
             </div>
         </div>
-
-        <!-- Certificates Section -->
-        <div class="mb-8">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-bold text-gray-800">Completed Courses</h2>
-                <div class="flex items-center space-x-2">
-                    <span class="text-sm text-gray-600">Sort by:</span>
-                    <select class="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
-                        <option>Most Recent</option>
-                        <option>Course Name</option>
-                        <option>Completion Date</option>
-                    </select>
-                </div>
+        <div class="bg-white rounded-xl shadow-sm p-6 flex items-center">
+            <div class="p-3 rounded-full bg-purple-50 text-purple-600 mr-4">
+                <i class="fas fa-medal text-xl"></i>
             </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Certificate 1 -->
-                <div class="bg-white rounded-xl shadow-sm overflow-hidden certificate-card">
-                    <div class="h-48 bg-gradient-to-r from-green-500 to-green-600 flex flex-col items-center justify-center text-white p-6 relative">
-                        <div class="absolute top-4 right-4">
-                            <span class="text-xs px-2 text-green-400 py-1 bg-white bg-opacity-20 rounded-full">Verified</span>
-                        </div>
-                        <i class="fas fa-certificate text-5xl mb-4"></i>
-                        <h3 class="text-xl font-bold text-center">HIV/AIDS Prevention</h3>
-                        <p class="text-sm text-green-100 text-center">Completed with distinction</p>
+            <div>
+                <p class="text-sm font-medium text-gray-500">Badges Earned</p>
+                <p class="text-2xl font-bold">{{ stats.badgesEarned }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Certificates Section -->
+    <div *ngIf="!isLoading" class="mb-8">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-bold text-gray-800">Completed Courses</h2>
+            <div class="flex items-center space-x-2">
+                <span class="text-sm text-gray-600">Sort by:</span>
+                <select 
+                    class="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    (change)="onSortChange($event)">
+                    <option value="mostRecent">Most Recent</option>
+                    <option value="courseName">Course Name</option>
+                    <option value="completionDate">Completion Date</option>
+                </select>
+            </div>
+        </div>
+        
+        <div *ngIf="certificates.length === 0" class="bg-white rounded-xl shadow-sm p-8 text-center">
+            <i class="fas fa-certificate text-5xl text-gray-300 mb-4"></i>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">No Certificates Yet</h3>
+            <p class="text-gray-600 mb-4">Complete courses to earn certificates and showcase your achievements.</p>
+            <a routerLink="/courses" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                Browse Courses
+            </a>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Certificate Cards -->
+            <div *ngFor="let certificate of certificates; let i = index" 
+                 class="bg-white rounded-xl shadow-sm overflow-hidden certificate-card">
+                <div [class]="'h-48 ' + getGradientClass(getCertificateColor(i)) + ' flex flex-col items-center justify-center text-white p-6 relative'">
+                    <div class="absolute top-4 right-4">
+                        <span class="text-xs px-2 py-1 bg-white bg-opacity-20 rounded-full"
+                              [class.text-green-400]="getCertificateColor(i) === 'green'"
+                              [class.text-blue-400]="getCertificateColor(i) === 'blue'"
+                              [class.text-purple-400]="getCertificateColor(i) === 'purple'">
+                            Verified
+                        </span>
                     </div>
-                    <div class="p-6">
-                        <div class="flex justify-between items-center mb-4">
-                            <div>
-                                <p class="text-sm text-gray-500">Completion Date</p>
-                                <p class="font-medium">June 15, 2025</p>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-sm text-gray-500">Score</p>
-                                <p class="font-medium">92%</p>
-                            </div>
-                        </div>
-                        <div class="flex justify-between">
-                            <button class="px-4 py-2 border border-green-600 text-green-600 rounded-lg hover:bg-green-50 transition-colors text-sm">
-                                <i class="fas fa-share-alt mr-1"></i> Share
-                            </button>
-                            <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm">
-                                <i class="fas fa-download mr-1"></i> Download
-                            </button>
-                        </div>
-                    </div>
+                    <i class="fas fa-certificate text-5xl mb-4"></i>
+                    <h3 class="text-xl font-bold text-center">{{ certificate.courseTitle }}</h3>
+                    <p class="text-sm text-opacity-80 text-center">
+                        Completed with {{ certificate.score >= 90 ? 'distinction' : certificate.score >= 80 ? 'excellence' : 'success' }}
+                    </p>
                 </div>
-                
-                <!-- Certificate 2 -->
-                <div class="bg-white rounded-xl shadow-sm overflow-hidden certificate-card">
-                    <div class="h-48 bg-gradient-to-r from-blue-500 to-blue-600 flex flex-col items-center justify-center text-white p-6 relative">
-                        <div class="absolute top-4 right-4">
-                            <span class="text-xs px-2 text-blue-400 py-1 bg-white bg-opacity-20 rounded-full">Verified</span>
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <div>
+                            <p class="text-sm text-gray-500">Completion Date</p>
+                            <p class="font-medium">{{ certificate.issueDate | date:'longDate' }}</p>
                         </div>
-                        <i class="fas fa-certificate text-5xl mb-4"></i>
-                        <h3 class="text-xl font-bold text-center">Mental Health Awareness</h3>
-                        <p class="text-sm text-blue-100 text-center">Completed with excellence</p>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex justify-between items-center mb-4">
-                            <div>
-                                <p class="text-sm text-gray-500">Completion Date</p>
-                                <p class="font-medium">May 28, 2025</p>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-sm text-gray-500">Score</p>
-                                <p class="font-medium">87%</p>
-                            </div>
-                        </div>
-                        <div class="flex justify-between">
-                            <button class="px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors text-sm">
-                                <i class="fas fa-share-alt mr-1"></i> Share
-                            </button>
-                            <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm">
-                                <i class="fas fa-download mr-1"></i> Download
-                            </button>
+                        <div class="text-right">
+                            <p class="text-sm text-gray-500">Score</p>
+                            <p class="font-medium">{{ certificate.score }}%</p>
                         </div>
                     </div>
-                </div>
-                
-                <!-- Certificate 3 -->
-                <div class="bg-white rounded-xl shadow-sm overflow-hidden certificate-card">
-                    <div class="h-48 bg-gradient-to-r from-purple-500 to-purple-600 flex flex-col items-center justify-center text-white p-6 relative">
-                        <div class="absolute top-4 right-4">
-                            <span class="text-xs px-2 py-1 bg-white text-purple-400 bg-opacity-20 rounded-full">Verified</span>
-                        </div>
-                        <i class="fas fa-certificate text-5xl mb-4"></i>
-                        <h3 class="text-xl font-bold text-center">Hygiene Best Practices</h3>
-                        <p class="text-sm text-purple-100 text-center">Completed successfully</p>
+                    <div class="flex justify-between space-x-2">
+                        <button 
+                            [class]="'px-4 py-2 border rounded-lg hover:bg-gray-50 transition-colors text-sm ' + getBorderClass(getCertificateColor(i))"
+                            (click)="shareCertificate(certificate)">
+                            <i class="fas fa-share-alt mr-1"></i> Share
+                        </button>
+                        <button 
+                            [class]="'px-4 py-2 text-white rounded-lg transition-colors text-sm ' + getButtonClass(getCertificateColor(i))"
+                            (click)="downloadCertificate(certificate)">
+                            <i class="fas fa-download mr-1"></i> Download PDF
+                        </button>
                     </div>
-                    <div class="p-6">
-                        <div class="flex justify-between items-center mb-4">
-                            <div>
-                                <p class="text-sm text-gray-500">Completion Date</p>
-                                <p class="font-medium">April 10, 2025</p>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-sm text-gray-500">Score</p>
-                                <p class="font-medium">95%</p>
-                            </div>
-                        </div>
-                        <div class="flex justify-between">
-                            <button class="px-4 py-2 border border-purple-600 text-purple-600 rounded-lg hover:bg-purple-50 transition-colors text-sm">
-                                <i class="fas fa-share-alt mr-1"></i> Share
-                            </button>
-                            <button class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm">
-                                <i class="fas fa-download mr-1"></i> Download
-                            </button>
-                        </div>
+                    <div class="mt-3 text-center">
+                        <button 
+                            *ngIf="!certificate.isEmailed"
+                            class="text-xs text-gray-500 hover:text-gray-700"
+                            (click)="sendCertificateEmail(certificate)">
+                            <i class="fas fa-envelope mr-1"></i> Send to email
+                        </button>
+                        <span *ngIf="certificate.isEmailed" class="text-xs text-green-600">
+                            <i class="fas fa-check mr-1"></i> Emailed
+                        </span>
                     </div>
                 </div>
             </div>
@@ -247,7 +226,6 @@
                 </div>
             </div>
         </div>
-    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -276,3 +254,5 @@
             });
         });
     </script>
+
+

@@ -23,6 +23,7 @@ import { UserNavComponent } from './UI Folder/user-nav/user-nav.component';
 import { TestComponent } from './test/test.component';
 import { AdminNavComponent } from './UI Folder/nav-bar/admin-nav/admin-nav.component';
 import { ManageCommunityComponent } from './manage-community/manage-community.component';
+import { FileSaverModule } from 'ngx-filesaver';
 
 
 
@@ -44,6 +45,7 @@ import { ManageCommunityComponent } from './manage-community/manage-community.co
       TestComponent,
       AdminNavComponent,
       ManageCommunityComponent,
+   
 
   ],
   imports: [
@@ -55,6 +57,7 @@ import { ManageCommunityComponent } from './manage-community/manage-community.co
     HttpClientModule,
     RouterModule,
     RouterOutlet,
+   FileSaverModule,
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),

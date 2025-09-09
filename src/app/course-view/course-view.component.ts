@@ -191,17 +191,28 @@ export class CourseViewComponent implements OnInit {
     }
   }
 
-   onTestCompleted(isPassed: boolean) {
-    this.showTest = false;
-    this.testResult = isPassed;
-    
-    if (isPassed) {
-      alert('Congratulations! You passed the test and completed the course!');
-      // You might want to mark the course as completed here
-    } else {
-      alert('You didn\'t pass the test. You can review the material and try again.');
-    }
+// course-view.component.ts - Update onTestCompleted method
+onTestCompleted(testResult: any) {
+  this.showTest = false;
+  this.testResult = testResult;
+  
+  if (testResult.isPassed) {
+    // Generate certificate automatically
+    this.courseService.generateCertificate(testResult.id).subscribe({
+      next: (certificate) => {
+        alert('Congratulations! You passed the test and earned a certificate!');
+        // Reload the page to show the certificate
+        this.loadCourseData(this.course!.id);
+      },
+      error: (error) => {
+        console.error('Error generating certificate:', error);
+        alert('Congratulations! You passed the test! (Certificate generation may take a moment)');
+      }
+    });
+  } else {
+    alert('You didn\'t pass the test. You can review the material and try again.');
   }
+}
 
   startTest() {
     this.loadTest();
