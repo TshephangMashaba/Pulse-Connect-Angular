@@ -11,6 +11,9 @@ import { CourseViewComponent } from './course-view/course-view.component';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 import { CourseManagementComponent } from './course-management/course-management.component';
 import { ManageCommunityComponent } from './manage-community/manage-community.component';
+import { ProfileSettingsComponent } from './profile-settings/profile-settings.component';
+import { ContactComponent } from './contact/contact.component';
+import { CoursesAdvertComponent } from './courses-advert/courses-advert.component';
 
 const routes: Routes = [
   { 
@@ -60,7 +63,19 @@ const routes: Routes = [
   {
     path: 'manage-community',
     component: ManageCommunityComponent
-  }
+  },
+  {
+    path: 'profile-settings',
+    component: ProfileSettingsComponent
+  },
+  {
+    path: 'contact',
+    component: ContactComponent
+  },
+{
+  path: 'courses-enroll',
+  component: CoursesAdvertComponent
+}
 
 
 ];

@@ -24,6 +24,9 @@ import { TestComponent } from './test/test.component';
 import { AdminNavComponent } from './UI Folder/nav-bar/admin-nav/admin-nav.component';
 import { ManageCommunityComponent } from './manage-community/manage-community.component';
 import { FileSaverModule } from 'ngx-filesaver';
+import { ProfileSettingsComponent } from './profile-settings/profile-settings.component';
+import { ContactComponent } from './contact/contact.component';
+import { CoursesAdvertComponent } from './courses-advert/courses-advert.component';
 
 
 
@@ -45,8 +48,9 @@ import { FileSaverModule } from 'ngx-filesaver';
       TestComponent,
       AdminNavComponent,
       ManageCommunityComponent,
-   
-
+      ProfileSettingsComponent,
+    ContactComponent,
+    CoursesAdvertComponent
   ],
   imports: [
   BrowserModule,

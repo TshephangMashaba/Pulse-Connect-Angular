@@ -1,0 +1,17 @@
+.course-card {
+  transition: transform 0.3s ease-in-out;
+}
+
+.course-card:hover {
+  transform: translateY(-5px);
+}
+
+input, select {
+  transition: all 0.2s ease-in-out;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}

@@ -21,10 +21,7 @@
         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
     </div>
 
-    <!-- Error State -->
-    <div *ngIf="errorMessage" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6">
-        <p>{{ errorMessage }}</p>
-    </div>
+
 
     <!-- Content when loaded -->
     <div *ngIf="!isLoading && !errorMessage">

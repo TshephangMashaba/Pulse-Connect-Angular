@@ -1,235 +1,405 @@
 <app-user-nav></app-user-nav>
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Welcome Section -->
-        <div class="bg-gradient-to-r from-green-600 to-green-700 rounded-2xl p-6 text-white mb-8">
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-                <div>
-                    <h1 class="text-2xl font-bold mb-2">Welcome back, John!</h1>
-                    <p class="max-w-2xl">You have 2 courses in progress. Continue learning to unlock your next certificate.</p>
-                </div>
-                <div class="mt-4 md:mt-0">
-                    <button class="px-4 py-2 bg-white text-green-700 rounded-lg font-medium hover:bg-gray-100 transition-colors">
-                        View All Courses
-                    </button>
-                </div>
-            </div>
-        </div>
 
-        <!-- Quick Stats -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div class="bg-white rounded-xl shadow-sm p-6 flex items-center">
-                <div class="p-3 rounded-full bg-green-50 text-green-600 mr-4">
-                    <i class="fas fa-book-open text-xl"></i>
-                </div>
-                <div>
-                    <p class="text-sm font-medium text-gray-500">Active Courses</p>
-                    <p class="text-2xl font-bold">3</p>
-                </div>
-            </div>
-            <div class="bg-white rounded-xl shadow-sm p-6 flex items-center">
-                <div class="p-3 rounded-full bg-blue-50 text-blue-600 mr-4">
-                    <i class="fas fa-check-circle text-xl"></i>
-                </div>
-                <div>
-                    <p class="text-sm font-medium text-gray-500">Completed</p>
-                    <p class="text-2xl font-bold">5</p>
-                </div>
-            </div>
-            <div class="bg-white rounded-xl shadow-sm p-6 flex items-center">
-                <div class="p-3 rounded-full bg-purple-50 text-purple-600 mr-4">
-                    <i class="fas fa-star text-xl"></i>
-                </div>
-                <div>
-                    <p class="text-sm font-medium text-gray-500">XP Points</p>
-                    <p class="text-2xl font-bold">1,250</p>
-                </div>
-            </div>
-            <div class="bg-white rounded-xl shadow-sm p-6 flex items-center">
-                <div class="p-3 rounded-full bg-yellow-50 text-yellow-600 mr-4">
-                    <i class="fas fa-trophy text-xl"></i>
-                </div>
-                <div>
-                    <p class="text-sm font-medium text-gray-500">Achievements</p>
-                    <p class="text-2xl font-bold">2</p>
-                </div>
-            </div>
-        </div>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" *ngIf="!isLoading; else loadingTemplate">
+  <!-- Welcome Section -->
+  <div class="bg-gradient-to-r from-green-600 to-green-700 rounded-2xl p-6 text-white mb-8">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+      <div>
+        <h1 class="text-2xl font-bold mb-2">Welcome back, {{userName}}!</h1>
+        <p class="max-w-2xl">
+          You have {{dashboardStats.inProgressCourses}} courses in progress. 
+          Continue learning to unlock your next certificate.
+        </p>
+      </div>
+      <div class="mt-4 md:mt-0">
+        <button class="px-4 py-2 bg-white text-green-700 rounded-lg font-medium hover:bg-gray-100 transition-colors">
+          View All Courses
+        </button>
+      </div>
+    </div>
+  </div>
 
-        <!-- Current Learning Section -->
-        <div class="mb-8">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-bold text-gray-800">Continue Learning</h2>
-                <a href="#" class="text-sm text-green-600 hover:text-green-700 font-medium">View All</a>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Course 1 -->
-                <div class="bg-white rounded-xl shadow-sm overflow-hidden course-card transition-all duration-300">
-                    <div class="p-6">
-                        <div class="flex items-start">
-                            <div class="flex-shrink-0 bg-green-100 p-3 rounded-lg mr-4">
-                                <i class="fas fa-first-aid text-green-600 text-xl"></i>
-                            </div>
-                            <div class="flex-1">
-                                <h3 class="font-bold text-lg mb-1">HIV/AIDS Prevention</h3>
-                                <p class="text-sm text-gray-500 mb-3">Module 3: Treatment Options</p>
-                                <div class="flex items-center">
-                                    <div class="w-full bg-gray-200 rounded-full h-2 mr-3">
-                                        <div class="bg-green-500 h-2 rounded-full" style="width: 65%"></div>
-                                    </div>
-                                    <span class="text-xs text-gray-500">65%</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mt-4 flex justify-end">
-                            <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm">
-                                Continue Course
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Course 2 -->
-                <div class="bg-white rounded-xl shadow-sm overflow-hidden course-card transition-all duration-300">
-                    <div class="p-6">
-                        <div class="flex items-start">
-                            <div class="flex-shrink-0 bg-blue-100 p-3 rounded-lg mr-4">
-                                <i class="fas fa-brain text-blue-600 text-xl"></i>
-                            </div>
-                            <div class="flex-1">
-                                <h3 class="font-bold text-lg mb-1">Mental Health Awareness</h3>
-                                <p class="text-sm text-gray-500 mb-3">Module 1: Understanding Stress</p>
-                                <div class="flex items-center">
-                                    <div class="w-full bg-gray-200 rounded-full h-2 mr-3">
-                                        <div class="bg-blue-500 h-2 rounded-full" style="width: 30%"></div>
-                                    </div>
-                                    <span class="text-xs text-gray-500">30%</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mt-4 flex justify-end">
-                            <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm">
-                                Continue Course
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <!-- Error Messages -->
+  <div *ngIf="apiErrors['stats']" class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+    <div class="flex items-center">
+      <i class="fas fa-exclamation-triangle text-red-600 mr-3"></i>
+      <p class="text-red-800">{{apiErrors['stats']}}</p>
+      <button class="ml-auto text-red-600 hover:text-red-800 text-sm font-medium" 
+              (click)="retryApiCall('stats')">
+        Retry
+      </button>
+    </div>
+  </div>
 
-        <!-- Recommended Courses -->
-        <div class="mb-8">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-bold text-gray-800">Recommended For You</h2>
-                <a href="#" class="text-sm text-green-600 hover:text-green-700 font-medium">Browse All</a>
-            </div>
-            
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Course Card 1 -->
-                <div class="bg-white rounded-xl shadow-sm overflow-hidden course-card transition-all duration-300">
-                    <div class="h-40 bg-green-100 flex items-center justify-center">
-                        <i class="fas fa-heartbeat text-5xl text-green-600"></i>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="font-bold text-lg mb-2">Chronic Disease Management</h3>
-                        <p class="text-sm text-gray-500 mb-4">Learn to manage diabetes and hypertension</p>
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs px-2 py-1 bg-gray-100 text-gray-800 rounded-full">Intermediate</span>
-                            <button class="text-sm text-green-600 hover:text-green-700 font-medium">Enroll Now</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Course Card 2 -->
-                <div class="bg-white rounded-xl shadow-sm overflow-hidden course-card transition-all duration-300">
-                    <div class="h-40 bg-blue-100 flex items-center justify-center">
-                        <i class="fas fa-hand-holding-water text-5xl text-blue-600"></i>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="font-bold text-lg mb-2">Hygiene Best Practices</h3>
-                        <p class="text-sm text-gray-500 mb-4">Maintain proper hygiene in rural settings</p>
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs px-2 py-1 bg-gray-100 text-gray-800 rounded-full">Beginner</span>
-                            <button class="text-sm text-green-600 hover:text-green-700 font-medium">Enroll Now</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Course Card 3 -->
-                <div class="bg-white rounded-xl shadow-sm overflow-hidden course-card transition-all duration-300">
-                    <div class="h-40 bg-purple-100 flex items-center justify-center">
-                        <i class="fas fa-baby text-5xl text-purple-600"></i>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="font-bold text-lg mb-2">Maternal Health</h3>
-                        <p class="text-sm text-gray-500 mb-4">Prenatal and postnatal care essentials</p>
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs px-2 py-1 bg-gray-100 text-gray-800 rounded-full">Beginner</span>
-                            <button class="text-sm text-green-600 hover:text-green-700 font-medium">Enroll Now</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <!-- Dashboard Tabs -->
+  <div class="mb-6 border-b border-gray-200">
+    <nav class="flex space-x-8">
+      <button 
+        *ngFor="let tab of ['overview', 'progress', 'achievements']" 
+        [class]="activeTab === tab ? 'border-green-500 text-green-600' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'"
+        class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"
+        (click)="setActiveTab(tab)">
+        {{ tab === 'overview' ? 'Overview' : 
+           tab === 'progress' ? 'My Progress' : 'Achievements' }}
+      </button>
+    </nav>
+  </div>
 
-        <!-- Recent Activity -->
+  <!-- Overview Tab -->
+  <div *ngIf="activeTab === 'overview'">
+    <!-- Quick Stats -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div class="bg-white rounded-xl shadow-sm p-6 flex items-center">
+        <div class="p-3 rounded-full bg-green-50 text-green-600 mr-4">
+          <i class="fas fa-book-open text-xl"></i>
+        </div>
         <div>
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-bold text-gray-800">Recent Activity</h2>
-                <a href="#" class="text-sm text-green-600 hover:text-green-700 font-medium">View All</a>
-            </div>
-            
-            <div class="bg-white rounded-xl shadow-sm overflow-hidden">
-                <ul class="divide-y">
-                    <li class="p-6 hover:bg-gray-50">
-                        <div class="flex items-start">
-                            <div class="flex-shrink-0 bg-green-100 p-2 rounded-full text-green-600 mr-4">
-                                <i class="fas fa-check"></i>
-                            </div>
-                            <div>
-                                <p class="text-sm font-medium">Completed "HIV Basics" quiz</p>
-                                <p class="text-xs text-gray-500 mt-1">2 hours ago • Scored 85%</p>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="p-6 hover:bg-gray-50">
-                        <div class="flex items-start">
-                            <div class="flex-shrink-0 bg-blue-100 p-2 rounded-full text-blue-600 mr-4">
-                                <i class="fas fa-comment"></i>
-                            </div>
-                            <div>
-                                <p class="text-sm font-medium">Posted in Mental Health forum</p>
-                                <p class="text-xs text-gray-500 mt-1">5 hours ago</p>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="p-6 hover:bg-gray-50">
-                        <div class="flex items-start">
-                            <div class="flex-shrink-0 bg-purple-100 p-2 rounded-full text-purple-600 mr-4">
-                                <i class="fas fa-certificate"></i>
-                            </div>
-                            <div>
-                                <p class="text-sm font-medium">Earned "First Aid Basics" certificate</p>
-                                <p class="text-xs text-gray-500 mt-1">Yesterday</p>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
+          <p class="text-sm font-medium text-gray-500">Active Courses</p>
+          <p class="text-2xl font-bold">{{dashboardStats.inProgressCourses}}</p>
         </div>
+      </div>
+      <div class="bg-white rounded-xl shadow-sm p-6 flex items-center">
+        <div class="p-3 rounded-full bg-blue-50 text-blue-600 mr-4">
+          <i class="fas fa-check-circle text-xl"></i>
+        </div>
+        <div>
+          <p class="text-sm font-medium text-gray-500">Completed</p>
+          <p class="text-2xl font-bold">{{dashboardStats.completedCourses}}</p>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl shadow-sm p-6 flex items-center">
+        <div class="p-3 rounded-full bg-purple-50 text-purple-600 mr-4">
+          <i class="fas fa-star text-xl"></i>
+        </div>
+        <div>
+          <p class="text-sm font-medium text-gray-500">XP Points</p>
+          <p class="text-2xl font-bold">{{dashboardStats.totalXpPoints}}</p>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl shadow-sm p-6 flex items-center">
+        <div class="p-3 rounded-full bg-yellow-50 text-yellow-600 mr-4">
+          <i class="fas fa-trophy text-xl"></i>
+        </div>
+        <div>
+          <p class="text-sm font-medium text-gray-500">Achievements</p>
+          <p class="text-2xl font-bold">{{dashboardStats.totalBadges}}</p>
+        </div>
+      </div>
     </div>
 
-    <script>
-        // Simple script for any interactive elements
-        document.addEventListener('DOMContentLoaded', function() {
-            // You can add dashboard-specific interactions here
-            console.log('Student dashboard loaded');
-            
-            // Example: Animate progress rings on scroll into view
-            const animateProgress = () => {
-                // Implementation would go here
-            };
-            
-            window.addEventListener('scroll', animateProgress);
-        });
-    </script>
+    
+<div class="mb-8">
+  <div class="flex justify-between items-center mb-4">
+  </div>
+  
+  
+<div class="mb-8">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-xl font-bold text-gray-800">Continue Learning</h2>
+    <a routerLink="/courses" class="text-sm text-green-600 hover:text-green-700 font-medium">View All</a>
+  </div>
+  
+  <div *ngIf="apiErrors['myEnrollments']" class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+    <div class="flex items-center">
+      <i class="fas fa-exclamation-triangle text-yellow-600 mr-3"></i>
+      <p class="text-yellow-800">{{apiErrors['myEnrollments']}}</p>
+      <button class="ml-auto text-yellow-600 hover:text-yellow-800 text-sm font-medium" 
+              (click)="retryApiCall('myEnrollments')">
+        Retry
+      </button>
+    </div>
+  </div>
+  
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div *ngFor="let course of activeCourses" class="bg-white rounded-xl shadow-sm overflow-hidden course-card transition-all duration-300">
+      <div class="p-6">
+        <div class="flex items-start">
+          <div class="flex-shrink-0 bg-green-100 p-3 rounded-lg mr-4">
+            <i class="fas fa-book text-green-600 text-xl"></i>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-bold text-lg mb-1">{{course.courseTitle}}</h3>
+            <p class="text-sm text-gray-500 mb-3">Progress: {{course.progressPercentage}}%</p>
+            <div class="flex items-center">
+              <div class="w-full bg-gray-200 rounded-full h-2 mr-3">
+                <div class="bg-green-500 h-2 rounded-full" [style.width]="course.progressPercentage + '%'"></div>
+              </div>
+              <span class="text-xs text-gray-500">{{course.progressPercentage}}%</span>
+            </div>
+            <p class="text-xs text-gray-500 mt-2">
+              {{course.completedChapters}} of {{course.totalChapters}} chapters completed
+            </p>
+          </div>
+        </div>
+        <div class="mt-4 flex justify-end">
+          <button (click)="continueLearning(course.courseId)" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm">
+            Continue Course
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <div *ngIf="activeCourses.length === 0 && !apiErrors['myEnrollments']" class="bg-gray-50 rounded-xl p-8 text-center">
+      <i class="fas fa-book-open text-4xl text-gray-300 mb-4"></i>
+      <p class="text-gray-500">No active courses found</p>
+      <button routerLink="/courses" class="mt-4 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm">
+        Browse Courses
+      </button>
+    </div>
+  </div>
+</div>
+
+    <!-- Recent Activity -->
+    <div class="mb-8">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-bold text-gray-800">Recent Activity</h2>
+        <a href="#" class="text-sm text-green-600 hover:text-green-700 font-medium">View All</a>
+      </div>
+      
+      <div *ngIf="apiErrors['recentActivity']" class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+        <div class="flex items-center">
+          <i class="fas fa-exclamation-triangle text-yellow-600 mr-3"></i>
+          <p class="text-yellow-800">{{apiErrors['recentActivity']}}</p>
+          <button class="ml-auto text-yellow-600 hover:text-yellow-800 text-sm font-medium" 
+                  (click)="retryApiCall('recentActivity')">
+            Retry
+          </button>
+        </div>
+      </div>
+      
+      <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+        <ul class="divide-y">
+          <li *ngFor="let activity of recentActivities" class="p-6 hover:bg-gray-50">
+            <div class="flex items-start">
+              <div class="flex-shrink-0" [ngClass]="{
+                'bg-green-100 text-green-600': activity.isSuccess,
+                'bg-blue-100 text-blue-600': !activity.isSuccess
+              }" class="p-2 rounded-full mr-4">
+                <i class="fas" [class]="{
+                  'fa-check': activity.type.includes('Completed'),
+                  'fa-certificate': activity.type.includes('Enrolled'),
+                  'fa-comment': activity.type.includes('Posted')
+                }"></i>
+              </div>
+              <div>
+                <p class="text-sm font-medium">{{activity.description}}</p>
+                <p class="text-xs text-gray-500 mt-1">
+                  {{formatDateTime(activity.timestamp)}} • {{activity.courseTitle}}
+                </p>
+              </div>
+            </div>
+          </li>
+        </ul>
+        
+        <div *ngIf="recentActivities.length === 0 && !apiErrors['recentActivity']" class="p-8 text-center text-gray-500">
+          <i class="fas fa-history text-3xl mb-3"></i>
+          <p>No recent activity found</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recommended Courses -->
+    <div class="mb-8">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-bold text-gray-800">Recommended For You</h2>
+        <a href="#" class="text-sm text-green-600 hover:text-green-700 font-medium">Browse All</a>
+      </div>
+      
+      <div *ngIf="apiErrors['recommendedCourses']" class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+        <div class="flex items-center">
+          <i class="fas fa-exclamation-triangle text-yellow-600 mr-3"></i>
+          <p class="text-yellow-800">{{apiErrors['recommendedCourses']}}</p>
+          <button class="ml-auto text-yellow-600 hover:text-yellow-800 text-sm font-medium" 
+                  (click)="retryApiCall('recommendedCourses')">
+            Retry
+          </button>
+        </div>
+      </div>
+      
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div *ngFor="let course of recommendedCourses" class="bg-white rounded-xl shadow-sm overflow-hidden course-card transition-all duration-300">
+          <div class="h-40 bg-green-100 flex items-center justify-center">
+            <i class="fas fa-graduation-cap text-5xl text-green-600"></i>
+          </div>
+          <div class="p-6">
+            <h3 class="font-bold text-lg mb-2">{{course.title}}</h3>
+            <p class="text-sm text-gray-500 mb-4">{{course.description}}</p>
+            <div class="flex justify-between items-center">
+              <span class="text-xs px-2 py-1 bg-gray-100 text-gray-800 rounded-full">
+                {{course.chapterCount}} chapters
+              </span>
+              <button class="text-sm text-green-600 hover:text-green-700 font-medium">Enroll Now</button>
+            </div>
+          </div>
+        </div>
+        
+        <div *ngIf="recommendedCourses.length === 0 && !apiErrors['recommendedCourses']" class="bg-gray-50 rounded-xl p-8 text-center col-span-full">
+          <i class="fas fa-graduation-cap text-4xl text-gray-300 mb-4"></i>
+          <p class="text-gray-500">No recommended courses available</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  <!-- Progress Tab -->
+<div *ngIf="activeTab === 'progress'">
+  <h2 class="text-xl font-bold text-gray-800 mb-6">My Learning Progress</h2>
+  
+  <div *ngIf="apiErrors['myEnrollments']" class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+    <div class="flex items-center">
+      <i class="fas fa-exclamation-triangle text-yellow-600 mr-3"></i>
+      <p class="text-yellow-800">{{apiErrors['myEnrollments']}}</p>
+      <button class="ml-auto text-yellow-600 hover:text-yellow-800 text-sm font-medium" 
+              (click)="retryApiCall('myEnrollments')">
+        Retry
+      </button>
+    </div>
+  </div>
+
+  <!-- Active Courses Section -->
+  <div class="mb-8">
+    <h3 class="text-lg font-semibold text-gray-700 mb-4">Active Courses</h3>
+    <div class="grid grid-cols-1 gap-6">
+      <div *ngFor="let course of activeCourses" class="bg-white rounded-xl shadow-sm p-6">
+        <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
+          <h3 class="font-bold text-lg">{{course.courseTitle}}</h3>
+          <span class="text-sm font-medium text-green-600">{{course.progressPercentage}}% Complete</span>
+        </div>
+        
+        <div class="w-full bg-gray-200 rounded-full h-3 mb-4">
+          <div class="bg-green-500 h-3 rounded-full" [style.width]="course.progressPercentage + '%'"></div>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-4 text-sm">
+          <div>
+            <p class="text-gray-500">Chapters Completed</p>
+            <p class="font-medium">{{course.completedChapters}}/{{course.totalChapters}}</p>
+          </div>
+          <div>
+            <p class="text-gray-500">Enrolled On</p>
+            <p class="font-medium">{{formatDate(course.enrollmentDate)}}</p>
+          </div>
+          <div>
+            <p class="text-gray-500">Progress</p>
+            <p class="font-medium">{{course.progressPercentage}}%</p>
+          </div>
+          <div class="text-right">
+            <button (click)="continueLearning(course.courseId)" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm">
+              Continue Learning
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div *ngIf="activeCourses.length === 0 && !apiErrors['myEnrollments']" class="bg-gray-50 rounded-xl p-8 text-center">
+        <i class="fas fa-book-open text-4xl text-gray-300 mb-4"></i>
+        <p class="text-gray-500 mb-4">No active courses</p>
+        <button routerLink="/courses" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+          Browse Available Courses
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Completed Courses Section -->
+  <div *ngIf="completedCourses.length > 0">
+    <h3 class="text-lg font-semibold text-gray-700 mb-4">Completed Courses</h3>
+    <div class="grid grid-cols-1 gap-4">
+      <div *ngFor="let course of completedCourses" class="bg-green-50 rounded-xl shadow-sm p-6 border border-green-200">
+        <div class="flex items-center justify-between">
+          <div>
+            <h4 class="font-bold text-lg text-green-800">{{course.courseTitle}}</h4>
+            <p class="text-sm text-green-600">Completed on {{formatDate(course.completionDate || course.enrollmentDate)}}</p>
+            <p class="text-sm text-green-700">{{course.completedChapters}}/{{course.totalChapters}} chapters completed</p>
+          </div>
+          <div class="flex items-center">
+            <i class="fas fa-check-circle text-2xl text-green-600 mr-2"></i>
+            <span class="text-green-800 font-bold">100%</span>
+          </div>
+        </div>
+        <div class="mt-4 text-right">
+          <button (click)="viewCompletedCourse()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm">
+            View Certificates
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <!-- Achievements Tab -->
+  <div *ngIf="activeTab === 'achievements'">
+    <h2 class="text-xl font-bold text-gray-800 mb-6">My Achievements</h2>
+    
+    <div *ngIf="apiErrors['achievements']" class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+      <div class="flex items-center">
+        <i class="fas fa-exclamation-triangle text-yellow-600 mr-3"></i>
+        <p class="text-yellow-800">{{apiErrors['achievements']}}</p>
+        <button class="ml-auto text-yellow-600 hover:text-yellow-800 text-sm font-medium" 
+                (click)="retryApiCall('achievements')">
+          Retry
+        </button>
+      </div>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <div class="bg-white rounded-xl shadow-sm p-6">
+        <h3 class="font-bold text-lg mb-4">Learning Stats</h3>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="text-center p-4 bg-gray-50 rounded-lg">
+            <p class="text-2xl font-bold text-green-600">{{achievements.coursesCompleted}}</p>
+            <p class="text-sm text-gray-500">Courses Completed</p>
+          </div>
+          <div class="text-center p-4 bg-gray-50 rounded-lg">
+            <p class="text-2xl font-bold text-green-600">{{achievements.chaptersCompleted}}</p>
+            <p class="text-sm text-gray-500">Chapters Completed</p>
+          </div>
+          <div class="text-center p-4 bg-gray-50 rounded-lg">
+            <p class="text-2xl font-bold text-green-600">{{achievements.perfectScores}}</p>
+            <p class="text-sm text-gray-500">Perfect Scores</p>
+          </div>
+          <div class="text-center p-4 bg-gray-50 rounded-lg">
+            <p class="text-2xl font-bold text-green-600">{{achievements.streakDays}}</p>
+            <p class="text-sm text-gray-500">Day Streak</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="bg-white rounded-xl shadow-sm p-6">
+        <h3 class="font-bold text-lg mb-4">Certificates & Hours</h3>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="text-center p-4 bg-gray-50 rounded-lg">
+            <p class="text-2xl font-bold text-green-600">{{achievements.totalCertificates}}</p>
+            <p class="text-sm text-gray-500">Certificates Earned</p>
+          </div>
+          <div class="text-center p-4 bg-gray-50 rounded-lg">
+            <p class="text-2xl font-bold text-green-600">{{achievements.totalLearningHours}}</p>
+            <p class="text-sm text-gray-500">Learning Hours</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <h3 class="font-bold text-lg mb-4">Badges Earned</h3>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+      <div *ngFor="let badge of achievements.badges" class="bg-white rounded-xl shadow-sm p-4 text-center">
+        <div class="text-3xl mb-2">{{badge.icon}}</div>
+        <h4 class="font-medium mb-1">{{badge.name}}</h4>
+        <p class="text-xs text-gray-500">{{badge.description}}</p>
+      </div>
+      
+      <div *ngIf="achievements.badges.length === 0" class="bg-gray-50 rounded-xl p-8 text-center col-span-full">
+        <i class="fas fa-trophy text-4xl text-gray-300 mb-4"></i>
+        <p class="text-gray-500">No badges earned yet</p>
+        <p class="text-sm text-gray-400 mt-2">Complete courses and achievements to earn badges</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #loadingTemplate>
+  <div class="flex justify-center items-center h-64">
+    <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div>
+  </div>
+</ng-template>

@@ -1,15 +1,16 @@
+<!-- certificates.component.html -->
 <app-user-nav></app-user-nav>
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <!-- Page Header -->
     <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
         <div>
-            <h1 class="text-3xl font-bold text-gray-800">My Certificates</h1>
-            <p class="text-gray-600">Your earned health education certifications from Pulse Connect</p>
+            <h1 class="text-3xl font-bold text-gray-800">My Certificates & Achievements</h1>
+            <p class="text-gray-600">Your earned health education certifications and badges from Pulse Connect</p>
         </div>
         <div class="mt-4 md:mt-0">
             <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
-                <i class="fas fa-trophy mr-2"></i> View Achievements
+                <i class="fas fa-trophy mr-2"></i> View All Achievements
             </button>
         </div>
     </div>
@@ -25,7 +26,7 @@
     </div>
 
     <!-- Stats Section -->
-    <div *ngIf="!isLoading" class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+    <div *ngIf="!isLoading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <div class="bg-white rounded-xl shadow-sm p-6 flex items-center">
             <div class="p-3 rounded-full bg-green-50 text-green-600 mr-4">
                 <i class="fas fa-certificate text-xl"></i>
@@ -50,15 +51,24 @@
             </div>
             <div>
                 <p class="text-sm font-medium text-gray-500">Badges Earned</p>
-                <p class="text-2xl font-bold">{{ stats.badgesEarned }}</p>
+                <p class="text-2xl font-bold">{{ stats.badgesEarned }}/{{ stats.totalBadges }}</p>
+            </div>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm p-6 flex items-center">
+            <div class="p-3 rounded-full bg-yellow-50 text-yellow-600 mr-4">
+                <i class="fas fa-trophy text-xl"></i>
+            </div>
+            <div>
+                <p class="text-sm font-medium text-gray-500">Completion Rate</p>
+                <p class="text-2xl font-bold">{{ (stats.badgesEarned / stats.totalBadges * 100).toFixed(0) }}%</p>
             </div>
         </div>
     </div>
 
     <!-- Certificates Section -->
     <div *ngIf="!isLoading" class="mb-8">
-        <div class="flex justify-between items-center mb-4">
-            <h2 class="text-xl font-bold text-gray-800">Completed Courses</h2>
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-gray-800">Course Certificates</h2>
             <div class="flex items-center space-x-2">
                 <span class="text-sm text-gray-600">Sort by:</span>
                 <select 
@@ -83,19 +93,22 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Certificate Cards -->
             <div *ngFor="let certificate of certificates; let i = index" 
-                 class="bg-white rounded-xl shadow-sm overflow-hidden certificate-card">
+                 class="bg-white rounded-xl shadow-sm overflow-hidden certificate-card hover:shadow-md transition-shadow duration-300">
                 <div [class]="'h-48 ' + getGradientClass(getCertificateColor(i)) + ' flex flex-col items-center justify-center text-white p-6 relative'">
                     <div class="absolute top-4 right-4">
                         <span class="text-xs px-2 py-1 bg-white bg-opacity-20 rounded-full"
                               [class.text-green-400]="getCertificateColor(i) === 'green'"
                               [class.text-blue-400]="getCertificateColor(i) === 'blue'"
-                              [class.text-purple-400]="getCertificateColor(i) === 'purple'">
+                              [class.text-purple-400]="getCertificateColor(i) === 'purple'"
+                              [class.text-yellow-400]="getCertificateColor(i) === 'yellow'"
+                              [class.text-indigo-400]="getCertificateColor(i) === 'indigo'"
+                              [class.text-pink-400]="getCertificateColor(i) === 'pink'">
                             Verified
                         </span>
                     </div>
                     <i class="fas fa-certificate text-5xl mb-4"></i>
                     <h3 class="text-xl font-bold text-center">{{ certificate.courseTitle }}</h3>
-                    <p class="text-sm text-opacity-80 text-center">
+                    <p class="text-sm text-opacity-80 text-center mt-2">
                         Completed with {{ certificate.score >= 90 ? 'distinction' : certificate.score >= 80 ? 'excellence' : 'success' }}
                     </p>
                 </div>
@@ -136,123 +149,115 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Badges Section -->
-        <div class="mb-8">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-bold text-gray-800">Achievement Badges</h2>
-                <a href="#" class="text-sm text-green-600 hover:text-green-700 font-medium">View All</a>
-            </div>
-            
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                <!-- Badge 1 -->
-                <div class="bg-white rounded-xl shadow-sm p-6 flex flex-col items-center">
-                    <div class="relative">
-                        <div class="w-16 h-16 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-600 mb-2 badge">
-                            <i class="fas fa-trophy text-2xl"></i>
-                        </div>
-                        <div class="absolute -top-1 -right-1 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
-                            1
-                        </div>
-                    </div>
-                    <h3 class="text-sm font-medium text-center">Health Champion</h3>
-                    <p class="text-xs text-gray-500 text-center">Complete 3 courses</p>
-                </div>
-                
-                <!-- Badge 2 -->
-                <div class="bg-white rounded-xl shadow-sm p-6 flex flex-col items-center">
-                    <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mb-2">
-                        <i class="fas fa-star text-2xl"></i>
-                    </div>
-                    <h3 class="text-sm font-medium text-center">Quick Learner</h3>
-                    <p class="text-xs text-gray-500 text-center">Finish course in 1 day</p>
-                </div>
-                
-                <!-- Badge 3 -->
-                <div class="bg-white rounded-xl shadow-sm p-6 flex flex-col items-center">
-                    <div class="w-16 h-16 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 mb-2">
-                        <i class="fas fa-comments text-2xl"></i>
-                    </div>
-                    <h3 class="text-sm font-medium text-center">Community Helper</h3>
-                    <p class="text-xs text-gray-500 text-center">5 forum posts</p>
-                </div>
-                
-                <!-- Badge 4 -->
-                <div class="bg-white rounded-xl shadow-sm p-6 flex flex-col items-center opacity-50">
-                    <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 mb-2">
-                        <i class="fas fa-medal text-2xl"></i>
-                    </div>
-                    <h3 class="text-sm font-medium text-center">Quiz Master</h3>
-                    <p class="text-xs text-gray-400 text-center">Score 100% on a quiz</p>
-                </div>
-                
-                <!-- Badge 5 -->
-                <div class="bg-white rounded-xl shadow-sm p-6 flex flex-col items-center opacity-50">
-                    <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 mb-2">
-                        <i class="fas fa-book text-2xl"></i>
-                    </div>
-                    <h3 class="text-sm font-medium text-center">Knowledge Seeker</h3>
-                    <p class="text-xs text-gray-400 text-center">Complete 5 courses</p>
-                </div>
-                
-                <!-- Badge 6 -->
-                <div class="bg-white rounded-xl shadow-sm p-6 flex flex-col items-center opacity-50">
-                    <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 mb-2">
-                        <i class="fas fa-share-alt text-2xl"></i>
-                    </div>
-                    <h3 class="text-sm font-medium text-center">Health Advocate</h3>
-                    <p class="text-xs text-gray-400 text-center">Share 3 certificates</p>
-                </div>
+    <!-- Enhanced Badges Section -->
+    <div class="mb-8">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-gray-800">Achievement Badges</h2>
+            <div class="flex items-center space-x-2">
+                <span class="text-sm text-gray-600">{{stats.badgesEarned}}/{{stats.totalBadges}} earned</span>
             </div>
         </div>
 
-        <!-- Progress Section -->
-        <div class="bg-gradient-to-r from-green-600 to-green-700 rounded-2xl p-6 text-white">
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-                <div class="mb-4 md:mb-0">
-                    <h2 class="text-xl font-bold mb-2">Your Learning Progress</h2>
-                    <p class="max-w-2xl">Complete more courses to unlock additional certificates and badges.</p>
+        <!-- Badge Filter Tabs -->
+        <div class="flex space-x-4 mb-6 border-b border-gray-200">
+            <button 
+                [class]="activeBadgeTab === 'all' ? 'border-green-500 text-green-600' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'"
+                class="py-2 px-1 border-b-2 font-medium text-sm"
+                (click)="setActiveBadgeTab('all')">
+                All Badges
+            </button>
+            <button 
+                [class]="activeBadgeTab === 'earned' ? 'border-green-500 text-green-600' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'"
+                class="py-2 px-1 border-b-2 font-medium text-sm"
+                (click)="setActiveBadgeTab('earned')">
+                Earned ({{achievements.earnedCount}})
+            </button>
+            <button 
+                [class]="activeBadgeTab === 'pending' ? 'border-green-500 text-green-600' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'"
+                class="py-2 px-1 border-b-2 font-medium text-sm"
+                (click)="setActiveBadgeTab('pending')">
+                Pending ({{stats.totalBadges - achievements.earnedCount}})
+            </button>
+        </div>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div *ngFor="let badge of getBadgesToShow()" 
+                 [class]="'bg-white rounded-xl shadow-sm p-6 flex flex-col items-center transition-transform duration-200 hover:shadow-lg ' + 
+                         (badge.earned ? 'transform hover:scale-105 border-2 border-green-200' : 'opacity-70 border border-gray-200')">
+                
+                <!-- Badge Icon -->
+                <div class="relative mb-4">
+                    <div [class]="'w-16 h-16 rounded-full flex items-center justify-center text-2xl ' + 
+                                (badge.earned ? getBadgeIconClass(badge.category) : 'bg-gray-100 text-gray-400')">
+                        {{badge.icon}}
+                    </div>
+                    
+                    <!-- Earned Checkmark -->
+                    <div *ngIf="badge.earned" class="absolute -top-1 -right-1 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-white shadow-md">
+                        <i class="fas fa-check text-xs"></i>
+                    </div>
+
+                    <!-- Lock Icon for Pending -->
+                    <div *ngIf="!badge.earned" class="absolute -top-1 -right-1 w-6 h-6 bg-gray-400 rounded-full flex items-center justify-center text-white shadow-md">
+                        <i class="fas fa-lock text-xs"></i>
+                    </div>
                 </div>
-                <div>
-                    <div class="flex items-center">
-                        <div class="mr-4">
-                            <div class="text-2xl font-bold">65%</div>
-                            <div class="text-sm text-green-200">to next level</div>
-                        </div>
-                        <div class="w-32 bg-white bg-opacity-20 rounded-full h-2">
-                            <div class="bg-white h-2 rounded-full" style="width: 65%"></div>
-                        </div>
+                
+                <!-- Badge Info -->
+                <h3 class="text-sm font-semibold text-center mb-1 text-gray-800">{{badge.name}}</h3>
+                <p class="text-xs text-gray-600 text-center mb-3 leading-tight">{{badge.description}}</p>
+                
+                <!-- Progress Bar -->
+                <div *ngIf="!badge.earned" class="w-full bg-gray-200 rounded-full h-2 mb-2">
+                    <div class="bg-green-500 h-2 rounded-full transition-all duration-500" [style.width]="getProgressPercentage(badge) + '%'"></div>
+                </div>
+                
+                <!-- Progress Text -->
+                <p *ngIf="!badge.earned" class="text-xs text-gray-500 font-medium">
+                    {{badge.progress}}/{{badge.target}}
+                </p>
+                
+                <!-- Earned Text -->
+                <p *ngIf="badge.earned" class="text-xs text-green-600 font-semibold">
+                    <i class="fas fa-check mr-1"></i> Earned
+                </p>
+                
+                <!-- Category Tag -->
+                <span [class]="'mt-3 px-2 py-1 rounded-full text-xs font-medium ' + getBadgeCategoryClass(badge.category)">
+                    {{badge.category}}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Section with Badges Link -->
+    <div class="bg-gradient-to-r from-green-600 to-green-700 rounded-2xl p-6 text-white mb-8">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+            <div class="mb-4 md:mb-0">
+                <h2 class="text-xl font-bold mb-2">Your Learning Journey</h2>
+                <p class="max-w-2xl">You've earned {{stats.badgesEarned}} out of {{stats.totalBadges}} badges. Keep learning to unlock more achievements!</p>
+            </div>
+            <div>
+                <div class="flex items-center">
+                    <div class="mr-4">
+                        <div class="text-2xl font-bold">{{(stats.badgesEarned / stats.totalBadges * 100).toFixed(0)}}%</div>
+                        <div class="text-sm text-green-200">badges collected</div>
+                    </div>
+                    <div class="w-32 bg-white bg-opacity-20 rounded-full h-2">
+                        <div class="bg-white h-2 rounded-full transition-all duration-1000" [style.width]="(stats.badgesEarned / stats.totalBadges * 100) + '%'"></div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Certificate download functionality
-            const downloadBtns = document.querySelectorAll('.certificate-card button.bg-green-600, .certificate-card button.bg-blue-600, .certificate-card button.bg-purple-600');
-            downloadBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const courseName = btn.closest('.certificate-card').querySelector('h3').textContent;
-                    alert(`Downloading your ${courseName} certificate...`);
-                });
-            });
-
-            // Certificate share functionality
-            const shareBtns = document.querySelectorAll('.certificate-card button.border-green-600, .certificate-card button.border-blue-600, .certificate-card button.border-purple-600');
-            shareBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const courseName = btn.closest('.certificate-card').querySelector('h3').textContent;
-                    alert(`Sharing your ${courseName} certificate...`);
-                });
-            });
-
-            // View achievements button
-            const achievementsBtn = document.querySelector('button.bg-green-600');
-            achievementsBtn.addEventListener('click', () => {
-                alert('Showing your achievements and badges...');
-            });
-        });
-    </script>
-
-
+    <!-- Link to Achievements Page -->
+    <div class="text-center">
+        <a routerLink="/achievements" class="inline-flex items-center px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors shadow-md">
+            <i class="fas fa-trophy mr-2"></i>
+            View Complete Achievements Dashboard
+        </a>
+    </div>
+</div>

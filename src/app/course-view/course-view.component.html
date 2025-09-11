@@ -96,7 +96,7 @@
                 
                 <div class="p-6">
                     <app-course-test 
-                        [courseId]="course?.id || ''" 
+                        [courseId]="course.id || ''" 
                         [test]="test"
                         (testCompleted)="onTestCompleted($event)">
                     </app-course-test>

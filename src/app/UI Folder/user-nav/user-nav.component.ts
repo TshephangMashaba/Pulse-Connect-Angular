@@ -11,25 +11,20 @@ import { AuthService, User } from '../../services/auth.service';
   standalone: false
 })
 export class UserNavComponent implements OnInit {
-
   currentPath = '';
   user: User | null = null;
   defaultAvatar = '/default-profile.png';
   isStudent: boolean = false;
   isSuperAdmin: boolean = false;
   totalNotificationCount = 0;
+  isDropdownOpen = false;
   private destroy$ = new Subject<void>();
 
   constructor(
     private location: Location,
     private auth: AuthService,
     private router: Router,
-
-  ) {
-
-  }
-  
-
+  ) {}
 
   ngOnInit() {
     this.auth.currentUser$.pipe(
@@ -40,11 +35,10 @@ export class UserNavComponent implements OnInit {
       this.isSuperAdmin = u?.role?.toLowerCase() === 'mentor' || 
              u?.role === 'Admin' || 
              u?.role === 'Manager';
-      
-  
     });
 
     this.auth.refreshUserData().subscribe();
+    this.updateCurrentPath();
   }
 
   ngOnDestroy() {
@@ -54,6 +48,10 @@ export class UserNavComponent implements OnInit {
 
   @HostListener('window:popstate')
   onPopState() {
+    this.updateCurrentPath();
+  }
+
+  updateCurrentPath() {
     this.currentPath = this.location.path();
   }
 
@@ -66,7 +64,12 @@ export class UserNavComponent implements OnInit {
     imgElement.src = this.defaultAvatar;
   }
 
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
   logout() {
+    this.isDropdownOpen = false;
     // Use the Flowbite modal via CDN
     const modal = document.getElementById('logout-modal');
     if (modal) {

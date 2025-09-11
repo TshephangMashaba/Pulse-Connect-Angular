@@ -1,4 +1,4 @@
-// certificate.service.ts - FIXED VERSION
+// certificate.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -22,6 +22,26 @@ export interface CertificateStats {
   totalCertificates: number;
   xpPoints: number;
   badgesEarned: number;
+  totalBadges: number;
+}
+
+export interface Badge {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  earned: boolean;
+  progress: number;
+  target: number;
+  category: string;
+}
+
+export interface AchievementData {
+  badges: Badge[];
+  earnedBadges: Badge[];
+  pendingBadges: Badge[];
+  totalBadges: number;
+  earnedCount: number;
 }
 
 @Injectable({
@@ -43,14 +63,22 @@ export class CertificateService {
     });
   }
 
-  getMyCertificates(): Observable<Certificate[]> {
-    return this.http.get<Certificate[]>(`${this.apiUrl}/my-certificates`, {
+
+getMyCertificates(): Observable<Certificate[]> {
+  const headers = this.getHeaders();
+  return this.http.get<Certificate[]>(`https://localhost:7142/api/certificates/my-certificates`, {
+    headers: headers
+  });
+}
+
+  getCertificateStats(): Observable<CertificateStats> {
+    return this.http.get<CertificateStats>(`${this.apiUrl}/stats`, {
       headers: this.getHeaders()
     });
   }
 
-  getCertificateStats(): Observable<CertificateStats> {
-    return this.http.get<CertificateStats>(`${this.apiUrl}/stats`, {
+  getAchievements(): Observable<AchievementData> {
+    return this.http.get<AchievementData>(`${this.apiUrl}/achievements`, {
       headers: this.getHeaders()
     });
   }
@@ -89,8 +117,6 @@ export class CertificateService {
     }
   }
 
-  // This method is not needed since we're generating PDFs on frontend
-  // But keeping it for backward compatibility
   downloadCertificate(certificateId: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/${certificateId}/download`, {
       headers: this.getHeaders()

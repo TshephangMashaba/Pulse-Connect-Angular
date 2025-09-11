@@ -1,7 +1,23 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, Injector, PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { BehaviorSubject, catchError, map, Observable, of, Subject, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, of, Subject, tap } from 'rxjs';
+
+export interface User {
+  id?: string;
+  firstName: string;
+  lastName: string;
+  q_Number?: string;
+  email: string;
+  profilePhoto?: string;
+  phoneNumber?: string;
+  dateOfBirth?: string;
+  address?: string;
+  race?: string;
+  gender?: string;
+  role?: string;
+  token?: string;
+}
 
 export interface UserRegistration {
   firstName?: string;
@@ -14,16 +30,7 @@ export interface UserRegistration {
   role?: string;
 }
 
-export interface User {
-  id?: string; 
-  firstName: string;
-  lastName: string;
-  q_Number?: string;
-  email: string;
-  profilePhoto?: string;
-  role?: string;
-  token?: string;
-}
+
 
 export interface ResetPasswordPayload {
   email: string;
@@ -43,13 +50,13 @@ export interface OnboardingResponse {
   suburb: string;
   streetAddress: string;
   submittedDate: string;
-  idPhotoPath?: string;          
+  idPhotoPath?: string;
   certifiedIdCopyPath?: string;
   proofOfRegistrationPath?: string;
   role?: string;
 }
 
-export const DEFAULT_AVATAR = '../../../public/default-profile.png';
+export const DEFAULT_AVATAR = '/default-profile.png';
 
 @Injectable({
   providedIn: 'root'
@@ -62,13 +69,12 @@ export class AuthService {
   public refreshOnboarding$ = this.refreshOnboardingSubject.asObservable();
 
   constructor(
-    private http: HttpClient, 
+    private http: HttpClient,
     private injector: Injector,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    // Safe initialization - only access localStorage in browser
     let user: User | null = null;
-    
+
     if (isPlatformBrowser(this.platformId)) {
       try {
         const userData = this.safeGetItem('currentUser');
@@ -88,7 +94,6 @@ export class AuthService {
     this.currentUser$ = this.currentUserSubject.asObservable();
   }
 
-  // Safe localStorage methods
   private safeSetItem(key: string, value: string): void {
     if (isPlatformBrowser(this.platformId)) {
       try {
@@ -141,28 +146,27 @@ export class AuthService {
   register(user: UserRegistration): Observable<any> {
     return this.http.post(`${this.apiUrl}/api/Account/register`, user);
   }
-login(credentials: { email: string; password: string }): Observable<any> {
-  return this.http.post(`${this.apiUrl}/api/Account/login`, credentials).pipe(
-    tap((response: any) => {
-      if (response.isSuccessful && response.token) {
-        const userWithId = {
-          ...response.user,
-          id: response.user.id || response.user.userId || response.userId,
-          token: response.token,
-          role: response.user.roles?.[0] || '' // Get the first role
-        };
-        this.setCurrentUser(userWithId);
-      }
-    }),
-    catchError(err => {
-      console.error('Login failed', err);
-      this.clearUserData();
-      throw err;
-    })
-  );
-}
 
-// Remove the verifyOtp and resendOtp methods completely
+  login(credentials: { email: string; password: string }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/api/Account/login`, credentials).pipe(
+      tap((response: any) => {
+        if (response.isSuccessful && response.token) {
+          const userWithId = {
+            ...response.user,
+            id: response.user.id || response.user.userId || response.userId,
+            token: response.token,
+            role: response.user.roles?.[0] || ''
+          };
+          this.setCurrentUser(userWithId);
+        }
+      }),
+      catchError(err => {
+        console.error('Login failed', err);
+        this.clearUserData();
+        throw err;
+      })
+    );
+  }
 
   resendOtp(email: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/api/Account/resend-otp`, { email }, { headers: this.getAuthHeaders() });
@@ -170,18 +174,15 @@ login(credentials: { email: string; password: string }): Observable<any> {
 
   setCurrentUser(user: User): void {
     try {
-      // Get token from localStorage if not in user object
       const token = user.token || this.safeGetItem('token') || undefined;
-      
-      // Ensure user has token and role
       const userWithToken = {
         ...user,
         token: token === null ? undefined : token,
         role: user.role || ''
       };
-      
+
       console.log('🔧 setCurrentUser - Final user object:', userWithToken);
-      
+
       this.safeSetItem('currentUser', JSON.stringify(userWithToken));
       this.currentUserSubject.next(userWithToken);
     } catch (e) {
@@ -190,21 +191,19 @@ login(credentials: { email: string; password: string }): Observable<any> {
   }
 
   getValidToken(): string | null {
-    // First check current user
     const current = this.currentUserValue;
     if (current?.token) {
       console.log('🔑 Token from currentUser:', current.token.substring(0, 20) + '...');
       return current.token;
     }
 
-    // Then check localStorage
     try {
       const localToken = this.safeGetItem('token');
       if (localToken) {
         console.log('🔑 Token from localStorage:', localToken.substring(0, 20) + '...');
         return localToken;
       }
-      
+
       const userData = this.safeGetItem('currentUser');
       if (userData) {
         const parsed = JSON.parse(userData);
@@ -224,11 +223,11 @@ login(credentials: { email: string; password: string }): Observable<any> {
   isAuthenticated(): boolean {
     const currentUser = this.currentUserValue;
     const token = this.getValidToken();
-    
+
     console.log('🔍 isAuthenticated check:');
     console.log('  - currentUser exists:', !!currentUser);
     console.log('  - token exists:', !!token);
-    
+
     return !!(currentUser && token);
   }
 
@@ -242,7 +241,7 @@ login(credentials: { email: string; password: string }): Observable<any> {
         return user.email;
       }
     }
-    
+
     try {
       const userData = this.safeGetItem('currentUser');
       if (userData) {
@@ -252,7 +251,7 @@ login(credentials: { email: string; password: string }): Observable<any> {
     } catch (e) {
       console.error('Error parsing user data from localStorage:', e);
     }
-    
+
     return '';
   }
 
@@ -261,11 +260,11 @@ login(credentials: { email: string; password: string }): Observable<any> {
       headers: this.getAuthHeaders()
     });
   }
-  
+
   get currentUserValue(): User | null {
     return this.currentUserSubject.value;
   }
-  
+
   resetPassword(data: ResetPasswordPayload): Observable<any> {
     return this.http.post(`${this.apiUrl}/api/Account/reset-password`, data);
   }
@@ -286,7 +285,7 @@ login(credentials: { email: string; password: string }): Observable<any> {
     const storedUser = this.getStoredUser();
     return storedUser?.firstName || 'User';
   }
-  
+
   get currentAvatar$(): Observable<string> {
     return this.currentUser$.pipe(
       map((u: User | null) => u?.profilePhoto ?? DEFAULT_AVATAR)
@@ -326,8 +325,8 @@ login(credentials: { email: string; password: string }): Observable<any> {
 
   logout(): Observable<any> {
     if (this.currentUserValue?.token) {
-      return this.http.post(`${this.apiUrl}/api/Account/logout`, {}, { 
-        headers: this.getAuthHeaders() 
+      return this.http.post(`${this.apiUrl}/api/Account/logout`, {}, {
+        headers: this.getAuthHeaders()
       }).pipe(
         tap(() => {
           this.clearUserData();
@@ -338,7 +337,7 @@ login(credentials: { email: string; password: string }): Observable<any> {
         })
       );
     }
-    
+
     this.clearUserData();
     return of(null);
   }
@@ -377,7 +376,7 @@ login(credentials: { email: string; password: string }): Observable<any> {
     this.safeRemoveItem('token');
     this.currentUserSubject.next(null);
   }
- 
+
   getAllOnboardedUsers(): Observable<OnboardingResponse[]> {
     const headers = this.getAuthHeaders();
     return this.http.get<OnboardingResponse[]>(`${this.apiUrl}/api/account/onboard`, {
@@ -392,16 +391,20 @@ login(credentials: { email: string; password: string }): Observable<any> {
       lastName: string;
       email: string;
       phoneNumber?: string;
+      dateOfBirth?: string;
+      address?: string;
+      race?: string;
+      gender?: string;
       profilePhoto?: string;
       qNumber?: string;
       role?: string;
-    }>(`${this.apiUrl}/api/Profile`, { 
-      headers: this.getAuthHeaders() 
+    }>(`${this.apiUrl}/api/Account/profile`, {
+      headers: this.getAuthHeaders()
     }).pipe(
       map(apiUser => {
         console.log('=== API RESPONSE DEBUG ===');
         console.log('Raw API response:', apiUser);
-        
+
         const userId = apiUser.id;
         if (!userId) {
           throw new Error('User ID not found in profile response');
@@ -409,11 +412,10 @@ login(credentials: { email: string; password: string }): Observable<any> {
 
         let profilePhoto = apiUser.profilePhoto;
         if (profilePhoto) {
-          if (!profilePhoto.startsWith('http') && 
-              !profilePhoto.includes('null') && 
+          if (!profilePhoto.startsWith('http') &&
+              !profilePhoto.includes('null') &&
               !profilePhoto.includes('undefined')) {
-            
-            profilePhoto = profilePhoto.startsWith('/') 
+            profilePhoto = profilePhoto.startsWith('/')
               ? `${this.apiUrl}${profilePhoto}`
               : `${this.apiUrl}/${profilePhoto}`;
           }
@@ -428,6 +430,11 @@ login(credentials: { email: string; password: string }): Observable<any> {
           email: apiUser.email,
           q_Number: apiUser.qNumber,
           profilePhoto: profilePhoto,
+          phoneNumber: apiUser.phoneNumber,
+          dateOfBirth: apiUser.dateOfBirth,
+          address: apiUser.address,
+          race: apiUser.race,
+          gender: apiUser.gender,
           token: this.currentUserValue?.token,
           role: apiUser.role || this.currentUserValue?.role || ''
         };
@@ -457,7 +464,7 @@ login(credentials: { email: string; password: string }): Observable<any> {
 
   ensureUserRoleIsLoaded(): Observable<User> {
     const currentUser = this.currentUserValue;
-    
+
     if (!currentUser) {
       throw new Error('No user is currently logged in');
     }

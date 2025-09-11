@@ -1,0 +1,137 @@
+<!-- Full Page Wrapper -->
+<div class="min-h-screen bg-gray-50 font-sans">
+  <!-- Navigation Bar -->
+  <app-nav-bar></app-nav-bar>
+<div class="h-4"></div>
+<div class="h-4"></div>
+<div class="h-4"></div>
+<div class="h-4"></div>
+  <!-- Header Section -->
+  <div class="bg-gradient-to-r from-green-600 to-green-700 rounded-2xl p-6 text-white mb-8 mx-auto max-w-6xl mt-8">
+    <h1 class="text-2xl font-bold mb-2">Our Courses</h1>
+    <p class="max-w-2xl text-base">Explore free health courses designed for South African communities to learn, certify, and make a difference.</p>
+  </div>
+
+  <!-- Courses Section -->
+  <section class="courses-section py-12 bg-gray-50">
+    <div class="container mx-auto max-w-6xl px-4">
+  
+
+      <!-- Loading State -->
+      <div *ngIf="isLoading" class="flex justify-center items-center h-48">
+        <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-green-600"></div>
+      </div>
+      
+
+      <!-- Courses Grid -->
+      <div *ngIf="!isLoading && allCourses.length" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div *ngFor="let course of allCourses" class="bg-white rounded-xl shadow-sm p-5 transition-all duration-200 hover:shadow-md hover:-translate-y-1">
+          <h3 class="text-lg font-semibold text-gray-800 mb-2">{{ course.title }}</h3>
+          <p class="text-gray-600 text-sm mb-3 line-clamp-3 leading-relaxed">{{ course.description }}</p>
+          <div class="grid grid-cols-2 gap-3 text-sm text-gray-600 mb-4">
+            <div class="flex items-center">
+              <i class="fas fa-user-tie text-green-600 mr-1.5"></i>
+              <span>{{ course.instructorName }}</span>
+            </div>
+            <div class="flex items-center">
+              <i class="fas fa-clock text-green-600 mr-1.5"></i>
+              <span>{{ course.estimatedDuration }} min</span>
+            </div>
+            <div class="flex items-center">
+              <i class="fas fa-book text-green-600 mr-1.5"></i>
+              <span>{{ course.chapterCount }} chapters</span>
+            </div>
+            <div class="flex items-center">
+              <i class="fas fa-users text-green-600 mr-1.5"></i>
+              <span>{{ course.enrollmentCount }} enrolled</span>
+            </div>
+          </div>
+          <div class="flex gap-3">
+            <button
+              (click)="viewCourse(course.id)"
+              class="flex-1 px-3 py-1.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm"
+              aria-label="View course details"
+            >
+              View Course
+            </button>
+            <button
+              *ngIf="!isEnrolled(course.id)"
+              (click)="enrollInCourse(course.id)"
+              [disabled]="isLoading"
+              class="flex-1 px-3 py-1.5 border-2 border-green-600 text-green-600 rounded-lg hover:bg-green-600 hover:text-white transition-colors text-sm disabled:bg-gray-200 disabled:text-gray-500 disabled:border-gray-200"
+              aria-label="Enroll in course"
+            >
+              <span *ngIf="isLoading" class="animate-spin inline-block mr-1">⟳</span>
+              Enroll Now
+            </button>
+            <button
+              *ngIf="isEnrolled(course.id)"
+              class="flex-1 px-3 py-1.5 bg-green-500 text-white rounded-lg cursor-default text-sm"
+              aria-label="Course enrolled"
+            >
+              Enrolled
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- No Courses Available -->
+      <div *ngIf="!isLoading && !allCourses.length" class="text-center text-gray-600">
+        <p class="text-sm">No courses available at the moment. Please check back later.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ad Section with Benefits -->
+  <section class="ad-section py-12 bg-white">
+    <div class="container mx-auto max-w-6xl px-4">
+      <div class="text-center mb-8">
+          <div class="text-center mt-8">
+        <a
+          [routerLink]="['/courses']"
+          class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-semibold"
+          aria-label="Explore all courses"
+        >
+          Explore All Courses
+          <i class="fas fa-arrow-right ml-1.5"></i>
+        </a>
+      </div>
+      <br>
+  
+      </div>
+      <div *ngIf="allCourses.length" class="grid md:grid-cols-3 gap-6 mb-8">
+        <div *ngFor="let course of allCourses | slice:0:3" class="bg-white rounded-xl shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md">
+          <div class="relative h-32">
+            <img
+              [src]="course.thumbnailUrl || defaultCourseImage"
+              [alt]="course.title"
+              class="w-full h-full object-cover"
+            />
+          </div>
+          <div class="p-5 text-gray-800">
+            <h3 class="text-lg font-semibold mb-2">{{ course.title }}</h3>
+            <p class="text-sm text-gray-600 mb-3 line-clamp-2 leading-relaxed">{{ course.description }}</p>
+            <div class="flex items-center text-sm text-gray-600 mb-3">
+              <i class="fas fa-user-tie text-green-600 mr-1.5"></i>
+              <span>{{ course.instructorName }}</span>
+            </div>
+            <button
+              (click)="viewCourse(course.id)"
+              class="w-full px-3 py-1.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm"
+              aria-label="Start course now"
+            >
+              Start Now
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Benefits Mention -->
+      <div class="bg-gray-100 rounded-xl p-6 text-center">
+        <p class="text-sm text-gray-600 leading-relaxed">
+          <span class="font-semibold">Why enroll?</span> Earn digital certificates, access courses offline, and make a positive impact in your community with our free health courses.
+        </p>
+      </div>
+   
+    </div>
+  </section>
+</div>
