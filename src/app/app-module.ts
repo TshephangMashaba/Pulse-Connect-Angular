@@ -27,6 +27,10 @@ import { FileSaverModule } from 'ngx-filesaver';
 import { ProfileSettingsComponent } from './profile-settings/profile-settings.component';
 import { ContactComponent } from './contact/contact.component';
 import { CoursesAdvertComponent } from './courses-advert/courses-advert.component';
+import { AlertModalComponent } from './UI Folder/alert-modal/alert-modal.component';
+import { AlertContainerComponent } from './UI Folder/alert-container/alert-container.component';
+import { AdminSettingsComponent } from './admin-settings/admin-settings.component';
+import { UsersManagementComponent } from './users-management/users-management.component';
 
 
 
@@ -50,7 +54,11 @@ import { CoursesAdvertComponent } from './courses-advert/courses-advert.componen
       ManageCommunityComponent,
       ProfileSettingsComponent,
     ContactComponent,
-    CoursesAdvertComponent
+    CoursesAdvertComponent,
+    AlertModalComponent,
+    AlertContainerComponent,
+    AdminSettingsComponent,
+    UsersManagementComponent
   ],
   imports: [
   BrowserModule,

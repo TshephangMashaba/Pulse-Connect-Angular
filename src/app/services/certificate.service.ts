@@ -138,4 +138,10 @@ getMyCertificates(): Observable<Certificate[]> {
       headers: this.getHeaders()
     });
   }
+
+  recordShare(certificateId: string, platform: string): Observable<any> {
+  return this.http.post(`${this.apiUrl}/${certificateId}/share`, { platform }, {
+    headers: this.getHeaders()
+  });
+}
 }

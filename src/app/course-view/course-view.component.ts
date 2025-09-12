@@ -1,8 +1,11 @@
 // course-view.component.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CourseService, Course, Chapter, Enrollment } from '../services/course.service';
 import { AuthService } from '../services/auth.service';
+import { AlertService } from '../services/alert.service';
+import { Subscription } from 'rxjs';
+import { TextToSpeechService } from '../services/tts.service';
 
 @Component({
   selector: 'app-course-view',
@@ -17,17 +20,29 @@ export class CourseViewComponent implements OnInit {
   currentChapter: Chapter | null = null;
   isLoading = true;
   errorMessage = '';
-    showTest = false;
+  showTest = false;
   test: any = null;
   testResult: any = null;
-   testAttempts: any[] = [];
+  testAttempts: any[] = [];
 
+
+  isPlaying = false;
+  private ttsSubscription: Subscription;
+  @ViewChild('chapterContent') chapterContent!: ElementRef;
+
+  
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private courseService: CourseService,
-    private authService: AuthService
-  ) { }
+    private authService: AuthService,
+    private alertService: AlertService,
+    private ttsService: TextToSpeechService
+  ) { 
+       this.ttsSubscription = this.ttsService.getIsSpeaking().subscribe(speaking => {
+      this.isPlaying = speaking;
+    });
+  }
 
   ngOnInit() {
     const courseId = this.route.snapshot.paramMap.get('id');
@@ -38,6 +53,86 @@ export class CourseViewComponent implements OnInit {
       this.isLoading = false;
     }
   }
+
+   ngOnDestroy() {
+    // Clean up TTS when component is destroyed
+    this.ttsService.stop();
+    if (this.ttsSubscription) {
+      this.ttsSubscription.unsubscribe();
+    }
+  }
+
+  toggleTTS() {
+    if (this.isPlaying) {
+      this.ttsService.pause();
+    } else {
+      this.readChapterContent();
+    }
+  }
+
+   stopTTS() {
+    this.ttsService.stop();
+  }
+
+  private readChapterContent() {
+    if (!this.currentChapter || !this.chapterContent) return;
+    
+    // Extract text content from HTML
+    const contentElement = this.chapterContent.nativeElement;
+    const textContent = contentElement.textContent || '';
+    
+    if (!textContent.trim()) return;
+    
+    // Get text nodes and their boundaries for highlighting
+    const textNodes: Node[] = [];
+    const wordBoundaries: { node: Node, start: number, end: number }[] = [];
+    let currentIndex = 0;
+    
+    this.collectTextNodes(contentElement, textNodes, wordBoundaries, currentIndex);
+    
+    // Start reading
+    this.ttsService.speak(textContent, textNodes, wordBoundaries);
+  }
+
+   private collectTextNodes(
+    element: Node, 
+    textNodes: Node[], 
+    wordBoundaries: any[], 
+    currentIndex: number
+  ): number {
+    for (let i = 0; i < element.childNodes.length; i++) {
+      const node = element.childNodes[i];
+      
+      if (node.nodeType === Node.TEXT_NODE && node.textContent) {
+        const text = node.textContent;
+        textNodes.push(node);
+        
+        // Split text into words and record their boundaries
+        const words = text.split(/(\s+)/);
+        let wordStart = currentIndex;
+        
+        for (const word of words) {
+          if (word.trim()) { // Only non-whitespace words
+            wordBoundaries.push({
+              node: node,
+              start: wordStart,
+              end: wordStart + word.length
+            });
+          }
+          wordStart += word.length;
+        }
+        
+        currentIndex += text.length;
+      } else if (node.nodeType === Node.ELEMENT_NODE) {
+        currentIndex = this.collectTextNodes(node, textNodes, wordBoundaries, currentIndex);
+      }
+    }
+    
+    return currentIndex;
+  }
+
+
+
 
   loadCourseData(courseId: string) {
     this.isLoading = true;
@@ -56,7 +151,7 @@ export class CourseViewComponent implements OnInit {
     });
   }
 
-    loadTestAttempts() {
+  loadTestAttempts() {
     if (this.course && this.authService.isAuthenticated()) {
       this.courseService.getTestAttempts(this.course.id).subscribe({
         next: (attempts) => {
@@ -68,6 +163,7 @@ export class CourseViewComponent implements OnInit {
       });
     }
   }
+
   loadChapters(courseId: string) {
     this.courseService.getChapters(courseId).subscribe({
       next: (chapters) => {
@@ -110,52 +206,63 @@ export class CourseViewComponent implements OnInit {
     });
   }
 
-
-
-  enrollInCourse() {
+  async enrollInCourse() {
     if (this.course) {
       // Check if user is authenticated first
       if (!this.authService.isAuthenticated()) {
-        alert('Please log in to enroll in courses');
-        this.router.navigate(['/login']);
+        const confirmed = await this.alertService.confirm('Please log in to enroll in courses. Would you like to go to the login page?');
+        if (confirmed) {
+          this.router.navigate(['/login']);
+        }
         return;
       }
 
       this.courseService.enrollInCourse(this.course.id).subscribe({
         next: () => {
           this.loadEnrollmentData(this.course!.id);
-          alert('Successfully enrolled in the course!');
+          this.alertService.success('Successfully enrolled in the course!');
         },
         error: (error) => {
           console.error('Error enrolling in course:', error);
           if (error.status === 401) {
-            alert('Please log in to enroll in courses');
+            this.alertService.error('Please log in to enroll in courses');
             this.router.navigate(['/login']);
           } else {
-            alert('Failed to enroll in the course. Please try again.');
+            this.alertService.error('Failed to enroll in the course. Please try again.');
           }
         }
       });
     }
   }
 
-  unenrollFromCourse() {
-    if (this.course && confirm('Are you sure you want to unenroll from this course?')) {
-      this.courseService.unenrollFromCourse(this.course.id).subscribe({
-        next: () => {
-          this.router.navigate(['/courses']);
-          alert('Successfully unenrolled from the course.');
-        },
-        error: (error) => {
-          console.error('Error unenrolling from course:', error);
-          alert('Failed to unenroll from the course. Please try again.');
-        }
-      });
+  async unenrollFromCourse() {
+    if (this.course) {
+      const confirmed = await this.alertService.confirm('Are you sure you want to unenroll from this course?');
+      
+      if (confirmed) {
+        this.courseService.unenrollFromCourse(this.course.id).subscribe({
+          next: () => {
+            this.router.navigate(['/courses']);
+            this.alertService.success('Successfully unenrolled from the course.');
+          },
+          error: (error) => {
+            console.error('Error unenrolling from course:', error);
+            this.alertService.error('Failed to unenroll from the course. Please try again.');
+          }
+        });
+      }
     }
   }
 
-  setCurrentChapter(chapter: Chapter) {
+   setCurrentChapter(chapter: Chapter) {
+    this.ttsService.stop();
     this.currentChapter = chapter;
+    
+    setTimeout(() => {
+      if (this.isPlaying) {
+        this.readChapterContent();
+      }
+    }, 100);
   }
 
   isChapterCompleted(chapterIndex: number): boolean {
@@ -170,7 +277,7 @@ export class CourseViewComponent implements OnInit {
     return this.enrollment ? chapterIndex > this.enrollment.completedChapters : chapterIndex > 0;
   }
 
-    checkIfAllChaptersCompleted(): boolean {
+  checkIfAllChaptersCompleted(): boolean {
     return this.enrollment ? 
       this.enrollment.completedChapters >= this.enrollment.totalChapters : 
       false;
@@ -191,38 +298,82 @@ export class CourseViewComponent implements OnInit {
     }
   }
 
-// course-view.component.ts - Update onTestCompleted method
-onTestCompleted(testResult: any) {
-  this.showTest = false;
-  this.testResult = testResult;
-  
-  if (testResult.isPassed) {
-    // Generate certificate automatically
-    this.courseService.generateCertificate(testResult.id).subscribe({
-      next: (certificate) => {
-        alert('Congratulations! You passed the test and earned a certificate!');
-        // Reload the page to show the certificate
-        this.loadCourseData(this.course!.id);
-      },
-      error: (error) => {
-        console.error('Error generating certificate:', error);
-        alert('Congratulations! You passed the test! (Certificate generation may take a moment)');
-      }
-    });
-  } else {
-    alert('You didn\'t pass the test. You can review the material and try again.');
+  onTestCompleted(testResult: any) {
+    console.log('Test completed with result:', testResult);
+    this.showTest = false;
+    this.testResult = testResult;
+    
+    // Debug: Check the structure of the test result
+    console.log('Test result structure:', JSON.stringify(testResult, null, 2));
+    
+    // Check if the user passed based on different possible property names
+    const isPassed = this.determineIfPassed(testResult);
+    const score = this.getScore(testResult);
+    
+    console.log('Determined passed status:', isPassed, 'Score:', score);
+    
+    if (isPassed) {
+      // Generate certificate automatically
+      this.courseService.generateCertificate(testResult.id).subscribe({
+        next: (certificate) => {
+          console.log('Certificate generated:', certificate);
+          this.alertService.success(`Congratulations! You passed the test with ${score}% and earned a certificate!`);
+          // Reload the page to show the certificate and updated test attempts
+          this.loadCourseData(this.course!.id);
+        },
+        error: (error) => {
+          console.error('Error generating certificate:', error);
+          this.alertService.info(`Congratulations! You passed the test with ${score}%! (Certificate generation may take a moment)`);
+          // Still reload to show the updated test attempts
+          this.loadCourseData(this.course!.id);
+        }
+      });
+    } else {
+      this.alertService.warning(`You scored ${score}% but didn't pass the test. You can review the material and try again.`);
+      // Reload to show the updated test attempts
+      this.loadCourseData(this.course!.id);
+    }
   }
-}
+
+  // Helper method to determine if the test was passed
+  private determineIfPassed(testResult: any): boolean {
+    // Check various possible property names for passed status
+    if (testResult.isPassed !== undefined) return testResult.isPassed;
+    if (testResult.passed !== undefined) return testResult.passed;
+    if (testResult.isSuccessful !== undefined) return testResult.isSuccessful;
+    
+    // Check if score meets passing criteria
+    const score = this.getScore(testResult);
+    if (score !== undefined && this.test && this.test.passingScore) {
+      return score >= this.test.passingScore;
+    }
+    
+    // Default to false if we can't determine
+    return false;
+  }
+
+  // Helper method to extract score from test result
+  private getScore(testResult: any): number {
+    // Check various possible property names for score
+    if (testResult.score !== undefined) return testResult.score;
+    if (testResult.percentage !== undefined) return testResult.percentage;
+    if (testResult.correctAnswers !== undefined && testResult.totalQuestions !== undefined) {
+      return (testResult.correctAnswers / testResult.totalQuestions) * 100;
+    }
+    
+    // Default to 0 if we can't determine
+    return 0;
+  }
 
   startTest() {
     this.loadTest();
   }
 
-  markChapterComplete() {
+  async markChapterComplete() {
     if (this.currentChapter) {
       // Check if user is authenticated first
       if (!this.authService.isAuthenticated()) {
-        alert('Please log in to mark chapters as complete');
+        this.alertService.error('Please log in to mark chapters as complete');
         return;
       }
 
@@ -236,18 +387,17 @@ onTestCompleted(testResult: any) {
           
           // Check if all chapters are now completed
           if (this.checkIfAllChaptersCompleted()) {
-            alert('All chapters completed! You can now take the final test.');
+            this.alertService.success('All chapters completed! You can now take the final test.');
             this.loadTest(); // Load the test automatically
           } else {
-            alert('Chapter marked as complete!');
+            this.alertService.success('Chapter marked as complete!');
           }
         },
         error: (error) => {
           console.error('Error marking chapter complete:', error);
-          alert('Failed to mark chapter as complete. Please try again.');
+          this.alertService.error('Failed to mark chapter as complete. Please try again.');
         }
       });
     }
   }
 }
-

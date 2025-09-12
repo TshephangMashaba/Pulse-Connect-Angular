@@ -18,3 +18,18 @@
 .prose li {
   margin-bottom: 0.5rem;
 }
+
+/* course-view.component.css */
+::ng-deep .prose {
+  line-height: 1.6;
+}
+
+::ng-deep .prose p {
+  margin-bottom: 1rem;
+}
+
+::ng-deep .prose span.bg-yellow-200 {
+  padding: 0 1px;
+  border-radius: 2px;
+  transition: background-color 0.2s;
+}

@@ -1,0 +1,12 @@
+<!-- alert-container.component.html -->
+<app-alert-modal 
+  [isVisible]="isVisible"
+  [title]="alertOptions.title"
+  [message]="alertOptions.message"
+  [type]="alertOptions.type || 'info'"
+  [confirmText]="alertOptions.confirmText || 'OK'"
+  [cancelText]="alertOptions.cancelText || 'Cancel'"
+  [showCancel]="alertOptions.showCancel || false"
+  (confirm)="onConfirm()"
+  (cancel)="onCancel()">
+</app-alert-modal>

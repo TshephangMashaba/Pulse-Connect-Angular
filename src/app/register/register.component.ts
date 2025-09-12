@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { AlertService } from '../services/alert.service'; // Import the alert service
 
 // Custom validator for password confirmation
 export function confirmPasswordValidator(): ValidatorFn {
@@ -28,12 +29,12 @@ export function confirmPasswordValidator(): ValidatorFn {
 export class RegisterComponent {
   registerForm: FormGroup;
   isLoading = false;
-  errorMessage = '';
 
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private alertService: AlertService // Inject the alert service
   ) {
     this.registerForm = this.fb.group({
       firstName: ['', [Validators.required, Validators.minLength(2)]],
@@ -52,7 +53,6 @@ export class RegisterComponent {
   onSubmit() {
     if (this.registerForm.valid) {
       this.isLoading = true;
-      this.errorMessage = '';
 
       // Include confirmPassword in the data sent to the backend
       const formData = {
@@ -68,8 +68,10 @@ export class RegisterComponent {
           this.isLoading = false;
           
           // Show success message and redirect to login
-          alert('Registration successful! Please login to continue.');
-          this.router.navigate(['/login']);
+          this.alertService.success('Registration successful! Please login to continue.')
+            .then(() => {
+              this.router.navigate(['/login']);
+            });
         },
         error: (error: HttpErrorResponse) => {
           this.isLoading = false;
@@ -81,6 +83,9 @@ export class RegisterComponent {
       Object.keys(this.registerForm.controls).forEach(key => {
         this.registerForm.get(key)?.markAsTouched();
       });
+      
+      // Show alert for form validation errors
+      this.alertService.error('Please fill in all required fields correctly.');
     }
   }
 
@@ -100,15 +105,17 @@ export class RegisterComponent {
   private handleError(error: HttpErrorResponse) {
     console.error('Registration error:', error);
     
+    let errorMessage = 'Registration failed. Please try again.';
+    
     if (error.status === 400) {
       // Handle 400 Bad Request errors
       if (error.error && typeof error.error === 'string') {
         // Simple string error message
-        this.errorMessage = error.error;
+        errorMessage = error.error;
       } else if (error.error && error.error.errors) {
         // Handle array of errors
         if (Array.isArray(error.error.errors)) {
-          this.errorMessage = error.error.errors.join(', ');
+          errorMessage = error.error.errors.join(', ');
         } else if (typeof error.error.errors === 'object') {
           // Handle object with error properties (ASP.NET ModelState)
           const errorMessages: string[] = [];
@@ -122,21 +129,19 @@ export class RegisterComponent {
               }
             }
           }
-          this.errorMessage = errorMessages.join(', ');
+          errorMessage = errorMessages.join(', ');
         }
       } else if (error.error && error.error.errorMessage) {
         // Handle error message property
-        this.errorMessage = error.error.errorMessage;
-      } else {
-        this.errorMessage = 'Registration failed. Please check your information and try again.';
+        errorMessage = error.error.errorMessage;
       }
     } else if (error.status === 0) {
       // Network error
-      this.errorMessage = 'Unable to connect to the server. Please check your connection.';
-    } else {
-      // Other server errors
-      this.errorMessage = 'An unexpected error occurred. Please try again later.';
+      errorMessage = 'Unable to connect to the server. Please check your connection.';
     }
+    
+    // Show alert with error message
+    this.alertService.error(errorMessage);
   }
 
   // Helper method to check if a field has errors

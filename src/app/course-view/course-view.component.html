@@ -96,7 +96,7 @@
                 
                 <div class="p-6">
                     <app-course-test 
-                        [courseId]="course.id || ''" 
+                        [courseId]="course?.id || ''" 
                         [test]="test"
                         (testCompleted)="onTestCompleted($event)">
                     </app-course-test>
@@ -104,14 +104,34 @@
             </div>
 
             <!-- Chapter Content (Shown when not taking test) -->
-            <div *ngIf="!showTest && currentChapter" class="bg-white rounded-xl shadow-sm overflow-hidden">
-                <div class="p-6 border-b border-gray-200 flex justify-between items-center">
-                    <div>
-                        <h2 class="text-xl font-bold text-gray-800">{{ currentChapter.title }}</h2>
-                        <p class="text-sm text-gray-500">Lesson {{ chapters.indexOf(currentChapter) + 1 }} of {{ chapters.length }}</p>
-                    </div>
+          <div *ngIf="!showTest && currentChapter" class="bg-white rounded-xl shadow-sm overflow-hidden">
+        <div class="p-6 border-b border-gray-200 flex justify-between items-center">
+            <div>
+                <h2 class="text-xl font-bold text-gray-800">{{ currentChapter.title }}</h2>
+                <p class="text-sm text-gray-500">Lesson {{ chapters.indexOf(currentChapter) + 1 }} of {{ chapters.length }}</p>
+            </div>
+
+            <div class="flex items-center space-x-2" *ngIf="currentChapter.content">
+                <button (click)="toggleTTS()" 
+                        [class.bg-green-600]="isPlaying"
+                        [class.bg-gray-200]="!isPlaying"
+                        [class.text-white]="isPlaying"
+                        [class.text-gray-700]="!isPlaying"
+                        class="p-2 rounded-full hover:bg-green-500 hover:text-white transition-colors"
+                        [title]="isPlaying ? 'Pause reading' : 'Start reading'">
+                    <i class="fas" [class.fa-pause]="isPlaying" [class.fa-play]="!isPlaying"></i>
+                </button>
+                <button (click)="stopTTS()" 
+                        class="p-2 rounded-full bg-gray-200 text-gray-700 hover:bg-red-500 hover:text-white transition-colors"
+                        title="Stop reading">
+                    <i class="fas fa-stop"></i>
+                </button>
+                <div class="flex items-center ml-2 text-sm text-gray-500" *ngIf="isPlaying">
+                    <i class="fas fa-volume-up mr-1"></i>
+                    Reading...
                 </div>
-                
+            </div>
+        </div>
                 <div class="p-6">
                     <!-- Media content based on type -->
                     <div *ngIf="currentChapter.mediaUrl" class="aspect-w-16 aspect-h-9 bg-gray-100 rounded-lg mb-6 flex items-center justify-center">
@@ -140,7 +160,9 @@
                     </div>
                     
                     <!-- Text Content -->
-                    <div class="prose max-w-none mb-6" [innerHTML]="currentChapter.content"></div>
+                   <div class="prose max-w-none mb-6 relative" [innerHTML]="currentChapter.content" 
+                 #chapterContent>
+                    </div>
                     
                     <!-- Navigation Buttons -->
                     <div class="flex justify-between mt-8">

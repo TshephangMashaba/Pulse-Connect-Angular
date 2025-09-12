@@ -14,6 +14,8 @@ import { ManageCommunityComponent } from './manage-community/manage-community.co
 import { ProfileSettingsComponent } from './profile-settings/profile-settings.component';
 import { ContactComponent } from './contact/contact.component';
 import { CoursesAdvertComponent } from './courses-advert/courses-advert.component';
+import { AdminSettingsComponent } from './admin-settings/admin-settings.component';
+import { UsersManagementComponent } from './users-management/users-management.component';
 
 const routes: Routes = [
   { 
@@ -75,7 +77,16 @@ const routes: Routes = [
 {
   path: 'courses-enroll',
   component: CoursesAdvertComponent
+},
+{
+  path: 'admin-setting',
+  component: AdminSettingsComponent
+},
+{
+  path: 'users-management',
+  component: UsersManagementComponent
 }
+
 
 
 ];

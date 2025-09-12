@@ -2,3 +2,49 @@
 button {
   cursor: pointer;
 }
+
+:host {
+  display: block;
+}
+
+/* alert-modal.component.css */
+:host {
+  --backdrop-color: rgba(4, 0, 41, 0.7);
+}
+
+.fixed.inset-0 {
+  background-color: var(--backdrop-color);
+}
+
+/* Ensure modal is properly centered and sized */
+.modal-container {
+  width: 100%;
+
+  margin: 0 auto;
+}
+
+/* Animation styles */
+.animate-fade-in-down {
+  animation: fadeInDown 0.3s ease-out;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Loading spinner animation */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

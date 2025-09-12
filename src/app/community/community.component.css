@@ -7,8 +7,12 @@
             color: #059669;
         }
 
-        #postDetailModal {
-  backdrop-filter: blur(5px);
+:host {
+  --backdrop-color: rgba(4, 0, 41, 0.7);
+}
+
+.fixed.inset-0 {
+  background-color: var(--backdrop-color);
 }
 
 #postDetailModal > div {

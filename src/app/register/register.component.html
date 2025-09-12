@@ -44,11 +44,6 @@
         <p class="text-gray-600 mt-2">Join Pulse Connect today</p>
       </div>
 
-      <!-- Error Message -->
-      <div *ngIf="errorMessage" class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-        {{ errorMessage }}
-      </div>
-
       <!-- Registration Form -->
       <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-5">
         <!-- Two Column Fields -->

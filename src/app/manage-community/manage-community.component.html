@@ -2,158 +2,277 @@
 
     <main class="md:ml-64 pt-20">
         <div class="p-1">
+<div class="max-w-7xl mx-auto px-1 sm:px-1 lg:px-8 py-1">
+    <!-- Page Header -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-800">
+                {{ showProvinceView ? selectedProvinceGroup + ' Community' : 'Pulse Network Community' }}
+            </h1>
+            <p class="text-gray-600">
+                {{ showProvinceView ? 'Connect with members in your province' : 'Connect, share, and learn with others in the Pulse Network Community' }}
+            </p>
+        </div>
+        <div class="mt-4 md:mt-0">
+            <button *ngIf="showProvinceView" 
+                    class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors mr-2"
+                    (click)="backToGroups()">
+                <i class="fas fa-arrow-left mr-2"></i> Back to Groups
+            </button>
+            <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors" 
+                    (click)="openModal()">
+                <i class="fas fa-plus mr-2"></i> New Post
+            </button>
+        </div>
+    </div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Page Header -->
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
-            <div>
-                <h1 class="text-3xl font-bold text-gray-800">Community Hub</h1>
-                <p class="text-gray-600">Connect, share, and learn with others in the Pulse Connect community</p>
-            </div>
-            <div class="mt-4 md:mt-0">
-                <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors" id="newPostBtn">
-                    <i class="fas fa-plus mr-2"></i> New Post
-                </button>
+    <!-- Province Group View -->
+    <div *ngIf="showProvinceView" class="mb-6">
+        <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6">
+            <div class="flex items-start">
+                <div class="flex-shrink-0">
+                    <i class="fas fa-users text-blue-400 text-xl mt-1"></i>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm text-blue-700">
+                        You're viewing the {{ selectedProvinceGroup }} community. 
+                        <span *ngIf="!isAuthenticated()" class="font-medium">
+                            <a routerLink="/login" class="underline">Sign in</a> to participate.
+                        </span>
+                    </p>
+                </div>
             </div>
         </div>
 
+        <!-- Province Posts -->
+        <div *ngIf="provincePosts.length > 0">
+            <div *ngFor="let post of provincePosts" class="bg-white rounded-xl shadow-sm overflow-hidden mb-6 discussion-card transition-all duration-300">
+                <div class="p-6">
+                    <div class="flex items-start mb-4">
+                        <img *ngIf="!post.isAnonymous && post.authorProfilePicture" 
+                             [src]="post.authorProfilePicture" 
+                             class="h-10 w-10 rounded-full mr-4" 
+                             [alt]="post.authorName">
+                             
+                        <div *ngIf="!post.isAnonymous && !post.authorProfilePicture" 
+                             class="h-10 w-10 rounded-full mr-4 bg-gray-200 flex items-center justify-center">
+                            <i class="fas fa-user text-gray-400"></i>
+                        </div>
+                        
+                        <div *ngIf="post.isAnonymous" 
+                             class="h-10 w-10 rounded-full mr-4 bg-gray-200 flex items-center justify-center">
+                            <i class="fas fa-user-secret text-gray-400"></i>
+                        </div>
+                        
+                        <div>
+                            <div class="flex items-center">
+                                <h3 class="font-bold">{{ post.isAnonymous ? 'Anonymous User' : post.authorName }}</h3>
+                            </div>
+                            <p class="text-xs text-gray-500">
+                                Posted {{ post.createdAt | date:'mediumDate' }} 
+                                <span *ngIf="post.topic">in <span class="text-green-600">{{ post.topic }}</span></span>
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <h2 class="text-xl font-bold mb-3">{{ post.title }}</h2>
+                    <p class="text-gray-700 mb-4">{{ post.content }}</p>
+                    
+                    <div class="flex items-center justify-between">
+                        <div class="flex space-x-4">
+                            <button class="flex items-center text-gray-500 hover:text-green-600" (click)="likePost(post.id)">
+                                <i class="far fa-thumbs-up mr-1"></i>
+                                <span>{{ post.likes }}</span>
+                            </button>
+                            <button class="flex items-center text-gray-500 hover:text-green-600" (click)="loadPostDetails(post.id)">
+                                <i class="far fa-comment mr-1"></i>
+                                <span>{{ post.commentCount }} comments</span>
+                            </button>
+                        </div>
+                      <button (click)="loadPostDetails(post.id)">View Discussion</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty State for Province -->
+        <div *ngIf="provincePosts.length === 0 && !isLoading" class="bg-white rounded-xl shadow-sm p-6 text-center">
+            <i class="fas fa-comments text-gray-400 text-3xl mb-4"></i>
+            <h3 class="text-lg font-medium text-gray-800 mb-2">No posts in this community yet</h3>
+            <p class="text-gray-600 mb-4">Be the first to start a discussion in the {{ selectedProvinceGroup }} community!</p>
+            <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors" (click)="openModal()">
+                Create a Post
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Community View -->
+    <div *ngIf="!showProvinceView">
         <!-- Community Tabs -->
         <div class="mb-6 border-b border-gray-200">
             <div class="flex space-x-8">
-                <button class="py-4 px-1 font-medium text-sm border-b-2 active-tab" data-tab="discussions">
+                <button class="py-4 px-1 font-medium text-sm border-b-2" 
+                        [class.active-tab]="activeTab === 'discussions'"
+                        [class.text-gray-900]="activeTab === 'discussions'"
+                        [class.border-green-500]="activeTab === 'discussions'"
+                        [class.text-gray-500]="activeTab !== 'discussions'"
+                        [class.border-transparent]="activeTab !== 'discussions'"
+                        (click)="switchTab('discussions')">
                     <i class="fas fa-comments mr-2"></i> Discussions
                 </button>
-                <button class="py-4 px-1 font-medium text-sm border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" data-tab="questions">
+                <button class="py-4 px-1 font-medium text-sm border-b-2" 
+                        [class.active-tab]="activeTab === 'questions'"
+                        [class.text-gray-900]="activeTab === 'questions'"
+                        [class.border-green-500]="activeTab === 'questions'"
+                        [class.text-gray-500]="activeTab !== 'questions'"
+                        [class.border-transparent]="activeTab !== 'questions'"
+                        (click)="switchTab('questions')">
                     <i class="fas fa-question-circle mr-2"></i> Q&A
                 </button>
-                <button class="py-4 px-1 font-medium text-sm border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" data-tab="resources">
-                    <i class="fas fa-bookmark mr-2"></i> Health Resources
-                </button>
-                <button class="py-4 px-1 font-medium text-sm border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" data-tab="events">
-                    <i class="fas fa-calendar-alt mr-2"></i> Community Events
+                <button class="py-4 px-1 font-medium text-sm border-b-2" 
+                        [class.active-tab]="activeTab === 'groups'"
+                        [class.text-gray-900]="activeTab === 'groups'"
+                        [class.border-green-500]="activeTab === 'groups'"
+                        [class.text-gray-500]="activeTab !== 'groups'"
+                        [class.border-transparent]="activeTab !== 'groups'"
+                        (click)="switchTab('groups')">
+                    <i class="fas fa-users mr-2"></i> Province Groups
                 </button>
             </div>
         </div>
 
-        <!-- Community Content -->
-        <div class="flex flex-col lg:flex-row gap-8">
+        <!-- Groups Tab Content -->
+
+<div *ngIf="activeTab === 'groups'" class="bg-white rounded-xl shadow-sm p-6">
+  <h2 class="text-xl font-bold mb-4">Join a Province Community</h2>
+  <p class="text-gray-600 mb-6">Connect with people in your province for local discussions and support.</p>
+  
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div *ngFor="let province of availableProvinces" 
+         class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+      <div class="flex items-center mb-3">
+        <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+          <i class="fas fa-map-marker-alt text-blue-600"></i>
+        </div>
+        <h3 class="font-bold text-lg">{{ province }}</h3>
+      </div>
+      <div class="flex justify-between text-sm text-gray-500 mb-4">
+        <span>{{ getProvinceStats(province)?.memberCount || 0 }} members</span>
+        <span>{{ getProvinceStats(province)?.postCount || 0 }} posts</span>
+      </div>
+      <button class="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              (click)="joinProvince(province)">
+        Join Community
+      </button>
+    </div>
+  </div>
+</div>
+        <!-- Discussions and Q&A Tab Content -->
+        <div *ngIf="activeTab !== 'groups'" class="flex flex-col lg:flex-row gap-8">
             <!-- Main Content -->
             <div class="lg:w-2/3">
                 <!-- Search and Filter -->
                 <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
                     <div class="flex flex-col md:flex-row md:items-center gap-4">
                         <div class="relative flex-grow">
-                            <input type="text" placeholder="Search community posts..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent w-full">
+                            <input type="text" placeholder="Search community posts..." 
+                                   class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent w-full"
+                                   [(ngModel)]="searchTerm"
+                                   (keyup.enter)="applyFilters()">
                             <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
                         </div>
-                        <select class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
-                            <option>All Topics</option>
-                            <option>HIV/AIDS</option>
-                            <option>Mental Health</option>
-                            <option>Hygiene</option>
-                            <option>Maternal Health</option>
-                            <option>Chronic Diseases</option>
-                        </select>
-                        <select class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
-                            <option>Newest First</option>
-                            <option>Most Popular</option>
-                            <option>Unanswered</option>
+                        <input type="text" placeholder="Topic (type anything)" 
+                               class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                               [(ngModel)]="selectedTopic"
+                               (keyup.enter)="applyFilters()">
+                        <select class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                                [(ngModel)]="selectedSort"
+                                (change)="applyFilters()">
+                            <option value="Newest First">Newest First</option>
+                            <option value="Most Popular">Most Popular</option>
+                            <option value="Oldest First">Oldest First</option>
                         </select>
                     </div>
                 </div>
 
-                <!-- Discussion Cards -->
-              <div id="discussions-tab" [class.hidden]="activeTab !== 'discussions'">
-                    <!-- Discussion 1 -->
-                    <div class="bg-white rounded-xl shadow-sm overflow-hidden mb-6 discussion-card transition-all duration-300">
-                        <div class="p-6">
-                            <div class="flex items-start mb-4">
-                                <img class="h-10 w-10 rounded-full mr-4" src="/user1.jpg" alt="User">
-                                <div>
-                                    <div class="flex items-center">
-                                        <h3 class="font-bold">Sarah M.</h3>
-                                        <span class="ml-2 text-xs px-2 py-1 bg-green-100 text-green-800 rounded-full">Community Leader</span>
-                                    </div>
-                                    <p class="text-xs text-gray-500">Posted 2 days ago in <span class="text-green-600">HIV/AIDS</span></p>
-                                </div>
-                            </div>
-                            <h2 class="text-xl font-bold mb-3">Overcoming stigma in our community</h2>
-                            <p class="text-gray-700 mb-4">I've noticed many people in our area are still afraid to talk about HIV testing. How can we create a more open environment where people feel comfortable discussing their health?</p>
-                            <div class="flex items-center justify-between">
-                                <div class="flex space-x-4">
-                                    <button class="flex items-center text-gray-500 hover:text-green-600">
-                                        <i class="far fa-thumbs-up mr-1"></i>
-                                        <span>24</span>
-                                    </button>
-                                    <button class="flex items-center text-gray-500 hover:text-green-600">
-                                        <i class="far fa-comment mr-1"></i>
-                                        <span>8 comments</span>
-                                    </button>
-                                </div>
-                                <button class="text-green-600 hover:text-green-700 text-sm font-medium">
-                                    Join Discussion
-                                </button>
-                            </div>
-                        </div>
+                <!-- Posts List -->
+                <div id="posts-container">
+                    <!-- Loading State -->
+                    <div *ngIf="isLoading" class="bg-white rounded-xl shadow-sm p-6 text-center">
+                        <i class="fas fa-spinner fa-spin text-green-600 text-2xl mb-4"></i>
+                        <p class="text-gray-600">Loading posts...</p>
                     </div>
 
-                    <!-- Discussion 2 -->
-                    <div class="bg-white rounded-xl shadow-sm overflow-hidden mb-6 discussion-card transition-all duration-300">
-                        <div class="p-6">
-                            <div class="flex items-start mb-4">
-                                <img class="h-10 w-10 rounded-full mr-4" src="/user2.jpg" alt="User">
-                                <div>
-                                    <div class="flex items-center">
-                                        <h3 class="font-bold">Thomas K.</h3>
-                                        <span class="ml-2 text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded-full">Verified Health Worker</span>
-                                    </div>
-                                    <p class="text-xs text-gray-500">Posted 1 week ago in <span class="text-blue-600">Mental Health</span></p>
-                                </div>
-                            </div>
-                            <h2 class="text-xl font-bold mb-3">Simple stress relief techniques</h2>
-                            <p class="text-gray-700 mb-4">As a community health worker, I've found these three techniques most helpful for managing daily stress: 1) Deep breathing exercises, 2) Short walks in nature, 3) Talking to a trusted friend. What works best for you?</p>
-                            <div class="flex items-center justify-between">
-                                <div class="flex space-x-4">
-                                    <button class="flex items-center text-gray-500 hover:text-green-600">
-                                        <i class="far fa-thumbs-up mr-1"></i>
-                                        <span>42</span>
-                                    </button>
-                                    <button class="flex items-center text-gray-500 hover:text-green-600">
-                                        <i class="far fa-comment mr-1"></i>
-                                        <span>15 comments</span>
-                                    </button>
-                                </div>
-                                <button class="text-green-600 hover:text-green-700 text-sm font-medium">
-                                    Join Discussion
-                                </button>
-                            </div>
-                        </div>
+                    <!-- No Posts State -->
+                    <div *ngIf="posts.length === 0 && !isLoading" class="bg-white rounded-xl shadow-sm p-6 text-center">
+                        <i class="fas fa-comments text-gray-400 text-3xl mb-4"></i>
+                        <h3 class="text-lg font-medium text-gray-800 mb-2">No posts yet</h3>
+                        <p class="text-gray-600 mb-4">Be the first to start a discussion in this category!</p>
+                        <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors" (click)="openModal()">
+                            Create a Post
+                        </button>
                     </div>
 
-                    <!-- Discussion 3 -->
-                    <div class="bg-white rounded-xl shadow-sm overflow-hidden mb-6 discussion-card transition-all duration-300">
+                    <!-- Post Cards -->
+                    <div *ngFor="let post of filteredPosts" class="bg-white rounded-xl shadow-sm overflow-hidden mb-6 discussion-card transition-all duration-300">
                         <div class="p-6">
                             <div class="flex items-start mb-4">
-                                <img class="h-10 w-10 rounded-full mr-4" src="/user3.jpg" alt="User">
+                                <img *ngIf="!post.isAnonymous && post.authorProfilePicture" 
+                                     [src]="post.authorProfilePicture" 
+                                     class="h-10 w-10 rounded-full mr-4" 
+                                     [alt]="post.authorName">
+                                     
+                                <div *ngIf="!post.isAnonymous && !post.authorProfilePicture" 
+                                     class="h-10 w-10 rounded-full mr-4 bg-gray-200 flex items-center justify-center">
+                                    <i class="fas fa-user text-gray-400"></i>
+                                </div>
+                                
+                                <div *ngIf="post.isAnonymous" 
+                                     class="h-10 w-10 rounded-full mr-4 bg-gray-200 flex items-center justify-center">
+                                    <i class="fas fa-user-secret text-gray-400"></i>
+                                </div>
+                                
                                 <div>
-                                    <h3 class="font-bold">Anonymous User</h3>
-                                    <p class="text-xs text-gray-500">Posted 3 days ago in <span class="text-purple-600">Maternal Health</span></p>
+                                    <div class="flex items-center">
+                                        <h3 class="font-bold">{{ post.isAnonymous ? 'Anonymous User' : post.authorName }}</h3>
+                                        <span *ngIf="post.province" class="ml-2 text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded-full">{{ post.province }}</span>
+                                    </div>
+                                    <p class="text-xs text-gray-500">
+                                        Posted {{ post.createdAt | date:'mediumDate' }} 
+                                        <span *ngIf="post.topic">in <span class="text-green-600">{{ post.topic }}</span></span>
+                                    </p>
                                 </div>
                             </div>
-                            <h2 class="text-xl font-bold mb-3">[Anonymous] Prenatal care questions</h2>
-                            <p class="text-gray-700 mb-4">I'm expecting my first child and have some questions but feel uncomfortable asking in person. What are the most important things to focus on during the first trimester?</p>
+                              <!-- Image gallery -->
+    <div *ngIf="post.images && post.images.length > 0" class="mb-4">
+      <div class="grid grid-cols-2 gap-2">
+        <div *ngFor="let image of post.images" class="relative">
+         <img [src]="getImageUrl(image.imageUrl)" 
+     [alt]="image.caption || 'Post image'" 
+     class="w-full h-32 object-cover rounded-lg cursor-pointer"
+     (click)="openImageModal(getImageUrl(image.imageUrl))">
+        </div>
+      </div>
+      </div>
+                            <h2 class="text-xl font-bold mb-3">{{ post.title }}</h2>
+                            <p class="text-gray-700 mb-4">{{ post.content }}</p>
+                            
                             <div class="flex items-center justify-between">
                                 <div class="flex space-x-4">
-                                    <button class="flex items-center text-gray-500 hover:text-green-600">
+                                    <button class="flex items-center text-gray-500 hover:text-green-600" (click)="likePost(post.id)">
                                         <i class="far fa-thumbs-up mr-1"></i>
-                                        <span>18</span>
+                                        <span>{{ post.likes }}</span>
+                                    </button>
+                                    <button class="flex items-center text-gray-500 hover:text-green-600" (click)="loadPostDetails(post.id)">
+                                        <i class="far fa-comment mr-1"></i>
+                                        <span>{{ post.commentCount }} comments</span>
                                     </button>
                                     <button class="flex items-center text-gray-500 hover:text-green-600">
-                                        <i class="far fa-comment mr-1"></i>
-                                        <span>6 comments</span>
+                                        <i class="far fa-eye mr-1"></i>
+                                        <span>{{ post.views }} views</span>
                                     </button>
                                 </div>
-                                <button class="text-green-600 hover:text-green-700 text-sm font-medium">
+                                <button class="text-green-600 hover:text-green-700 text-sm font-medium" (click)="loadPostDetails(post.id)">
                                     Join Discussion
                                 </button>
                             </div>
@@ -161,32 +280,29 @@
                     </div>
 
                     <!-- Pagination -->
-                    <div class="flex justify-center mt-8">
+                    <div *ngIf="posts.length > 0" class="flex justify-center mt-8">
                         <nav class="flex items-center space-x-2">
-                            <button class="px-3 py-1 rounded-lg border border-gray-300 text-gray-500 hover:bg-gray-50">
+                            <button class="px-3 py-1 rounded-lg border border-gray-300 text-gray-500 hover:bg-gray-50" 
+                                    (click)="prevPage()" [disabled]="currentPage === 1">
                                 <i class="fas fa-chevron-left"></i>
                             </button>
-                            <button class="px-3 py-1 rounded-lg bg-green-600 text-white">1</button>
-                            <button class="px-3 py-1 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50">2</button>
-                            <button class="px-3 py-1 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50">3</button>
-                            <span class="px-2 text-gray-500">...</span>
-                            <button class="px-3 py-1 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50">8</button>
-                            <button class="px-3 py-1 rounded-lg border border-gray-300 text-gray-500 hover:bg-gray-50">
+                            
+                            <button *ngFor="let page of getPageNumbers()" 
+                                    class="px-3 py-1 rounded-lg border" 
+                                    [class.bg-green-600]="page === currentPage"
+                                    [class.text-white]="page === currentPage"
+                                    [class.border-gray-300]="page !== currentPage"
+                                    [class.text-gray-700]="page !== currentPage"
+                                    (click)="goToPage(page)">
+                                {{ page }}
+                            </button>
+                            
+                            <button class="px-3 py-1 rounded-lg border border-gray-300 text-gray-500 hover:bg-gray-50" 
+                                    (click)="nextPage()" [disabled]="currentPage * pageSize >= totalPostsCount">
                                 <i class="fas fa-chevron-right"></i>
                             </button>
                         </nav>
                     </div>
-                </div>
-
-                <!-- Other tabs (initially hidden) -->
-              <div id="questions-tab" [class.hidden]="activeTab !== 'questions'">
-                    <!-- Q&A content would go here -->
-                </div>
-                <div id="resources-tab" [class.hidden]="activeTab !== 'resources'">
-                    <!-- Health Resources content would go here -->
-                </div>
-                <div id="events-tab" [class.hidden]="activeTab !== 'events'">
-                    <!-- Community Events content would go here -->
                 </div>
             </div>
 
@@ -198,53 +314,31 @@
                     <div class="space-y-4">
                         <div>
                             <p class="text-sm text-gray-500">Total Members</p>
-                            <p class="text-2xl font-bold">1,842</p>
+                            <p class="text-2xl font-bold">{{ communityStats.totalMembers | number }}</p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-500">Active Discussions</p>
-                            <p class="text-2xl font-bold">127</p>
+                            <p class="text-2xl font-bold">{{ communityStats.activeDiscussions | number }}</p>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-500">Health Questions Answered</p>
-                            <p class="text-2xl font-bold">893</p>
+                            <p class="text-sm text-gray-500">Total Posts</p>
+                            <p class="text-2xl font-bold">{{ communityStats.totalPosts | number }}</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Top Contributors -->
+                <!-- Quick Actions -->
                 <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
-                    <h2 class="text-lg font-bold mb-4">Top Contributors</h2>
-                    <div class="space-y-4">
-                        <div class="flex items-center">
-                            <img class="h-10 w-10 rounded-full mr-3" src="/user1.jpg" alt="User">
-                            <div>
-                                <p class="font-medium">Sarah M.</p>
-                                <p class="text-xs text-gray-500">245 helpful posts</p>
-                            </div>
-                            <div class="ml-auto text-green-600">
-                                <i class="fas fa-medal"></i>
-                            </div>
-                        </div>
-                        <div class="flex items-center">
-                            <img class="h-10 w-10 rounded-full mr-3" src="/user4.jpg" alt="User">
-                            <div>
-                                <p class="font-medium">Dr. Nkosi</p>
-                                <p class="text-xs text-gray-500">189 helpful posts</p>
-                            </div>
-                            <div class="ml-auto text-blue-600">
-                                <i class="fas fa-star"></i>
-                            </div>
-                        </div>
-                        <div class="flex items-center">
-                            <img class="h-10 w-10 rounded-full mr-3" src="/user2.jpg" alt="User">
-                            <div>
-                                <p class="font-medium">Thomas K.</p>
-                                <p class="text-xs text-gray-500">156 helpful posts</p>
-                            </div>
-                            <div class="ml-auto text-yellow-600">
-                                <i class="fas fa-award"></i>
-                            </div>
-                        </div>
+                    <h2 class="text-lg font-bold mb-4">Quick Actions</h2>
+                    <div class="space-y-3">
+                        <button class="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                                (click)="openModal()">
+                            <i class="fas fa-plus mr-2"></i> Create New Post
+                        </button>
+                        <button class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                                (click)="openProvinceModal()">
+                            <i class="fas fa-users mr-2"></i> Join a Province Group
+                        </button>
                     </div>
                 </div>
 
@@ -270,71 +364,226 @@
                                 <span>Find Nearby Clinics</span>
                             </a>
                         </li>
-                        <li>
-                            <a href="#" class="flex items-center text-green-600 hover:text-green-700">
-                                <i class="fas fa-phone-alt mr-2"></i>
-                                <span>Emergency Contacts</span>
-                            </a>
-                        </li>
                     </ul>
                 </div>
             </div>
         </div>
     </div>
-</div>
-</main>
- <div id="newPostModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" *ngIf="showModal" (click)="onDocumentClick($event)">
-  <div class="bg-white rounded-xl shadow-lg w-full max-w-md mx-4" (click)="$event.stopPropagation()">
-            <div class="p-6">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-xl font-bold">Create New Post</h2>
-                    <button (click)="closeModal()">
-      <i class="fas fa-times"></i>
-    </button>
-
+<!-- Post Detail Modal -->
+<div id="postDetailModal" class="fixed inset-0 z-50 flex items-center justify-center" *ngIf="selectedPost" (click)="closePostModal()">
+    <div class="bg-white  shadow-lg w-full max-w-full mx-4 max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">Post Details</h2>
+                <button (click)="closePostModal()" class="text-gray-500 hover:text-gray-700 text-2xl">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="flex items-start mb-4">
+                <img *ngIf="!selectedPost.isAnonymous && selectedPost.authorProfilePicture" 
+                     [src]="selectedPost.authorProfilePicture" 
+                     class="h-10 w-10 rounded-full mr-4" 
+                     [alt]="selectedPost.authorName">
+                     
+                <div *ngIf="!selectedPost.isAnonymous && !selectedPost.authorProfilePicture" 
+                     class="h-10 w-10 rounded-full mr-4 bg-gray-200 flex items-center justify-center">
+                    <i class="fas fa-user text-gray-400"></i>
                 </div>
-                <form>
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-medium mb-2">Post Type</label>
-                        <select class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
-                            <option>Discussion</option>
-                            <option>Question</option>
-                            <option>Resource Share</option>
-                            <option>Event Announcement</option>
-                        </select>
+                
+                <div *ngIf="selectedPost.isAnonymous" 
+                     class="h-10 w-10 rounded-full mr-4 bg-gray-200 flex items-center justify-center">
+                    <i class="fas fa-user-secret text-gray-400"></i>
+                </div>
+                
+                <div>
+                    <div class="flex items-center">
+                        <h3 class="font-bold">{{ selectedPost.isAnonymous ? 'Anonymous User' : selectedPost.authorName }}</h3>
+                        <span *ngIf="selectedPost.province" class="ml-2 text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded-full">{{ selectedPost.province }}</span>
                     </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-medium mb-2">Topic</label>
-                        <select class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
-                            <option>HIV/AIDS</option>
-                            <option>Mental Health</option>
-                            <option>Hygiene</option>
-                            <option>Maternal Health</option>
-                            <option>Chronic Diseases</option>
-                            <option>Other</option>
-                        </select>
+                    <p class="text-xs text-gray-500">
+                        Posted {{ selectedPost.createdAt | date:'mediumDate' }} 
+                        <span *ngIf="selectedPost.topic">in <span class="text-green-600">{{ selectedPost.topic }}</span></span>
+                    </p>
+                </div>
+            </div>
+            
+            <h2 class="text-2xl font-bold mb-3">{{ selectedPost.title }}</h2>
+            <p class="text-gray-700 mb-6 whitespace-pre-line">{{ selectedPost.content }}</p>
+            
+            <!-- Image gallery -->
+            <div *ngIf="selectedPost.images && selectedPost.images.length > 0" class="mb-6">
+                <h3 class="text-lg font-semibold mb-3">Images</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div *ngFor="let image of selectedPost.images" class="relative">
+                        <img [src]="getImageUrl(image.imageUrl)" 
+                             [alt]="image.caption || 'Post image'" 
+                             class="w-full h-48 object-cover rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
+                             (click)="openImageModal(getImageUrl(image.imageUrl))">
+                        <p *ngIf="image.caption" class="text-sm text-gray-600 mt-1">{{ image.caption }}</p>
                     </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-medium mb-2">Title</label>
-                        <input type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-4 mb-6">
+                <button class="flex items-center text-gray-500 hover:text-green-600" (click)="likePost(selectedPost.id)">
+                    <i class="far fa-thumbs-up mr-1"></i>
+                    <span>{{ selectedPost.likes }}</span>
+                </button>
+                <div class="flex items-center text-gray-500">
+                    <i class="far fa-eye mr-1"></i>
+                    <span>{{ selectedPost.views }} views</span>
+                </div>
+            </div>
+            
+            <!-- Comments Section -->
+            <div class="border-t border-gray-200 pt-6">
+                <h3 class="text-lg font-bold mb-4">Comments ({{ selectedPost.commentCount }})</h3>
+                
+                <!-- Add Comment Form -->
+                <div class="mb-6">
+                    <textarea placeholder="Add a comment..." rows="3" 
+                              class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 mb-2"
+                              [(ngModel)]="newCommentContent"></textarea>
+                    <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                            (click)="addComment()">
+                        Post Comment
+                    </button>
+                </div>
+                
+                <!-- Comments List -->
+                <div *ngIf="comments.length === 0" class="text-center py-4 text-gray-500">
+                    No comments yet. Be the first to comment!
+                </div>
+                
+                <div *ngFor="let comment of comments" class="border-b border-gray-100 pb-4 mb-4 last:border-b-0">
+                    <div class="flex items-start mb-2">
+                        <img [src]="comment.authorProfilePicture || '/default-profile.png'" 
+                             class="h-8 w-8 rounded-full mr-3" 
+                             [alt]="comment.authorName">
+                        <div>
+                            <h4 class="font-medium">{{ comment.authorName }}</h4>
+                            <p class="text-xs text-gray-500">{{ comment.createdAt | date:'short' }}</p>
+                        </div>
                     </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-medium mb-2">Content</label>
-                        <textarea rows="4" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"></textarea>
-                    </div>
-                    <div class="mb-4 flex items-center">
-                        <input type="checkbox" id="anonymous" class="mr-2">
-                        <label for="anonymous" class="text-sm text-gray-700">Post anonymously</label>
-                    </div>
-                    <div class="flex justify-end space-x-3">
-                        <button type="button" id="cancelPostBtn" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
-                            Cancel
+                    <p class="text-gray-700 ml-11">{{ comment.content }}</p>
+                    <div class="flex items-center space-x-3 mt-2 ml-11">
+                        <button class="flex items-center text-gray-500 hover:text-green-600 text-sm">
+                            <i class="far fa-thumbs-up mr-1"></i>
+                            <span>{{ comment.likes }}</span>
                         </button>
-                        <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
-                            Post to Community
-                        </button>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
+</div>
+
+<!-- New Post Modal -->
+<div id="newPostModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" *ngIf="showModal" (click)="onDocumentClick($event)">
+    <div class="bg-white rounded-xl shadow-lg w-full max-w-md mx-4" (click)="$event.stopPropagation()">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold">Create New Post</h2>
+                <button (click)="closeModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form (ngSubmit)="createPost()">
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-medium mb-2">Post Type</label>
+                    <select class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                            [(ngModel)]="newPost.type" name="type">
+                        <option value="Discussion">Discussion</option>
+                        <option value="Question">Question</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-medium mb-2">Topic (optional)</label>
+                    <input type="text" placeholder="e.g., Mental Health, HIV Prevention, etc." 
+                           class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                           [(ngModel)]="newPost.topic" name="topic">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-medium mb-2">Title</label>
+                    <input type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                           [(ngModel)]="newPost.title" name="title" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-medium mb-2">Content</label>
+                    <textarea rows="4" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                              [(ngModel)]="newPost.content" name="content" required></textarea>
+                </div>
+                <!-- In the new post modal, add image upload section -->
+<div class="mb-4">
+  <label class="block text-gray-700 text-sm font-medium mb-2">Upload Images (optional)</label>
+  <input type="file" multiple (change)="onFileSelected($event)" 
+         class="w-full border border-gray-300 rounded-lg px-3 py-2"
+         accept="image/*">
+</div>
+
+<!-- Image previews -->
+<div *ngIf="previewUrls.length > 0" class="mb-4">
+  <div class="flex flex-wrap gap-2">
+    <div *ngFor="let url of previewUrls; let i = index" class="relative">
+      <img [src]="url" class="w-20 h-20 object-cover rounded border">
+      <button type="button" (click)="removeFile(i)" 
+              class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 text-xs flex items-center justify-center">
+        ×
+      </button>
+    </div>
+  </div>
+</div>
+                <div class="mb-4 flex items-center">
+                    <input type="checkbox" id="anonymous" class="mr-2" [(ngModel)]="newPost.isAnonymous" name="isAnonymous">
+                    <label for="anonymous" class="text-sm text-gray-700">Post anonymously</label>
+                </div>
+                <div class="flex justify-end space-x-3">
+                    <button type="button" (click)="closeModal()" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                        Post to Community
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Province Selection Modal -->
+<div id="provinceModal" class="fixed inset-0 flex items-center justify-center z-50" *ngIf="showProvinceModal" (click)="onDocumentClick($event)">
+    <div class="bg-white rounded-xl shadow-lg w-full max-w-md max-w-8xl" (click)="$event.stopPropagation()">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold">Join a Province Community</h2>
+                <button (click)="closeProvinceModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <p class="text-gray-600 mb-4">Select a province to join its community and connect with local members.</p>
+        <!-- In the province modal, change this: -->
+<div class="grid grid-cols-1 gap-2 max-h-96 overflow-y-auto">
+  <button *ngFor="let province of availableProvinces" 
+          class="p-3 border border-gray-200 rounded-lg hover:bg-gray-50 text-left"
+          (click)="joinProvince(province); closeProvinceModal()">
+    <div class="flex justify-between items-center">
+      <span class="font-medium">{{ province }}</span>
+      <!-- Show member count from stats if available -->
+      <span class="text-sm text-gray-500">
+        {{ getProvinceStats(province)?.memberCount || 0 }} members
+      </span>
+    </div>
+  </button>
+</div>
+    </div>
+</div>
+
+<div id="imageModal" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50" *ngIf="selectedImage" (click)="selectedImage = null">
+  <div class="max-w-4xl max-h-full" (click)="$event.stopPropagation()">
+    <button (click)="selectedImage = null" class="absolute top-4 right-4 text-white text-2xl z-10">
+      <i class="fas fa-times"></i>
+    </button>
+    <img [src]="selectedImage" class="max-w-full max-h-full object-contain">
+  </div>
+</div>

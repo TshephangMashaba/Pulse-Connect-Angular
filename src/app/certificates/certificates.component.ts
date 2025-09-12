@@ -1,7 +1,7 @@
 // certificates.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CertificateService, Certificate, CertificateStats, Badge, AchievementData } from '../services/certificate.service';
-import { CertificateGeneratorService } from '../services/certificate-generator.service';
+import { CertificateData, CertificateGeneratorService } from '../services/certificate-generator.service';
 
 @Component({
   selector: 'app-certificates',
@@ -28,7 +28,7 @@ export class CertificatesComponent implements OnInit {
   errorMessage = '';
   sortBy = 'mostRecent';
   activeBadgeTab: 'all' | 'earned' | 'pending' = 'all';
-
+   isGenerating = false;
   constructor(
     private certificateService: CertificateService,
     private certificateGenerator: CertificateGeneratorService
@@ -183,8 +183,37 @@ export class CertificatesComponent implements OnInit {
     this.stats.totalBadges = this.achievements.totalBadges;
   }
 
-  downloadCertificate(certificate: Certificate): void {
-    this.certificateService.generateAndDownloadCertificate(certificate);
+  async downloadCertificate(certificate: Certificate): Promise<void> {
+    this.isGenerating = true; // Show loader
+    try {
+      const certificateData: CertificateData = {
+        userName: certificate.userName,
+        courseTitle: certificate.courseTitle,
+        score: certificate.score,
+        certificateNumber: certificate.certificateNumber,
+        issueDate: new Date(certificate.issueDate)
+      };
+
+      console.log('Generating certificate PDF...');
+      const pdfBlob = await this.certificateGenerator.generateCertificatePDF(certificateData);
+      console.log('PDF generated successfully, downloading...');
+      this.certificateGenerator.downloadCertificatePDF(
+        pdfBlob, 
+        `Certificate_${certificate.certificateNumber}.pdf`
+      );
+    } catch (error) {
+      console.error('Error generating PDF certificate:', error);
+      console.log('Falling back to HTML preview...');
+      this.certificateService.openCertificateInNewWindow({
+        userName: certificate.userName,
+        courseTitle: certificate.courseTitle,
+        score: certificate.score,
+        certificateNumber: certificate.certificateNumber,
+        issueDate: new Date(certificate.issueDate)
+      });
+    } finally {
+      this.isGenerating = false; // Hide loader
+    }
   }
 
   sortCertificates() {
@@ -206,21 +235,62 @@ export class CertificatesComponent implements OnInit {
     this.sortBy = event.target.value;
     this.sortCertificates();
   }
+ async shareCertificate(certificate: Certificate): Promise<void> {
+    this.isGenerating = true; // Show loader
+    try {
+      // Generate PDF (same as before)
+      const certificateData: CertificateData = {
+        userName: certificate.userName,
+        courseTitle: certificate.courseTitle,
+        score: certificate.score,
+        certificateNumber: certificate.certificateNumber,
+        issueDate: new Date(certificate.issueDate)
+      };
 
-  shareCertificate(certificate: Certificate) {
-    if (navigator.share) {
-      navigator.share({
-        title: `My ${certificate.courseTitle} Certificate`,
-        text: `I completed the ${certificate.courseTitle} course on Pulse Connect with a score of ${certificate.score}%!`,
-        url: certificate.downloadUrl
-      }).catch((error) => {
-        console.error('Error sharing:', error);
-        this.copyToClipboard(certificate);
+      const pdfBlob = await this.certificateGenerator.generateCertificatePDF(certificateData);
+      
+      // Share logic (same as before)
+      const file = new File([pdfBlob], `Certificate_${certificate.certificateNumber}.pdf`, {
+        type: 'application/pdf'
       });
-    } else {
-      this.copyToClipboard(certificate);
+
+      if (navigator.share && navigator.canShare?.({ files: [file] })) {
+        await navigator.share({
+          title: `My ${certificate.courseTitle} Certificate`,
+          text: `I completed the ${certificate.courseTitle} course on Pulse Connect with a score of ${certificate.score}%!`,
+          files: [file]
+        });
+        
+        // ✅ NOW CALL BACKEND TO RECORD THE SHARE
+        await this.recordShareInBackend(certificate.id, 'native_share');
+        
+      } else {
+        this.certificateGenerator.downloadCertificatePDF(pdfBlob, `Certificate_${certificate.certificateNumber}.pdf`);
+        
+      
+        await this.recordShareInBackend(certificate.id, 'download');
+        
+        alert('PDF downloaded! You can now share the file.');
+      }
+    } catch (error) {
+      console.error('Error sharing certificate:', error);
+      this.downloadCertificate(certificate);
+    } finally {
+      this.isGenerating = false; // Hide loader
     }
   }
+
+// New method to record share in backend
+private async recordShareInBackend(certificateId: string, platform: string): Promise<void> {
+  try {
+    await this.certificateService.recordShare(certificateId, platform).toPromise();
+    // Refresh achievements to update the sharing badge
+    this.loadAchievements();
+  } catch (error) {
+    console.error('Failed to record share in backend:', error);
+  }
+}
+
 
   private copyToClipboard(certificate: Certificate) {
     const text = `Check out my certificate for ${certificate.courseTitle}: ${certificate.downloadUrl}`;

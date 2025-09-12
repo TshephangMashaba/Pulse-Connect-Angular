@@ -1,6 +1,16 @@
 <!-- certificates.component.html -->
 <app-user-nav></app-user-nav>
 
+<!-- Full Page Loader for Certificate Generation -->
+<div *ngIf="isGenerating" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+    <div class="bg-white rounded-xl p-8 max-w-md mx-4 text-center shadow-2xl">=
+        <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-green-600 mx-auto mb-4"></div>
+        <h3 class="text-xl font-bold text-gray-800 mb-2">Generating Certificate</h3>
+        <p class="text-gray-600">Please wait while we prepare your certificate...</p>
+        <p class="text-sm text-gray-500 mt-2">This may take a few moments</p>
+    </div>
+</div>
+
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <!-- Page Header -->
     <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
@@ -8,11 +18,7 @@
             <h1 class="text-3xl font-bold text-gray-800">My Certificates & Achievements</h1>
             <p class="text-gray-600">Your earned health education certifications and badges from Pulse Connect</p>
         </div>
-        <div class="mt-4 md:mt-0">
-            <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
-                <i class="fas fa-trophy mr-2"></i> View All Achievements
-            </button>
-        </div>
+        
     </div>
 
     <!-- Loading State -->
@@ -251,13 +257,5 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- Link to Achievements Page -->
-    <div class="text-center">
-        <a routerLink="/achievements" class="inline-flex items-center px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors shadow-md">
-            <i class="fas fa-trophy mr-2"></i>
-            View Complete Achievements Dashboard
-        </a>
     </div>
 </div>

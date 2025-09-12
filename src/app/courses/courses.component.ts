@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CourseService, Course, Enrollment } from '../services/course.service';
 import { AuthService } from '../services/auth.service';
+import { AlertService } from '../services/alert.service';
 
 @Component({
   selector: 'app-courses',
@@ -19,7 +20,8 @@ export class CoursesComponent implements OnInit {
   constructor(
     private courseService: CourseService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+     private alertService: AlertService
   ) { }
 
   ngOnInit() {
@@ -65,11 +67,13 @@ export class CoursesComponent implements OnInit {
     });
   }
 
-  enrollInCourse(courseId: string) {
+  async enrollInCourse(courseId: string) {
     // Check if user is authenticated first
     if (!this.authService.isAuthenticated()) {
-      alert('Please log in to enroll in courses');
-      this.router.navigate(['/login']);
+      const confirmed = await this.alertService.confirm('Please log in to enroll in courses. Would you like to go to the login page?');
+      if (confirmed) {
+        this.router.navigate(['/login']);
+      }
       return;
     }
 
@@ -77,35 +81,38 @@ export class CoursesComponent implements OnInit {
       next: () => {
         // Refresh the courses list after enrollment
         this.loadCourses();
-        alert('Successfully enrolled in the course!');
+        this.alertService.success('Successfully enrolled in the course!');
       },
       error: (error) => {
         console.error('Error enrolling in course:', error);
         if (error.status === 401) {
-          alert('Please log in to enroll in courses');
+          this.alertService.error('Please log in to enroll in courses');
           this.router.navigate(['/login']);
         } else {
-          alert('Failed to enroll in the course. Please try again.');
+          this.alertService.error('Failed to enroll in the course. Please try again.');
         }
       }
     });
   }
 
-  unenrollFromCourse(courseId: string) {
-    if (confirm('Are you sure you want to unenroll from this course?')) {
+async unenrollFromCourse(courseId: string) {
+    const confirmed = await this.alertService.confirm('Are you sure you want to unenroll from this course?');
+    
+    if (confirmed) {
       this.courseService.unenrollFromCourse(courseId).subscribe({
         next: () => {
           // Refresh the courses list after unenrollment
           this.loadCourses();
-          alert('Successfully unenrolled from the course.');
+          this.alertService.success('Successfully unenrolled from the course.');
         },
         error: (error) => {
           console.error('Error unenrolling from course:', error);
-          alert('Failed to unenroll from the course. Please try again.');
+          this.alertService.error('Failed to unenroll from the course. Please try again.');
         }
       });
     }
   }
+
 
   viewCourse(courseId: string) {
     // FIXED: Changed from '/courses' to '/course'
