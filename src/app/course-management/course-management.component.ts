@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { AlertService } from '../services/alert.service'; // Import the alert service
+import { catchError, map, of } from 'rxjs';
 
 // Interfaces (unchanged)
 export interface Course {
@@ -233,7 +234,7 @@ export class CourseManagementComponent implements OnInit {
       'removeformat | help',
     content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
   };
-  
+
   selectedFile: File | null = null;
   uploadProgress = 0;
   isUploading = false;
@@ -380,62 +381,12 @@ async deleteCourse(courseId: string): Promise<void> {
     });
   }
   
-  addChapter(courseId: string): void {
-    this.isLoading = true;
-    
-    const formData = new FormData();
-    formData.append('title', this.chapterForm.title);
-    formData.append('content', this.chapterForm.content);
-    
-    // Only add mediaUrl if no file is selected
-    if (!this.selectedFile && this.chapterForm.mediaUrl) {
-      formData.append('mediaUrl', this.chapterForm.mediaUrl);
-    }
-    
-    // MediaType will be auto-detected by backend if file is uploaded
-    if (this.selectedFile) {
-      formData.append('mediaFile', this.selectedFile);
-      // Let backend auto-detect media type
-    } else if (this.chapterForm.mediaType) {
-      formData.append('mediaType', this.chapterForm.mediaType);
-    }
-
-    this.http.post<Chapter>(`https://localhost:7142/api/course/${courseId}/chapter`, formData, {
-      headers: new HttpHeaders({
-        'Authorization': `Bearer ${this.authService.getValidToken()}`
-      })
-    }).subscribe({
-      next: (chapter) => {
-        this.selectedCourseChapters.push(chapter);
-        this.resetChapterForm();
-        this.selectedFile = null;
-        this.currentPreviewUrl = '';
-        this.successMessage = 'Chapter added successfully!';
-        this.isLoading = false;
-        this.alertService.success('Chapter added successfully!');
-        setTimeout(() => this.successMessage = '', 3000);
-      },
-      error: (error) => {
-        console.error('Error adding chapter:', error);
-        if (error.error) {
-          this.errorMessage = error.error.message || 'Failed to add chapter';
-          this.alertService.error(this.errorMessage);
-          // Log the full error for debugging
-          console.log('Full error response:', error.error);
-        } else {
-          this.errorMessage = 'Failed to add chapter';
-          this.alertService.error('Failed to add chapter. Please try again.');
-        }
-        this.isLoading = false;
-      }
-    });
-  }
 
   editChapter(chapter: Chapter): void {
     this.selectedChapterForEdit = { ...chapter };
     this.chapterForm = {
       title: chapter.title,
-      content: chapter.content,
+       content: chapter.content,
       order: chapter.order,
       mediaUrl: chapter.mediaUrl,
       mediaType: chapter.mediaType
@@ -446,33 +397,119 @@ async deleteCourse(courseId: string): Promise<void> {
     this.selectedChapterForEdit = null;
     this.resetChapterForm();
   }
-
-  updateChapter(): void {
-    if (!this.selectedChapterForEdit || !this.selectedCourse) return;
-    
-    this.isLoading = true;
-    this.http.put(`https://localhost:7142/api/course/${this.selectedCourse.id}/chapter/${this.selectedChapterForEdit.id}`, 
-      this.chapterForm, {
-      headers: this.getAuthHeaders()
-    }).subscribe({
-      next: () => {
-        this.loadChapters(this.selectedCourse!.id);
-        this.selectedChapterForEdit = null;
-        this.resetChapterForm();
-        this.successMessage = 'Chapter updated successfully!';
-        this.isLoading = false;
-        this.alertService.success('Chapter updated successfully!');
-        setTimeout(() => this.successMessage = '', 3000);
-      },
-      error: (error) => {
-        console.error('Error updating chapter:', error);
-        this.errorMessage = 'Failed to update chapter';
-        this.isLoading = false;
-        this.alertService.error('Failed to update chapter. Please try again.');
-      }
-    });
+  
+addChapter(courseId: string): void {
+  this.isLoading = true;
+  
+  const formData = new FormData();
+  formData.append('Title', this.chapterForm.title);
+  formData.append('Content', this.chapterForm.content || '');
+  
+  // Only add mediaUrl if no file is selected
+  if (!this.selectedFile && this.chapterForm.mediaUrl) {
+    formData.append('MediaUrl', this.chapterForm.mediaUrl);
+  }
+  
+  // MediaType will be auto-detected by backend if file is uploaded
+  if (this.selectedFile) {
+    formData.append('MediaFile', this.selectedFile);
+  } else if (this.chapterForm.mediaType) {
+    formData.append('MediaType', this.chapterForm.mediaType);
   }
 
+  this.http.post(`https://localhost:7142/api/course/${courseId}/chapter`, formData, {
+    headers: new HttpHeaders({
+      'Authorization': `Bearer ${this.authService.getValidToken()}`
+    })
+  }).subscribe({
+    next: (response: any) => {
+      // The backend now returns proper JSON, so we can handle it normally
+      this.selectedCourseChapters.push(response);
+      this.resetChapterForm();
+      this.selectedFile = null;
+      this.currentPreviewUrl = '';
+      this.successMessage = 'Chapter added successfully!';
+      this.isLoading = false;
+      this.alertService.success('Chapter added successfully!');
+      setTimeout(() => this.successMessage = '', 3000);
+    },
+    error: (error: HttpErrorResponse) => {
+      console.error('Error adding chapter:', error);
+      this.isLoading = false;
+      
+      // The backend now returns JSON errors, so we can parse them properly
+      if (error.error) {
+        if (error.error.errors) {
+          // Handle validation errors
+          const validationErrors = error.error.errors;
+          this.errorMessage = 'Validation errors: ' + validationErrors.join(', ');
+        } else if (error.error.message) {
+          // Handle other error messages
+          this.errorMessage = error.error.message;
+        } else {
+          this.errorMessage = 'Failed to add chapter';
+        }
+      } else {
+        this.errorMessage = 'Failed to add chapter. Please check your connection and try again.';
+      }
+      
+      this.alertService.error(this.errorMessage);
+    }
+  });
+}
+// Add this helper method to debug form data
+logFormData(formData: FormData): void {
+  console.log('FormData contents:');
+  for (let pair of (formData as any).entries()) {
+    console.log(pair[0] + ': ', pair[1]);
+  }
+}
+// Replace your current updateChapter method with this:
+updateChapter(): void {
+  if (!this.selectedChapterForEdit || !this.selectedCourse) return;
+  
+  this.isLoading = true;
+  
+  const formData = new FormData();
+  formData.append('Title', this.chapterForm.title);
+  formData.append('Content', this.chapterForm.content);
+  
+  if (this.chapterForm.mediaUrl) {
+    formData.append('MediaUrl', this.chapterForm.mediaUrl);
+  }
+  
+  if (this.chapterForm.mediaType) {
+    formData.append('MediaType', this.chapterForm.mediaType);
+  }
+  
+  if (this.selectedFile) {
+    formData.append('MediaFile', this.selectedFile);
+  }
+
+  this.http.put(`https://localhost:7142/api/course/${this.selectedCourse.id}/chapter/${this.selectedChapterForEdit.id}`, 
+    formData, {
+    headers: new HttpHeaders({
+      'Authorization': `Bearer ${this.authService.getValidToken()}`
+    })
+  }).subscribe({
+    next: () => {
+      this.loadChapters(this.selectedCourse!.id);
+      this.selectedChapterForEdit = null;
+      this.resetChapterForm();
+      this.selectedFile = null;
+      this.successMessage = 'Chapter updated successfully!';
+      this.isLoading = false;
+      this.alertService.success('Chapter updated successfully!');
+      setTimeout(() => this.successMessage = '', 3000);
+    },
+    error: (error) => {
+      console.error('Error updating chapter:', error);
+      this.errorMessage = 'Failed to update chapter';
+      this.isLoading = false;
+      this.alertService.error('Failed to update chapter. Please try again.');
+    }
+  });
+}
   async deleteChapter(chapterId: string): Promise<void> {
     const confirmed = await this.alertService.confirm('Are you sure you want to delete this chapter?');
     

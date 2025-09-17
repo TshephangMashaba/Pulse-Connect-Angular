@@ -1,3 +1,4 @@
+// Update your TinymceDirective to properly handle content changes
 import { Directive, ElementRef, AfterViewInit, Output, EventEmitter, Input, OnChanges, SimpleChanges } from '@angular/core';
 
 declare const tinymce: any;
@@ -48,7 +49,8 @@ export class TinymceDirective implements AfterViewInit, OnChanges {
           }
         });
         editor.on('change keyup', () => {
-          this.contentChange.emit(editor.getContent());
+          const content = editor.getContent();
+          this.contentChange.emit(content);
         });
       }
     });
