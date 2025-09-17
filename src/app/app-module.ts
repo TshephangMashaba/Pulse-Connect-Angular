@@ -34,6 +34,8 @@ import { UsersManagementComponent } from './users-management/users-management.co
 import { provideHttpClient, withFetch } from '@angular/common/http'
 import { AnalyticsComponent } from './analytics/analytics.component';
 import { TruncatePipe } from './truncate.pipe';
+import { EditorModule } from '@tinymce/tinymce-angular';
+import { TinymceDirective } from './tinymce.directive';
 
 
 @NgModule({
@@ -74,6 +76,8 @@ import { TruncatePipe } from './truncate.pipe';
     RouterModule,
     RouterOutlet,
    FileSaverModule,
+ EditorModule,
+ TinymceDirective
 
   ],
   providers: [
