@@ -49,8 +49,8 @@ export interface Chapter {
 export interface CreateChapterDTO {
   title: string;
   content: string;
-  mediaUrl: string;
-  mediaType: string;
+  mediaUrl?: string;
+  mediaType?: string;
   order?: number;
 }
 
