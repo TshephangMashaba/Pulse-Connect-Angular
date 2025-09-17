@@ -157,11 +157,15 @@ markChapterComplete(chapterId: string, minutesSpent: number): Observable<any> {
     return this.http.get<Test>(`${this.apiUrl}/${courseId}/test`);
   }
 
-  // Submit test answers
-  submitTest(courseId: string, submission: TestSubmission): Observable<TestAttempt> {
-    const headers = this.getAuthHeaders();
-    return this.http.post<TestAttempt>(`${this.apiUrl}/${courseId}/submit-test`, submission, { headers });
-  }
+// CORRECTED method in course.service.ts
+submitTest(testData: any): Observable<any> {
+  const headers = this.getAuthHeaders();
+  return this.http.post<any>(
+    `${this.apiUrl}/submit-test`, 
+    testData, // Send the complete test data object
+    { headers }
+  );
+}
 
   // Get user's test attempts for a course
   getTestAttempts(courseId: string): Observable<TestAttempt[]> {
@@ -183,10 +187,13 @@ generateCertificate(testAttemptId: string): Observable<any> {
 }
 
 
+
 getCourseCertificates(courseId: string): Observable<any[]> {
   const headers = this.getAuthHeaders();
   return this.http.get<any[]>(`https://localhost:7142/api/certificates/course/${courseId}`, {
     headers: headers
   });
 }
+
+
 }

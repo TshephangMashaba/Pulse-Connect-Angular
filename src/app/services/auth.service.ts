@@ -383,80 +383,94 @@ export class AuthService {
       headers: headers
     });
   }
+refreshUserData(): Observable<User> {
+  return this.http.get<{
+    id?: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phoneNumber?: string;
+    dateOfBirth?: string;
+    address?: string;
+    race?: string;
+    gender?: string;
+    profilePhoto?: string;
+    qNumber?: string;
+    role?: string;
+  }>(`${this.apiUrl}/api/Account/profile`, {
+    headers: this.getAuthHeaders()
+  }).pipe(
+    map(apiUser => {
+      console.log('=== API RESPONSE DEBUG ===');
+      console.log('Raw API response:', apiUser);
+      console.log('Raw profilePhoto from API:', apiUser.profilePhoto);
 
-  refreshUserData(): Observable<User> {
-    return this.http.get<{
-      id?: string;
-      firstName: string;
-      lastName: string;
-      email: string;
-      phoneNumber?: string;
-      dateOfBirth?: string;
-      address?: string;
-      race?: string;
-      gender?: string;
-      profilePhoto?: string;
-      qNumber?: string;
-      role?: string;
-    }>(`${this.apiUrl}/api/Account/profile`, {
-      headers: this.getAuthHeaders()
-    }).pipe(
-      map(apiUser => {
-        console.log('=== API RESPONSE DEBUG ===');
-        console.log('Raw API response:', apiUser);
+      const userId = apiUser.id;
+      if (!userId) {
+        throw new Error('User ID not found in profile response');
+      }
 
-        const userId = apiUser.id;
-        if (!userId) {
-          throw new Error('User ID not found in profile response');
-        }
-
-        let profilePhoto = apiUser.profilePhoto;
-        if (profilePhoto) {
-          if (!profilePhoto.startsWith('http') &&
-              !profilePhoto.includes('null') &&
-              !profilePhoto.includes('undefined')) {
-            profilePhoto = profilePhoto.startsWith('/')
-              ? `${this.apiUrl}${profilePhoto}`
-              : `${this.apiUrl}/${profilePhoto}`;
-          }
+      let profilePhoto = apiUser.profilePhoto;
+      console.log('Initial profilePhoto value:', profilePhoto);
+      
+      if (profilePhoto) {
+        console.log('ProfilePhoto exists, checking format...');
+        console.log('  - starts with http:', profilePhoto.startsWith('http'));
+        console.log('  - includes null:', profilePhoto.includes('null'));
+        console.log('  - includes undefined:', profilePhoto.includes('undefined'));
+        
+        if (!profilePhoto.startsWith('http') &&
+            !profilePhoto.includes('null') &&
+            !profilePhoto.includes('undefined')) {
+          const originalPhoto = profilePhoto;
+          profilePhoto = profilePhoto.startsWith('/')
+            ? `${this.apiUrl}${profilePhoto}`
+            : `${this.apiUrl}/${profilePhoto}`;
+          console.log(`  - Transformed: "${originalPhoto}" → "${profilePhoto}"`);
         } else {
-          profilePhoto = DEFAULT_AVATAR;
+          console.log('  - Using as-is:', profilePhoto);
         }
+      } else {
+        console.log('ProfilePhoto is null/undefined, using DEFAULT_AVATAR');
+        profilePhoto = DEFAULT_AVATAR;
+      }
 
-        const updatedUser: User = {
-          id: userId,
-          firstName: apiUser.firstName || '',
-          lastName: apiUser.lastName || '',
-          email: apiUser.email,
-          q_Number: apiUser.qNumber,
-          profilePhoto: profilePhoto,
-          phoneNumber: apiUser.phoneNumber,
-          dateOfBirth: apiUser.dateOfBirth,
-          address: apiUser.address,
-          race: apiUser.race,
-          gender: apiUser.gender,
-          token: this.currentUserValue?.token,
-          role: apiUser.role || this.currentUserValue?.role || ''
-        };
+      console.log('Final profilePhoto URL:', profilePhoto);
 
-        console.log('Processed user object:', updatedUser);
-        return updatedUser;
-      }),
-      tap(user => {
-        if (user.id && user.email) {
-          this.setCurrentUser(user);
-        }
-      }),
-      catchError(error => {
-        console.error('Profile refresh failed:', {
-          status: error.status,
-          message: error.message,
-          response: error.error
-        });
-        return of(this.currentUserValue || {} as User);
-      })
-    );
-  }
+      const updatedUser: User = {
+        id: userId,
+        firstName: apiUser.firstName || '',
+        lastName: apiUser.lastName || '',
+        email: apiUser.email,
+        q_Number: apiUser.qNumber,
+        profilePhoto: profilePhoto,
+        phoneNumber: apiUser.phoneNumber,
+        dateOfBirth: apiUser.dateOfBirth,
+        address: apiUser.address,
+        race: apiUser.race,
+        gender: apiUser.gender,
+        token: this.currentUserValue?.token,
+        role: apiUser.role || this.currentUserValue?.role || ''
+      };
+
+      console.log('Processed user object:', updatedUser);
+      return updatedUser;
+    }),
+    tap(user => {
+      if (user.id && user.email) {
+        this.setCurrentUser(user);
+      }
+    }),
+    catchError(error => {
+      console.error('Profile refresh failed:', {
+        status: error.status,
+        message: error.message,
+        response: error.error
+      });
+      return of(this.currentUserValue || {} as User);
+    })
+  );
+}
 
   fetchUserData(): Observable<User> {
     return this.refreshUserData();
@@ -481,4 +495,16 @@ export class AuthService {
     const user = this.currentUserValue;
     return user?.role?.includes('Admin') || false;
   }
+
+public getFormDataHeaders(): { [header: string]: string } {
+  const token = this.getValidToken();
+  const headers: { [header: string]: string } = {};
+
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  // Deliberately NOT setting Content-Type for FormData uploads
+
+  return headers;
+}
 }

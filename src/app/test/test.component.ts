@@ -12,7 +12,7 @@ import { AuthService } from '../services/auth.service';
 export class TestComponent implements OnInit {
   @Input() courseId: string = '';
   @Input() test: Test | null = null;
-  @Output() testCompleted = new EventEmitter<boolean>();
+  @Output() testCompleted = new EventEmitter<any>(); // Changed to emit the full result
   
   userAnswers: { [questionId: string]: string } = {};
   isSubmitting = false;
@@ -64,19 +64,24 @@ export class TestComponent implements OnInit {
     this.isSubmitting = true;
     this.errorMessage = '';
 
-    // Prepare submission
-    const submission: TestSubmission = {
+    // Prepare submission in the NEW format
+    const submissionData = {
+      testId: this.test.id, // Include the testId
       answers: Object.entries(this.userAnswers).map(([questionId, selectedOptionId]) => ({
         questionId,
         selectedOptionId
       }))
     };
 
-    this.courseService.submitTest(this.courseId, submission).subscribe({
+    console.log('Submitting test data:', submissionData);
+
+    // Call the NEW submitTest method (single parameter)
+    this.courseService.submitTest(submissionData).subscribe({
       next: (result) => {
         this.testResult = result;
         this.isSubmitting = false;
-        this.testCompleted.emit(result.isPassed);
+        // Emit the full result object instead of just isPassed
+        this.testCompleted.emit(result);
       },
       error: (error) => {
         console.error('Error submitting test:', error);

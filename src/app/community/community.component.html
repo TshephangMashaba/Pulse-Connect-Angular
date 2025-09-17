@@ -26,22 +26,32 @@
     </div>
 
     <!-- Province Group View -->
-    <div *ngIf="showProvinceView" class="mb-6">
-        <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6">
-            <div class="flex items-start">
-                <div class="flex-shrink-0">
-                    <i class="fas fa-users text-blue-400 text-xl mt-1"></i>
-                </div>
-                <div class="ml-3">
-                    <p class="text-sm text-blue-700">
-                        You're viewing the {{ selectedProvinceGroup }} community. 
-                        <span *ngIf="!isAuthenticated()" class="font-medium">
-                            <a routerLink="/login" class="underline">Sign in</a> to participate.
-                        </span>
-                    </p>
-                </div>
-            </div>
-        </div>
+    <div *ngIf="showProvinceView">
+       <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6">
+  <div class="flex items-start justify-between">
+    <div class="flex items-start">
+      <div class="flex-shrink-0">
+        <i class="fas fa-users text-blue-400 text-xl mt-1"></i>
+      </div>
+      <div class="ml-3">
+        <p class="text-sm text-blue-700">
+          <span *ngIf="isProvinceJoined(selectedProvinceGroup)" class="font-medium text-green-600 mr-2">
+            <i class="fas fa-check-circle"></i> You've joined this community
+          </span>
+          You're viewing the {{ selectedProvinceGroup }} community. 
+          <span *ngIf="!isAuthenticated()" class="font-medium">
+            <a routerLink="/login" class="underline">Sign in</a> to participate.
+          </span>
+        </p>
+      </div>
+    </div>
+    <button *ngIf="isProvinceJoined(selectedProvinceGroup)" 
+            class="px-3 py-1 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 text-sm"
+            (click)="leaveProvince(selectedProvinceGroup)">
+      <i class="fas fa-times mr-1"></i> Leave
+    </button>
+  </div>
+</div>
 
         <!-- Province Posts -->
         <div *ngIf="provincePosts.length > 0">
@@ -49,10 +59,11 @@
                 <div class="p-6">
                     <div class="flex items-start mb-4">
                         <img *ngIf="!post.isAnonymous && post.authorProfilePicture" 
-                             [src]="post.authorProfilePicture" 
+                             [src]="getImageUrl(post.authorProfilePicture)" 
                              class="h-10 w-10 rounded-full mr-4" 
-                             [alt]="post.authorName">
-                             
+                             [alt]="post.authorName"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                         
                         <div *ngIf="!post.isAnonymous && !post.authorProfilePicture" 
                              class="h-10 w-10 rounded-full mr-4 bg-gray-200 flex items-center justify-center">
                             <i class="fas fa-user text-gray-400"></i>
@@ -88,7 +99,7 @@
                                 <span>{{ post.commentCount }} comments</span>
                             </button>
                         </div>
-                      <button (click)="loadPostDetails(post.id)">View Discussion</button>
+                        <button (click)="loadPostDetails(post.id)">View Discussion</button>
                     </div>
                 </div>
             </div>
@@ -119,15 +130,7 @@
                         (click)="switchTab('discussions')">
                     <i class="fas fa-comments mr-2"></i> Discussions
                 </button>
-                <button class="py-4 px-1 font-medium text-sm border-b-2" 
-                        [class.active-tab]="activeTab === 'questions'"
-                        [class.text-gray-900]="activeTab === 'questions'"
-                        [class.border-green-500]="activeTab === 'questions'"
-                        [class.text-gray-500]="activeTab !== 'questions'"
-                        [class.border-transparent]="activeTab !== 'questions'"
-                        (click)="switchTab('questions')">
-                    <i class="fas fa-question-circle mr-2"></i> Q&A
-                </button>
+            
                 <button class="py-4 px-1 font-medium text-sm border-b-2" 
                         [class.active-tab]="activeTab === 'groups'"
                         [class.text-gray-900]="activeTab === 'groups'"
@@ -141,31 +144,50 @@
         </div>
 
         <!-- Groups Tab Content -->
-
-<div *ngIf="activeTab === 'groups'" class="bg-white rounded-xl shadow-sm p-6">
-  <h2 class="text-xl font-bold mb-4">Join a Province Community</h2>
-  <p class="text-gray-600 mb-6">Connect with people in your province for local discussions and support.</p>
-  
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-    <div *ngFor="let province of availableProvinces" 
-         class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-      <div class="flex items-center mb-3">
-        <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
-          <i class="fas fa-map-marker-alt text-blue-600"></i>
+        <div *ngIf="activeTab === 'groups'" class="bg-white rounded-xl shadow-sm p-6">
+            <h2 class="text-xl font-bold mb-4">Join a Province Community</h2>
+            <p class="text-gray-600 mb-6">Connect with people in your province for local discussions and support.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div *ngFor="let province of availableProvinces" 
+                     class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
+                     [class.border-green-300]="isProvinceJoined(province)"
+                     [class.bg-green-50]="isProvinceJoined(province)">
+                    <div class="flex items-center mb-3">
+                        <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3"
+                             [class.bg-green-100]="isProvinceJoined(province)">
+                            <i class="fas fa-map-marker-alt text-blue-600"
+                               [class.text-green-600]="isProvinceJoined(province)"></i>
+                        </div>
+                        <div class="flex-grow">
+                            <h3 class="font-bold text-lg">{{ province }}</h3>
+                            <div *ngIf="isProvinceJoined(province)" class="flex items-center text-green-600 text-sm mt-1">
+                                <i class="fas fa-check-circle mr-1"></i>
+                                <span>Joined</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between text-sm text-gray-500 mb-4">
+                        <span>{{ getProvinceStats(province)?.memberCount || 0 }} members</span>
+                        <span>{{ getProvinceStats(province)?.postCount || 0 }} posts</span>
+                    </div>
+                    
+                    <!-- Show different buttons based on join status -->
+                    <button *ngIf="!isProvinceJoined(province)"
+                            class="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                            (click)="joinProvince(province)">
+                        Join Community
+                    </button>
+                    
+                    <button *ngIf="isProvinceJoined(province)"
+                            class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                            (click)="viewProvinceGroup(province)">
+                        <i class="fas fa-comments mr-2"></i>Join Conversation
+                    </button>
+                </div>
+            </div>
         </div>
-        <h3 class="font-bold text-lg">{{ province }}</h3>
-      </div>
-      <div class="flex justify-between text-sm text-gray-500 mb-4">
-        <span>{{ getProvinceStats(province)?.memberCount || 0 }} members</span>
-        <span>{{ getProvinceStats(province)?.postCount || 0 }} posts</span>
-      </div>
-      <button class="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-              (click)="joinProvince(province)">
-        Join Community
-      </button>
-    </div>
-  </div>
-</div>
+
         <!-- Discussions and Q&A Tab Content -->
         <div *ngIf="activeTab !== 'groups'" class="flex flex-col lg:flex-row gap-8">
             <!-- Main Content -->
@@ -217,10 +239,11 @@
                         <div class="p-6">
                             <div class="flex items-start mb-4">
                                 <img *ngIf="!post.isAnonymous && post.authorProfilePicture" 
-                                     [src]="post.authorProfilePicture" 
+                                     [src]="getImageUrl(post.authorProfilePicture)" 
                                      class="h-10 w-10 rounded-full mr-4" 
-                                     [alt]="post.authorName">
-                                     
+                                     [alt]="post.authorName"
+                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                                 
                                 <div *ngIf="!post.isAnonymous && !post.authorProfilePicture" 
                                      class="h-10 w-10 rounded-full mr-4 bg-gray-200 flex items-center justify-center">
                                     <i class="fas fa-user text-gray-400"></i>
@@ -242,24 +265,30 @@
                                     </p>
                                 </div>
                             </div>
-                              <!-- Image gallery -->
-    <div *ngIf="post.images && post.images.length > 0" class="mb-4">
-      <div class="grid grid-cols-2 gap-2">
-        <div *ngFor="let image of post.images" class="relative">
-         <img [src]="getImageUrl(image.imageUrl)" 
-     [alt]="image.caption || 'Post image'" 
-     class="w-full h-32 object-cover rounded-lg cursor-pointer"
-     (click)="openImageModal(getImageUrl(image.imageUrl))">
-        </div>
-      </div>
-      </div>
+                            
+                            <!-- Image gallery -->
+                            <div *ngIf="post.images && post.images.length > 0" class="mb-4">
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div *ngFor="let image of post.images" class="relative">
+                                        <img [src]="getImageUrl(image.imageUrl)" 
+                                             [alt]="image.caption || 'Post image'" 
+                                             class="w-full h-32 object-cover rounded-lg cursor-pointer"
+                                             (click)="openImageModal(getImageUrl(image.imageUrl))">
+                                    </div>
+                                </div>
+                            </div>
+                            
                             <h2 class="text-xl font-bold mb-3">{{ post.title }}</h2>
                             <p class="text-gray-700 mb-4">{{ post.content }}</p>
                             
                             <div class="flex items-center justify-between">
                                 <div class="flex space-x-4">
-                                    <button class="flex items-center text-gray-500 hover:text-green-600" (click)="likePost(post.id)">
-                                        <i class="far fa-thumbs-up mr-1"></i>
+                                    <button class="flex items-center like-btn" 
+                                            [class.text-green-600]="userLikedPosts.has(post.id)"
+                                            [class.liked]="userLikedPosts.has(post.id)"
+                                            [class.liking]="likeAnimations.has(post.id)"
+                                            (click)="likePost(post.id, $event)">
+                                        <i [class]="userLikedPosts.has(post.id) ? 'fas fa-thumbs-up mr-1' : 'far fa-thumbs-up mr-1'"></i>
                                         <span>{{ post.likes }}</span>
                                     </button>
                                     <button class="flex items-center text-gray-500 hover:text-green-600" (click)="loadPostDetails(post.id)">
@@ -368,6 +397,8 @@
             </div>
         </div>
     </div>
+</div>
+
 <!-- Post Detail Modal -->
 <div id="postDetailModal" class="fixed inset-0 z-50 flex items-center justify-center" *ngIf="selectedPost" (click)="closePostModal()">
     <div class="bg-white  shadow-lg w-full max-w-full mx-4 max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
@@ -385,10 +416,10 @@
                      class="h-10 w-10 rounded-full mr-4" 
                      [alt]="selectedPost.authorName">
                      
-                <div *ngIf="!selectedPost.isAnonymous && !selectedPost.authorProfilePicture" 
-                     class="h-10 w-10 rounded-full mr-4 bg-gray-200 flex items-center justify-center">
-                    <i class="fas fa-user text-gray-400"></i>
-                </div>
+                    <div *ngIf="!selectedPost.isAnonymous && !selectedPost.authorProfilePicture" 
+                        class="h-10 w-10 rounded-full mr-4 bg-gray-200 flex items-center justify-center">
+                        <i class="fas fa-user text-gray-400"></i>
+                    </div>
                 
                 <div *ngIf="selectedPost.isAnonymous" 
                      class="h-10 w-10 rounded-full mr-4 bg-gray-200 flex items-center justify-center">
@@ -425,10 +456,14 @@
             </div>
             
             <div class="flex items-center space-x-4 mb-6">
-                <button class="flex items-center text-gray-500 hover:text-green-600" (click)="likePost(selectedPost.id)">
-                    <i class="far fa-thumbs-up mr-1"></i>
-                    <span>{{ selectedPost.likes }}</span>
-                </button>
+               <button class="flex items-center like-btn" 
+        [class.text-green-600]="userLikedPosts.has(selectedPost.id)"
+        [class.liked]="userLikedPosts.has(selectedPost.id)"
+        [class.liking]="likeAnimations.has(selectedPost.id)"
+        (click)="likePost(selectedPost.id, $event)">
+    <i [class]="userLikedPosts.has(selectedPost.id) ? 'fas fa-thumbs-up mr-1' : 'far fa-thumbs-up mr-1'"></i>
+    <span>{{ selectedPost.likes }}</span>
+</button>
                 <div class="flex items-center text-gray-500">
                     <i class="far fa-eye mr-1"></i>
                     <span>{{ selectedPost.views }} views</span>
@@ -494,7 +529,7 @@
                     <select class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
                             [(ngModel)]="newPost.type" name="type">
                         <option value="Discussion">Discussion</option>
-                        <option value="Question">Question</option>
+                     
                     </select>
                 </div>
                 <div class="mb-4">
@@ -517,7 +552,7 @@
 <div class="mb-4">
   <label class="block text-gray-700 text-sm font-medium mb-2">Upload Images (optional)</label>
   <input type="file" multiple (change)="onFileSelected($event)" 
-         class="w-full border border-gray-300 rounded-lg px-3 py-2"
+         class="w-full px-3 py-2"
          accept="image/*">
 </div>
 
@@ -561,18 +596,22 @@
                 </button>
             </div>
             <p class="text-gray-600 mb-4">Select a province to join its community and connect with local members.</p>
-        <!-- In the province modal, change this: -->
+     <!-- In the province modal -->
 <div class="grid grid-cols-1 gap-2 max-h-96 overflow-y-auto">
   <button *ngFor="let province of availableProvinces" 
-          class="p-3 border border-gray-200 rounded-lg hover:bg-gray-50 text-left"
+          class="p-3 border border-gray-200 rounded-lg hover:bg-gray-50 text-left flex justify-between items-center"
+          [class.border-green-300]="isProvinceJoined(province)"
+          [class.bg-green-50]="isProvinceJoined(province)"
           (click)="joinProvince(province); closeProvinceModal()">
-    <div class="flex justify-between items-center">
+    <div class="flex items-center">
       <span class="font-medium">{{ province }}</span>
-      <!-- Show member count from stats if available -->
-      <span class="text-sm text-gray-500">
-        {{ getProvinceStats(province)?.memberCount || 0 }} members
+      <span *ngIf="isProvinceJoined(province)" class="ml-2 text-green-600">
+        <i class="fas fa-check-circle"></i>
       </span>
     </div>
+    <span class="text-sm text-gray-500">
+      {{ getProvinceStats(province)?.memberCount || 0 }} members
+    </span>
   </button>
 </div>
     </div>

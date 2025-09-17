@@ -117,6 +117,8 @@ getMyCertificates(): Observable<Certificate[]> {
     }
   }
 
+  
+
   downloadCertificate(certificateId: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/${certificateId}/download`, {
       headers: this.getHeaders()

@@ -2,14 +2,15 @@
 <app-user-nav></app-user-nav>
 
 <!-- Full Page Loader for Certificate Generation -->
-<div *ngIf="isGenerating" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-    <div class="bg-white rounded-xl p-8 max-w-md mx-4 text-center shadow-2xl">=
+<div *ngIf="isGenerating" class="fixed inset-0 bg-white z-50 flex items-center justify-center">
+    <div class="bg-white rounded-xl p-8 max-w-md mx-4 text-center shadow-2xl">
         <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-green-600 mx-auto mb-4"></div>
         <h3 class="text-xl font-bold text-gray-800 mb-2">Generating Certificate</h3>
         <p class="text-gray-600">Please wait while we prepare your certificate...</p>
         <p class="text-sm text-gray-500 mt-2">This may take a few moments</p>
     </div>
 </div>
+
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <!-- Page Header -->
@@ -26,10 +27,6 @@
         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
     </div>
 
-    <!-- Error State -->
-    <div *ngIf="errorMessage" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-8">
-        <p>{{ errorMessage }}</p>
-    </div>
 
     <!-- Stats Section -->
     <div *ngIf="!isLoading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">

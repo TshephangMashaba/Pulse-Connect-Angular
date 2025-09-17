@@ -31,7 +31,9 @@ import { AlertModalComponent } from './UI Folder/alert-modal/alert-modal.compone
 import { AlertContainerComponent } from './UI Folder/alert-container/alert-container.component';
 import { AdminSettingsComponent } from './admin-settings/admin-settings.component';
 import { UsersManagementComponent } from './users-management/users-management.component';
-
+import { provideHttpClient, withFetch } from '@angular/common/http'
+import { AnalyticsComponent } from './analytics/analytics.component';
+import { TruncatePipe } from './truncate.pipe';
 
 
 @NgModule({
@@ -58,7 +60,9 @@ import { UsersManagementComponent } from './users-management/users-management.co
     AlertModalComponent,
     AlertContainerComponent,
     AdminSettingsComponent,
-    UsersManagementComponent
+    UsersManagementComponent,
+    AnalyticsComponent,
+    TruncatePipe
   ],
   imports: [
   BrowserModule,
@@ -70,10 +74,12 @@ import { UsersManagementComponent } from './users-management/users-management.co
     RouterModule,
     RouterOutlet,
    FileSaverModule,
+
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideClientHydration(withEventReplay())
+    provideClientHydration(withEventReplay()),
+    provideHttpClient(withFetch()) 
   ],
   bootstrap: [App]
 })

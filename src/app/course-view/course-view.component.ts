@@ -24,7 +24,7 @@ export class CourseViewComponent implements OnInit {
   test: any = null;
   testResult: any = null;
   testAttempts: any[] = [];
-
+   isGenerating = false;
 
   isPlaying = false;
   private ttsSubscription: Subscription;
@@ -297,73 +297,57 @@ export class CourseViewComponent implements OnInit {
       });
     }
   }
-
-  onTestCompleted(testResult: any) {
-    console.log('Test completed with result:', testResult);
+  // In course-view.component.ts - FIX the onTestCompleted method
+async onTestCompleted(testResult: any) {
+  try {
+    this.isLoading = true;
+    
+    console.log('Test result received:', testResult);
+    
+    // The testResult should already contain the full result from the backend
+    // No need to submit again - just process the result
+    
     this.showTest = false;
     this.testResult = testResult;
-    
-    // Debug: Check the structure of the test result
-    console.log('Test result structure:', JSON.stringify(testResult, null, 2));
-    
-    // Check if the user passed based on different possible property names
-    const isPassed = this.determineIfPassed(testResult);
-    const score = this.getScore(testResult);
-    
-    console.log('Determined passed status:', isPassed, 'Score:', score);
-    
-    if (isPassed) {
-      // Generate certificate automatically
-      this.courseService.generateCertificate(testResult.id).subscribe({
-        next: (certificate) => {
-          console.log('Certificate generated:', certificate);
-          this.alertService.success(`Congratulations! You passed the test with ${score}% and earned a certificate!`);
-          // Reload the page to show the certificate and updated test attempts
-          this.loadCourseData(this.course!.id);
-        },
-        error: (error) => {
-          console.error('Error generating certificate:', error);
-          this.alertService.info(`Congratulations! You passed the test with ${score}%! (Certificate generation may take a moment)`);
-          // Still reload to show the updated test attempts
-          this.loadCourseData(this.course!.id);
-        }
-      });
-    } else {
-      this.alertService.warning(`You scored ${score}% but didn't pass the test. You can review the material and try again.`);
-      // Reload to show the updated test attempts
-      this.loadCourseData(this.course!.id);
-    }
-  }
 
-  // Helper method to determine if the test was passed
-  private determineIfPassed(testResult: any): boolean {
-    // Check various possible property names for passed status
-    if (testResult.isPassed !== undefined) return testResult.isPassed;
-    if (testResult.passed !== undefined) return testResult.passed;
-    if (testResult.isSuccessful !== undefined) return testResult.isSuccessful;
-    
-    // Check if score meets passing criteria
-    const score = this.getScore(testResult);
-    if (score !== undefined && this.test && this.test.passingScore) {
-      return score >= this.test.passingScore;
+    if (testResult.isPassed) {
+      // Show congratulations message
+      this.alertService.success(testResult.message);
+      
+      // Generate certificate if passed
+      try {
+        const certificate = await this.courseService.generateCertificate(testResult.attemptId).toPromise();
+        console.log('Certificate generated:', certificate);
+        this.alertService.success('Certificate generated successfully!');
+      } catch (certError) {
+        console.error('Certificate generation error:', certError);
+        // Don't show error to user - certificate generation is secondary
+      }
+    } else {
+      this.alertService.warning(testResult.message);
     }
+
+    // Reload test attempts
+    this.loadTestAttempts();
     
-    // Default to false if we can't determine
-    return false;
+  } catch (error) {
+    console.error('Error processing test result:', error);
+    this.alertService.error('Failed to process test result. Please try again.');
+  } finally {
+    this.isLoading = false;
   }
+}
+
 
   // Helper method to extract score from test result
-  private getScore(testResult: any): number {
-    // Check various possible property names for score
-    if (testResult.score !== undefined) return testResult.score;
-    if (testResult.percentage !== undefined) return testResult.percentage;
-    if (testResult.correctAnswers !== undefined && testResult.totalQuestions !== undefined) {
-      return (testResult.correctAnswers / testResult.totalQuestions) * 100;
-    }
-    
-    // Default to 0 if we can't determine
-    return 0;
+getScore(testResult: any): number {
+  if (testResult.score !== undefined) return testResult.score;
+  if (testResult.percentage !== undefined) return testResult.percentage;
+  if (testResult.correctAnswers !== undefined && testResult.totalQuestions !== undefined) {
+    return Math.round((testResult.correctAnswers / testResult.totalQuestions) * 100);
   }
+  return 0;
+}
 
   startTest() {
     this.loadTest();
@@ -400,4 +384,6 @@ export class CourseViewComponent implements OnInit {
       });
     }
   }
+
+  
 }

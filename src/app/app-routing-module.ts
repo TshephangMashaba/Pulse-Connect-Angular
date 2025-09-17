@@ -16,6 +16,7 @@ import { ContactComponent } from './contact/contact.component';
 import { CoursesAdvertComponent } from './courses-advert/courses-advert.component';
 import { AdminSettingsComponent } from './admin-settings/admin-settings.component';
 import { UsersManagementComponent } from './users-management/users-management.component';
+import { AnalyticsComponent } from './analytics/analytics.component';
 
 const routes: Routes = [
   { 
@@ -85,6 +86,10 @@ const routes: Routes = [
 {
   path: 'users-management',
   component: UsersManagementComponent
+},
+{
+  path: 'analytics',
+  component: AnalyticsComponent
 }
 
 
