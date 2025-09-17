@@ -22,8 +22,10 @@ export class CertificatesComponent implements OnInit {
     earnedBadges: [],
     pendingBadges: [],
     totalBadges: 0,
-    earnedCount: 0
+    earnedCount: 0,
   };
+
+  
   isLoading = true;
   errorMessage = '';
   sortBy = 'mostRecent';

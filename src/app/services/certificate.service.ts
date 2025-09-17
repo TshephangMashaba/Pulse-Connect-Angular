@@ -116,7 +116,6 @@ getMyCertificates(): Observable<Certificate[]> {
       this.openCertificateInNewWindow(certificateData);
     }
   }
-
   
 
   downloadCertificate(certificateId: string): Observable<any> {
