@@ -235,9 +235,12 @@
 }
 
 .card-icon {
-  font-size: 2.5rem;
-  color: #005f16;
-  margin-bottom: 20px;
+    font-size: 2.5rem;
+    background: linear-gradient(80deg, #00bf56, #004d1d);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 20px;
 }
 
 .card h3 {
@@ -255,7 +258,7 @@
 
 .card-button {
   display: inline-block;
-  background: linear-gradient(80deg, #2ac400, #4017fb);
+  background: linear-gradient(80deg, #00bf56, #004d1d);
   color: white;
   padding: 12px 25px;
   border-radius: 50px;
