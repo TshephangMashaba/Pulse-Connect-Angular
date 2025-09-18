@@ -1,8 +1,10 @@
+// user-nav.component.ts
 import { Component, HostListener, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { AuthService, User } from '../../services/auth.service';
+import { NotificationService, Notification } from '../../services/notification.service';
 
 @Component({
   selector: 'app-user-nav',
@@ -16,14 +18,18 @@ export class UserNavComponent implements OnInit {
   defaultAvatar = '/default-profile.png';
   isStudent: boolean = false;
   isSuperAdmin: boolean = false;
-  totalNotificationCount = 0;
   isDropdownOpen = false;
+  isNotificationModalOpen = false;
+  notifications: Notification[] = [];
+  unreadCount = 0;
+  
   private destroy$ = new Subject<void>();
 
   constructor(
     private location: Location,
     private auth: AuthService,
     private router: Router,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit() {
@@ -37,6 +43,19 @@ export class UserNavComponent implements OnInit {
              u?.role === 'Manager';
     });
 
+    // Load notifications
+    this.notificationService.getNotifications().pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(notifications => {
+      this.notifications = notifications;
+    });
+
+    this.notificationService.getUnreadCount().pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(count => {
+      this.unreadCount = count;
+    });
+
     this.auth.refreshUserData().subscribe();
     this.updateCurrentPath();
   }
@@ -46,9 +65,19 @@ export class UserNavComponent implements OnInit {
     this.destroy$.complete();
   }
 
-  @HostListener('window:popstate')
-  onPopState() {
-    this.updateCurrentPath();
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    
+    // Close dropdown if clicked outside
+    if (this.isDropdownOpen && !target.closest('.profile-dropdown')) {
+      this.isDropdownOpen = false;
+    }
+    
+    // Close notification modal if clicked outside
+    if (this.isNotificationModalOpen && !target.closest('.notification-modal') && !target.closest('.notification-bell')) {
+      this.closeNotificationModal();
+    }
   }
 
   updateCurrentPath() {
@@ -66,37 +95,136 @@ export class UserNavComponent implements OnInit {
 
   toggleDropdown() {
     this.isDropdownOpen = !this.isDropdownOpen;
-  }
-
-  logout() {
-    this.isDropdownOpen = false;
-    // Use the Flowbite modal via CDN
-    const modal = document.getElementById('logout-modal');
-    if (modal) {
-      modal.classList.remove('hidden');
-      document.getElementById('logout-modal-backdrop')?.classList.remove('hidden');
+    if (this.isNotificationModalOpen) {
+      this.closeNotificationModal();
     }
   }
 
-  closeModal() {
-    const modal = document.getElementById('logout-modal');
-    if (modal) {
-      modal.classList.add('hidden');
-      document.getElementById('logout-modal-backdrop')?.classList.add('hidden');
+  toggleNotificationModal(event?: Event) {
+    if (event) {
+      event.stopPropagation();
+    }
+    
+    this.isNotificationModalOpen = !this.isNotificationModalOpen;
+    
+    if (this.isDropdownOpen) {
+      this.isDropdownOpen = false;
+    }
+    
+    // Mark all as read when opening modal
+    if (this.isNotificationModalOpen && this.unreadCount > 0) {
+      this.markAllAsRead();
     }
   }
 
-  confirmLogout() {
-    this.closeModal();
-    this.auth.logout().subscribe({
-      next: () => {
-        this.router.navigate(['/login']);
-      },
-      error: (err: any) => {
-        console.error('Logout error:', err);
-        this.auth.clearUserData();
-        this.router.navigate(['/login']);
+  closeNotificationModal() {
+    this.isNotificationModalOpen = false;
+  }
+
+  markAsRead(notification: Notification, event?: Event) {
+    if (event) {
+      event.stopPropagation();
+    }
+    
+    if (!notification.isRead) {
+      this.notificationService.markAsRead(notification.id).subscribe({
+        next: () => {
+          notification.isRead = true;
+          this.unreadCount = Math.max(0, this.unreadCount - 1);
+        },
+        error: (error) => console.error('Error marking notification as read:', error)
+      });
+    }
+  }
+
+  markAllAsRead(event?: Event) {
+    if (event) {
+      event.stopPropagation();
+    }
+    
+    if (this.unreadCount > 0) {
+      this.notificationService.markAllAsRead().subscribe({
+        next: () => {
+          this.notifications.forEach(n => n.isRead = true);
+          this.unreadCount = 0;
+        },
+        error: (error) => console.error('Error marking all notifications as read:', error)
+      });
+    }
+  }
+
+  navigateToRelatedItem(notification: Notification, event?: Event) {
+    if (event) {
+      event.stopPropagation();
+    }
+    
+    if (notification.relatedEntityId && notification.relatedEntityType) {
+      switch (notification.relatedEntityType) {
+        case 'course':
+          this.router.navigate(['/course', notification.relatedEntityId]);
+          break;
+        case 'certificate':
+          this.router.navigate(['/certificates']);
+          break;
+        case 'test':
+          this.router.navigate(['/test', notification.relatedEntityId]);
+          break;
+        default:
+          // Do nothing for other types
+          break;
       }
-    });
+    }
+    this.closeNotificationModal();
+    this.markAsRead(notification);
   }
+
+  getNotificationIcon(notification: Notification): string {
+    switch (notification.type) {
+      case 'success':
+        return 'fas fa-check-circle';
+      case 'warning':
+        return 'fas fa-exclamation-triangle';
+      case 'error':
+        return 'fas fa-exclamation-circle';
+      case 'info':
+      default:
+        return 'fas fa-info-circle';
+    }
+  }
+
+// user-nav.component.ts - Update the logout methods
+logout() {
+  this.isDropdownOpen = false;
+  this.closeNotificationModal();
+  
+  // Show confirmation modal
+  const modal = document.getElementById('logout-modal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    document.getElementById('logout-modal-backdrop')?.classList.remove('hidden');
+  }
+}
+
+closeModal() {
+  const modal = document.getElementById('logout-modal');
+  if (modal) {
+    modal.classList.add('hidden');
+    document.getElementById('logout-modal-backdrop')?.classList.add('hidden');
+  }
+}
+
+confirmLogout() {
+  this.closeModal();
+  this.auth.logout().subscribe({
+    next: () => {
+      this.router.navigate(['/login']);
+    },
+    error: (err: any) => {
+      console.error('Logout error:', err);
+      // Even if there's an error, clear local data and redirect
+      this.auth.clearUserData();
+      this.router.navigate(['/login']);
+    }
+  });
+}
 }

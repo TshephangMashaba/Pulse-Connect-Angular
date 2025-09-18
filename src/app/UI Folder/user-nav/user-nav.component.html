@@ -1,11 +1,12 @@
-<!-- Top Navigation -->
-<nav class="bg-white shadow-sm sticky top-0 z-10">
+<!-- user-nav.component.html -->
+<nav class="bg-white shadow-sm sticky top-0 z-50 relative">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
             <!-- Left: Logo -->
             <div class="flex items-center">
                 <img class="h-10 w-auto" src="/Pulse Connect.png" alt="Pulse Connect">
             </div>
+            
             <!-- Center: Navigation Links -->
             <div class="hidden md:flex justify-center flex-1">
                 <div class="flex space-x-8">
@@ -23,22 +24,70 @@
                     </a>
                 </div>
             </div>
+            
             <!-- Right: Notification and Profile -->
             <div class="flex items-center space-x-4">
-                <button class="p-1 rounded-full text-gray-400 hover:text-gray-500 relative">
-                    <i class="fas fa-bell text-xl"></i>
-                    <span class="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500"></span>
-                </button>
-                <div class="relative">
+                <!-- Notification Bell -->
+                <div class="relative notification-bell">
+                    <button (click)="toggleNotificationModal($event)" class="p-2 rounded-full text-gray-400 hover:text-gray-500 relative notification-bell">
+                        <i class="fas fa-bell text-xl"></i>
+                        <span *ngIf="unreadCount > 0" class="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center">
+                            {{ unreadCount > 99 ? '99+' : unreadCount }}
+                        </span>
+                    </button>
+                    
+                    <!-- Notification Modal -->
+                    <div *ngIf="isNotificationModalOpen" class="notification-modal fixed top-16 right-4 w-80 bg-white rounded-md shadow-lg py-1 z-50 max-h-96 overflow-y-auto border border-gray-200">
+                        <div class="px-4 py-2 border-b border-gray-200 flex justify-between items-center bg-gray-50">
+                            <h3 class="text-lg font-medium text-gray-900">Notifications</h3>
+                            <button *ngIf="unreadCount > 0" (click)="markAllAsRead($event)" class="text-sm text-blue-600 hover:text-blue-800 font-medium">
+                                Mark all as read
+                            </button>
+                        </div>
+                        
+                        <div *ngIf="notifications.length === 0" class="px-4 py-8 text-center text-gray-500">
+                            <i class="fas fa-bell-slash text-2xl mb-2"></i>
+                            <p>No notifications yet</p>
+                        </div>
+                        
+                        <div *ngFor="let notification of notifications" 
+                             (click)="navigateToRelatedItem(notification, $event)"
+                             class="px-4 py-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0 transition-colors duration-150"
+                             [class.bg-blue-50]="!notification.isRead">
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 pt-1">
+                                    <i [class]="getNotificationIcon(notification) + ' text-lg'" 
+                                       [class.text-blue-500]="notification.type === 'info'"
+                                       [class.text-green-500]="notification.type === 'success'"
+                                       [class.text-yellow-500]="notification.type === 'warning'"
+                                       [class.text-red-500]="notification.type === 'error'"></i>
+                                </div>
+                                <div class="ml-3 flex-1">
+                                    <p class="text-sm font-medium text-gray-900">{{ notification.title }}</p>
+                                    <p class="text-sm text-gray-600 mt-1">{{ notification.message }}</p>
+                                    <p class="text-xs text-gray-400 mt-2">
+                                        {{ notification.createdAt | date:'MMM d, y, h:mm a' }}
+                                    </p>
+                                </div>
+                                <div *ngIf="!notification.isRead" class="ml-2 flex-shrink-0 pt-1">
+                                    <span class="h-2 w-2 rounded-full bg-blue-500 block"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Profile Dropdown -->
+                <div class="relative profile-dropdown">
                     <button (click)="toggleDropdown()" class="flex items-center space-x-2 focus:outline-none">
                         <img class="w-8 h-8 rounded-full object-cover" 
                              [src]="user?.profilePhoto ? user?.profilePhoto : defaultAvatar" 
                              alt="User avatar"
                              (error)="handleImageError($event)"/>
-                        <span>{{ user?.firstName }}</span>
-                        <i class="fas fa-chevron-down text-xs"></i>
+                        <span class="hidden sm:block">{{ user?.firstName }}</span>
+                        <i class="fas fa-chevron-down text-xs hidden sm:block"></i>
                     </button>
-                    <div *ngIf="isDropdownOpen" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20">
+                    <div *ngIf="isDropdownOpen" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
                         <a href="/profile-settings" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile Settings</a>
                         <button (click)="logout()" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</button>
                     </div>
@@ -47,3 +96,34 @@
         </div>
     </div>
 </nav>
+
+<!-- Logout Confirmation Modal -->
+<div id="logout-modal" class="hidden fixed inset-0 z-50 overflow-y-auto">
+  <div id="logout-modal-backdrop" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 transition-opacity"></div>
+  
+  <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+    <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+      <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+        <div class="sm:flex sm:items-start">
+          <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+            <i class="fas fa-exclamation-triangle text-red-600"></i>
+          </div>
+          <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+            <h3 class="text-base font-semibold leading-6 text-gray-900">Confirm Logout</h3>
+            <div class="mt-2">
+              <p class="text-sm text-gray-500">Are you sure you want to logout of your account?</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+        <button (click)="confirmLogout()" type="button" class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">
+          Logout
+        </button>
+        <button (click)="closeModal()" type="button" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

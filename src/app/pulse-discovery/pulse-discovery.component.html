@@ -1,119 +1,136 @@
-<app-nav-bar></app-nav-bar>
 <!-- pulse-discovery.component.html -->
+<app-nav-bar></app-nav-bar>
+<br>
+<br>
+<br>
 <div class="pulse-discovery-container">
-
-  <!-- Start Screen -->
-  <div *ngIf="!showIframe" class="start-screen">
-    <div class="background-gradient"></div>
-    
-    <!-- Waves and floating elements from your design -->
-    <div class="wave-layer deep-waves">
-      <div class="wave deep-wave-1"></div>
-      <div class="wave deep-wave-2"></div>
-      <div class="wave deep-wave-3"></div>
-    </div>
-    
-    <div class="wave-layer mid-waves">
-      <div class="wave mid-wave-1"></div>
-      <div class="wave mid-wave-2"></div>
-      <div class="wave mid-wave-3"></div>
-    </div>
-    
-    <div class="wave-layer surface-waves">
-      <div class="wave surface-wave-1"></div>
-      <div class="wave surface-wave-2"></div>
-      <div class="wave surface-wave-3"></div>
-    </div>
-    
-    <div class="light-reflections">
-      <div class="light-spot light-1"></div>
-      <div class="light-spot light-2"></div>
-      <div class="light-spot light-3"></div>
-    </div>
-    
-    <div class="floating-icons">
-      <i 
-        *ngFor="let icon of floatingIcons; let i = index" 
-        class="icon fas {{icon.icon}}"
-        [style.left]="icon.left + '%'"
-        [style.animation-delay]="icon.delay + 's'"
-        [style.color]="icon.color"
-        [style.font-size]="icon.size + 'px'"
-        [style.top]="icon.startPosition + 'vh'">
-      </i>
-    </div>
-    
-    <!-- Content -->
-    <div class="start-content">
-      <h1>PULSE DISCOVERY</h1>
-      <p>HEALTH INFORMATION TO YOU IN A HEARTBEAT</p>
-      <button class="start-button" (click)="showIframe = true">
-        START EXPLORING
-      </button>
-    </div>
-    
-    <div class="powered-by">
-      <span>Powered by the AHRI Digital Repository</span>
-    </div>
+  <!-- Background elements from original design -->
+  <div class="background-gradient-red"></div>
+  
+  <div class="wave-layer deep-waves">
+    <div class="wave deep-wave-1"></div>
+    <div class="wave deep-wave-2"></div>
+    <div class="wave deep-wave-3"></div>
   </div>
   
-  <!-- Iframe Content with Custom UI Wrapper -->
-  <div *ngIf="showIframe" class="iframe-view">
-    <div class="custom-header">
-      <button class="back-button" (click)="showIframe = false">
-        <i class="fas fa-arrow-left"></i> Back to Start
-      </button>
-      <h2>Pulse Discovery - Data Catalog</h2>
-      <div class="powered-by">
-        <span>Powered by the AHRI Digital Repository</span>
+  <div class="wave-layer mid-waves">
+    <div class="wave mid-wave-1"></div>
+    <div class="wave mid-wave-2"></div>
+    <div class="wave mid-wave-3"></div>
+  </div>
+  
+  <div class="wave-layer surface-waves">
+    <div class="wave surface-wave-1"></div>
+    <div class="wave surface-wave-2"></div>
+    <div class="wave surface-wave-3"></div>
+  </div>
+  
+  <div class="light-reflections">
+    <div class="light-spot light-1"></div>
+    <div class="light-spot light-2"></div>
+    <div class="light-spot light-3"></div>
+  </div>
+  
+  <!-- Floating Icons with red theme -->
+  <div class="floating-icons">
+    <i class="icon fas fa-heart" style="left: 10%; animation-delay: 0s; color: #D32F2F; font-size: 24px; top: 20%;"></i>
+    <i class="icon fas fa-stethoscope" style="left: 25%; animation-delay: 0.5s; color: #B71C1C; font-size: 28px; top: 30%;"></i>
+    <i class="icon fas fa-brain" style="left: 40%; animation-delay: 1s; color: #C62828; font-size: 26px; top: 25%;"></i>
+    <i class="icon fas fa-laptop-medical" style="left: 60%; animation-delay: 1.5s; color: #D32F2F; font-size: 30px; top: 35%;"></i>
+    <i class="icon fas fa-book-medical" style="left: 75%; animation-delay: 2s; color: #E53935; font-size: 22px; top: 15%;"></i>
+    <i class="icon fas fa-hospital" style="left: 90%; animation-delay: 2.5s; color: #F44336; font-size: 32px; top: 28%;"></i>
+  </div>
+
+  <!-- Header Section -->
+  <div class="header-section">
+    <h1>Pulse Discovery</h1>
+    <p>Explore trusted health data repositories to expand your knowledge</p>
+  </div>
+
+
+  <!-- Cards Grid -->
+  <div class="cards-grid">
+    <!-- Card 1: AHRI Repository -->
+    <div class="card">
+      <div class="card-icon">
+        <i class="fas fa-database"></i>
       </div>
+      <h3>AHRI Data Repository</h3>
+      <p>Access comprehensive health research data from the Africa Health Research Institute</p>
+      <a href="https://data.ahri.org" target="_blank" class="card-button">
+        Explore Repository
+      </a>
     </div>
-    
-    <!-- Custom Search Bar -->
-    <div class="custom-search-container">
-      <div class="search-wrapper">
-        <h1>Data Catalog</h1>
-        <div class="sub-text">Search in <span class="highlight">190</span> surveys, <span class="highlight">48,724</span> variables and <span class="highlight">13</span> citations</div>
-        
-        <form class="custom-search-form" (submit)="onCustomSearch($event)">
-          <div class="search-input-group">
-            <input 
-              type="search" 
-              placeholder="Enter keywords..." 
-              class="custom-search-input"
-              [(ngModel)]="searchQuery"
-              name="searchQuery">
-            <button type="submit" class="custom-search-button">
-              <i class="fas fa-search"></i> Search
-            </button>
-          </div>
-        </form>
-        
-        <div class="custom-browse-link">
-          <a href="https://data.ahri.org/index.php/catalog" target="_blank">
-            <i class="fas fa-list"></i> Browse Full Catalog
-          </a>
-        </div>
+
+    <!-- Card 2: WHO Digital Health -->
+    <div class="card">
+      <div class="card-icon">
+        <i class="fas fa-globe"></i>
       </div>
+      <h3>WHO Digital Health Repository</h3>
+      <p>Global repository on national digital health strategies from World Health Organization</p>
+      <a href="https://www.who.int/teams/digital-health-and-innovation/global-repository-on-national-digital-health-strategies" target="_blank" class="card-button">
+        Explore Repository
+      </a>
     </div>
-    
-    <!-- Iframe Container -->
-    <div class="iframe-container" [class.hidden]="!iframeLoaded">
-      <iframe 
-        #dataIframe
-        [src]="iframeSrc" 
-        frameborder="0" 
-        class="data-iframe"
-        (load)="onIframeLoad()">
-      </iframe>
-    </div>
-    
-    <!-- Loading Indicator -->
-    <div *ngIf="!iframeLoaded" class="loading-overlay">
-      <div class="loading-content">
-        <div class="loading-spinner"></div>
-        <p>Loading Pulse Discovery Catalog...</p>
+
+    <!-- Card 3: Health Data.gov -->
+    <div class="card">
+      <div class="card-icon">
+        <i class="fas fa-chart-line"></i>
       </div>
+      <h3>HealthData.gov</h3>
+      <p>U.S. government's open health data with tools and applications</p>
+      <a href="https://healthdata.gov" target="_blank" class="card-button">
+        Explore Repository
+      </a>
+    </div>
+
+    <!-- Card 4: CDC Data -->
+    <div class="card">
+      <div class="card-icon">
+        <i class="fas fa-virus"></i>
+      </div>
+      <h3>CDC Data & Statistics</h3>
+      <p>Center for Disease Control data and statistics by topic</p>
+      <a href="https://www.cdc.gov/DataStatistics" target="_blank" class="card-button">
+        Explore Repository
+      </a>
+    </div>
+
+    <!-- Card 5: Global Health Observatory -->
+    <div class="card">
+      <div class="card-icon">
+        <i class="fas fa-clipboard-list"></i>
+      </div>
+      <h3>Global Health Observatory</h3>
+      <p>WHO's portal providing access to data and analyses for monitoring global health</p>
+      <a href="https://www.who.int/data/gho" target="_blank" class="card-button">
+        Explore Repository
+      </a>
+    </div>
+
+    <!-- Card 6: NIH Health Data -->
+    <div class="card">
+      <div class="card-icon">
+        <i class="fas fa-flask"></i>
+      </div>
+      <h3>NIH Health Data Resources</h3>
+      <p>National Institutes of Health data sharing repositories</p>
+      <a href="https://www.nih.gov/health-information/nih-health-data-repositories" target="_blank" class="card-button">
+        Explore Repository
+      </a>
+    </div>
+  </div>
+
+  <!-- Additional Resources Section -->
+  <div class="resources-section">
+    <h2>Additional Learning Resources</h2>
+    <div class="resources-list">
+      <a href="#" class="resource-link">Health Data Analysis Tutorials</a>
+      <a href="#" class="resource-link">Research Methodology Guides</a>
+      <a href="#" class="resource-link">Public Health Case Studies</a>
+      <a href="#" class="resource-link">Data Visualization Tools</a>
     </div>
   </div>
 </div>

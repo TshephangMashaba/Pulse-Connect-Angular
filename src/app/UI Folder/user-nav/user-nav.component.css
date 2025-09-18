@@ -1,0 +1,81 @@
+/* user-nav.component.css */
+.notification-modal {
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    border: 1px solid #e5e7eb;
+}
+
+.notification-modal {
+    z-index: 9999;
+}
+
+/* Scrollbar styling */
+.notification-modal::-webkit-scrollbar {
+    width: 6px;
+}
+
+.notification-modal::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.notification-modal::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+.notification-modal::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Ensure the nav is above other content */
+nav {
+    z-index: 50;
+}
+
+/* Profile dropdown styling */
+.profile-dropdown > div {
+    z-index: 50;
+}
+
+
+/* alert-modal.component.css */
+:host {
+  --backdrop-color: rgba(4, 0, 41, 0.4);
+}
+
+.fixed.inset-0 {
+  background-color: var(--backdrop-color);
+}
+
+/* Ensure modal is properly centered and sized */
+.modal-container {
+  width: 100%;
+
+  margin: 0 auto;
+}
+
+/* Animation styles */
+.animate-fade-in-down {
+  animation: fadeInDown 0.3s ease-out;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Loading spinner animation */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

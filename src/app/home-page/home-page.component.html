@@ -1,7 +1,7 @@
 <!-- home-page.component.html -->
 <app-nav-bar></app-nav-bar>
 
-<!-- Hero Section -->
+<!-- Hero Section --><!-- Hero Section -->
 <section class="hero-section">
   
   <!-- Background Gradient -->
@@ -35,23 +35,21 @@
     <div class="light-spot light-3"></div>
   </div>
   
-  <!-- Floating Icons -->
+  <!-- Floating Icons with red theme -->
   <div class="floating-icons">
-    <i 
-      *ngFor="let icon of floatingIcons; let i = index" 
-      class="icon fas {{icon.icon}}"
-      [style.left]="icon.left + '%'"
-      [style.animation-delay]="icon.delay + 's'"
-      [style.color]="icon.color"
-      [style.font-size]="icon.size + 'px'"
-      [style.top]="icon.startPosition + 'vh'">
-    </i>
+    <i class="icon fas fa-heart" style="left: 10%; animation-delay: 0s; color: #D32F2F; font-size: 24px;"></i>
+    <i class="icon fas fa-stethoscope" style="left: 25%; animation-delay: 0.5s; color: #B71C1C; font-size: 28px;"></i>
+    <i class="icon fas fa-brain" style="left: 40%; animation-delay: 1s; color: #C62828; font-size: 26px;"></i>
+    <i class="icon fas fa-laptop-medical" style="left: 60%; animation-delay: 1.5s; color: #D32F2F; font-size: 30px;"></i>
+    <i class="icon fas fa-book-medical" style="left: 75%; animation-delay: 2s; color: #E53935; font-size: 22px;"></i>
+    <i class="icon fas fa-hospital" style="left: 90%; animation-delay: 2.5s; color: #F44336; font-size: 32px;"></i>
   </div>
   
   <!-- Content -->
   <div class="hero-content">
     <h1>PULSE CONNECT</h1>
     <p>HEALTH INFORMATION TO YOU IN A HEARTBEAT</p>
+    <a href="#discover" class="cta-button">Get Started</a>
   </div>
   
   <!-- Scroll Indicator -->
@@ -62,6 +60,7 @@
     <span>Scroll Down</span>
   </div>
 </section>
+
 
 <!-- Rest of your page content goes here -->
 <!-- About Section -->
