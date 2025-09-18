@@ -235,24 +235,30 @@ export class CourseViewComponent implements OnInit {
     }
   }
 
-  async unenrollFromCourse() {
-    if (this.course) {
-      const confirmed = await this.alertService.confirm('Are you sure you want to unenroll from this course?');
-      
-      if (confirmed) {
-        this.courseService.unenrollFromCourse(this.course.id).subscribe({
-          next: () => {
-            this.router.navigate(['/courses']);
-            this.alertService.success('Successfully unenrolled from the course.');
-          },
-          error: (error) => {
-            console.error('Error unenrolling from course:', error);
-            this.alertService.error('Failed to unenroll from the course. Please try again.');
-          }
-        });
-      }
+  // In course-view.component.ts - update unenrollFromCourse method
+async unenrollFromCourse() {
+  if (this.course) {
+    const confirmed = await this.alertService.confirm(
+      'Are you sure you want to unenroll from this course?'
+    );
+    
+    if (confirmed) {
+      this.isLoading = true;
+      this.courseService.unenrollFromCourse(this.course.id).subscribe({
+        next: () => {
+          this.router.navigate(['/courses']);
+          this.alertService.success('Successfully unenrolled from the course.');
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Error unenrolling from course:', error);
+          this.alertService.error(error.message || 'Failed to unenroll from the course. Please try again.');
+          this.isLoading = false;
+        }
+      });
     }
   }
+}
 
    setCurrentChapter(chapter: Chapter) {
     this.ttsService.stop();

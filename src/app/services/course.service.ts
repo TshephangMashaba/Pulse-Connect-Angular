@@ -1,7 +1,7 @@
 // course.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { catchError, map, Observable, throwError } from 'rxjs';
 import { AuthService } from './auth.service';
 
 export interface Test {
@@ -121,12 +121,46 @@ export class CourseService {
     const headers = this.getAuthHeaders();
     return this.http.post(`${this.apiUrl}/enroll/${courseId}`, {}, { headers });
   }
-
-  // Unenroll from a course
-  unenrollFromCourse(courseId: string): Observable<any> {
-    const headers = this.getAuthHeaders();
-    return this.http.post(`${this.apiUrl}/unenroll/${courseId}`, {}, { headers });
-  }
+  
+// Updated unenrollFromCourse method in course.service.ts
+unenrollFromCourse(courseId: string): Observable<any> {
+  const headers = this.getAuthHeaders();
+  
+  return this.http.post(`${this.apiUrl}/unenroll/${courseId}`, {}, { 
+    headers,
+    observe: 'response',
+    responseType: 'text'
+  }).pipe(
+    map(response => {
+      if (response.status === 204) {
+        return { success: true, message: 'Successfully unenrolled from course' };
+      }
+      throw new Error(`Unexpected response status: ${response.status}`);
+    }),
+    catchError((error: HttpErrorResponse) => {
+      console.error('Unenrollment error:', error);
+      
+      let errorMessage = 'Failed to unenroll from the course. Please try again.';
+      
+      if (error.status === 401) {
+        errorMessage = 'Please log in to unenroll from courses';
+      } else if (error.status === 404) {
+        errorMessage = 'Enrollment not found. You may not be enrolled in this course.';
+      } else if (error.status === 500) {
+        // Handle both JSON and plain text error responses from server
+        if (typeof error.error === 'string' && error.error.trim()) {
+          errorMessage = error.error;
+        } else if (error.message && error.message.includes('Failed to unenroll')) {
+          errorMessage = error.message;
+        } else {
+          errorMessage = 'Server error occurred while unenrolling. Please contact support if this persists.';
+        }
+      }
+      
+      return throwError(() => new Error(errorMessage));
+    })
+  );
+}
 
   // Get course chapters
   getChapters(courseId: string): Observable<Chapter[]> {
