@@ -1,0 +1,119 @@
+<app-nav-bar></app-nav-bar>
+<!-- pulse-discovery.component.html -->
+<div class="pulse-discovery-container">
+
+  <!-- Start Screen -->
+  <div *ngIf="!showIframe" class="start-screen">
+    <div class="background-gradient"></div>
+    
+    <!-- Waves and floating elements from your design -->
+    <div class="wave-layer deep-waves">
+      <div class="wave deep-wave-1"></div>
+      <div class="wave deep-wave-2"></div>
+      <div class="wave deep-wave-3"></div>
+    </div>
+    
+    <div class="wave-layer mid-waves">
+      <div class="wave mid-wave-1"></div>
+      <div class="wave mid-wave-2"></div>
+      <div class="wave mid-wave-3"></div>
+    </div>
+    
+    <div class="wave-layer surface-waves">
+      <div class="wave surface-wave-1"></div>
+      <div class="wave surface-wave-2"></div>
+      <div class="wave surface-wave-3"></div>
+    </div>
+    
+    <div class="light-reflections">
+      <div class="light-spot light-1"></div>
+      <div class="light-spot light-2"></div>
+      <div class="light-spot light-3"></div>
+    </div>
+    
+    <div class="floating-icons">
+      <i 
+        *ngFor="let icon of floatingIcons; let i = index" 
+        class="icon fas {{icon.icon}}"
+        [style.left]="icon.left + '%'"
+        [style.animation-delay]="icon.delay + 's'"
+        [style.color]="icon.color"
+        [style.font-size]="icon.size + 'px'"
+        [style.top]="icon.startPosition + 'vh'">
+      </i>
+    </div>
+    
+    <!-- Content -->
+    <div class="start-content">
+      <h1>PULSE DISCOVERY</h1>
+      <p>HEALTH INFORMATION TO YOU IN A HEARTBEAT</p>
+      <button class="start-button" (click)="showIframe = true">
+        START EXPLORING
+      </button>
+    </div>
+    
+    <div class="powered-by">
+      <span>Powered by the AHRI Digital Repository</span>
+    </div>
+  </div>
+  
+  <!-- Iframe Content with Custom UI Wrapper -->
+  <div *ngIf="showIframe" class="iframe-view">
+    <div class="custom-header">
+      <button class="back-button" (click)="showIframe = false">
+        <i class="fas fa-arrow-left"></i> Back to Start
+      </button>
+      <h2>Pulse Discovery - Data Catalog</h2>
+      <div class="powered-by">
+        <span>Powered by the AHRI Digital Repository</span>
+      </div>
+    </div>
+    
+    <!-- Custom Search Bar -->
+    <div class="custom-search-container">
+      <div class="search-wrapper">
+        <h1>Data Catalog</h1>
+        <div class="sub-text">Search in <span class="highlight">190</span> surveys, <span class="highlight">48,724</span> variables and <span class="highlight">13</span> citations</div>
+        
+        <form class="custom-search-form" (submit)="onCustomSearch($event)">
+          <div class="search-input-group">
+            <input 
+              type="search" 
+              placeholder="Enter keywords..." 
+              class="custom-search-input"
+              [(ngModel)]="searchQuery"
+              name="searchQuery">
+            <button type="submit" class="custom-search-button">
+              <i class="fas fa-search"></i> Search
+            </button>
+          </div>
+        </form>
+        
+        <div class="custom-browse-link">
+          <a href="https://data.ahri.org/index.php/catalog" target="_blank">
+            <i class="fas fa-list"></i> Browse Full Catalog
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Iframe Container -->
+    <div class="iframe-container" [class.hidden]="!iframeLoaded">
+      <iframe 
+        #dataIframe
+        [src]="iframeSrc" 
+        frameborder="0" 
+        class="data-iframe"
+        (load)="onIframeLoad()">
+      </iframe>
+    </div>
+    
+    <!-- Loading Indicator -->
+    <div *ngIf="!iframeLoaded" class="loading-overlay">
+      <div class="loading-content">
+        <div class="loading-spinner"></div>
+        <p>Loading Pulse Discovery Catalog...</p>
+      </div>
+    </div>
+  </div>
+</div>

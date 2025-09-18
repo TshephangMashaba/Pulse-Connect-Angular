@@ -36,6 +36,7 @@ import { AnalyticsComponent } from './analytics/analytics.component';
 import { TruncatePipe } from './truncate.pipe';
 import { EditorModule } from '@tinymce/tinymce-angular';
 import { TinymceDirective } from './tinymce.directive';
+import { PulseDiscoveryComponent } from './pulse-discovery/pulse-discovery.component';
 
 
 @NgModule({
@@ -64,7 +65,8 @@ import { TinymceDirective } from './tinymce.directive';
     AdminSettingsComponent,
     UsersManagementComponent,
     AnalyticsComponent,
-    TruncatePipe
+    TruncatePipe,
+    PulseDiscoveryComponent
   ],
   imports: [
   BrowserModule,

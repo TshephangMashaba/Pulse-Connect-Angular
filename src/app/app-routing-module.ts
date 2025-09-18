@@ -17,6 +17,7 @@ import { CoursesAdvertComponent } from './courses-advert/courses-advert.componen
 import { AdminSettingsComponent } from './admin-settings/admin-settings.component';
 import { UsersManagementComponent } from './users-management/users-management.component';
 import { AnalyticsComponent } from './analytics/analytics.component';
+import { PulseDiscoveryComponent } from './pulse-discovery/pulse-discovery.component';
 
 const routes: Routes = [
   { 
@@ -90,6 +91,10 @@ const routes: Routes = [
 {
   path: 'analytics',
   component: AnalyticsComponent
+},
+{
+  path: 'pulse-discovery',
+  component: PulseDiscoveryComponent
 }
 
 

@@ -26,6 +26,13 @@
       <!-- Courses Grid -->
       <div *ngIf="!isLoading && allCourses.length" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div *ngFor="let course of allCourses" class="bg-white rounded-xl shadow-sm p-5 transition-all duration-200 hover:shadow-md hover:-translate-y-1">
+            <div class="relative h-32 mb-4 rounded-lg overflow-hidden">
+    <img
+      [src]="getCourseImage(course)"
+      [alt]="course.title"
+      class="w-full h-full object-cover"
+    />
+  </div>
           <h3 class="text-lg font-semibold text-gray-800 mb-2">{{ course.title }}</h3>
           <p class="text-gray-600 text-sm mb-3 line-clamp-3 leading-relaxed">{{ course.description }}</p>
           <div class="grid grid-cols-2 gap-3 text-sm text-gray-600 mb-4">
@@ -102,11 +109,11 @@
       <div *ngIf="allCourses.length" class="grid md:grid-cols-3 gap-6 mb-8">
         <div *ngFor="let course of allCourses | slice:0:3" class="bg-white rounded-xl shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md">
           <div class="relative h-32">
-            <img
-              [src]="course.thumbnailUrl || defaultCourseImage"
-              [alt]="course.title"
-              class="w-full h-full object-cover"
-            />
+             <img
+      [src]="getCourseImage(course)"
+      [alt]="course.title"
+      class="w-full h-full object-cover"
+    />
           </div>
           <div class="p-5 text-gray-800">
             <h3 class="text-lg font-semibold mb-2">{{ course.title }}</h3>

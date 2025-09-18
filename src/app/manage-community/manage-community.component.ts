@@ -4,6 +4,7 @@ import { catchError, throwError } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 
+
 // Interfaces
 interface CreatePostDto {
   title: string;
@@ -21,6 +22,9 @@ interface PostImageDto {
   caption?: string;
   order: number;
 }
+
+
+
 
 interface PostDto {
   id: string;
@@ -84,7 +88,7 @@ interface CommunityStats {
   standalone: false
 })
 export class ManageCommunityComponent implements OnInit {
-// Tabs
+ // Tabs
   activeTab = 'discussions';
   showProvinceView = false;
   selectedProvinceGroup: string = '';
@@ -108,6 +112,8 @@ export class ManageCommunityComponent implements OnInit {
   "Limpopo", "Mpumalanga", "North West", "Northern Cape", "Western Cape"
 ];
 
+userLikedPosts: Set<string> = new Set();
+likeAnimations: Set<string> = new Set();
 
 
   // Filter options
@@ -132,7 +138,8 @@ previewUrls: string[] = [];
     isAnonymous: false
   };
   newCommentContent = '';
-  
+  userJoinedProvinces: Set<string> = new Set();
+
   // UI states
   isLoading = false;
   showModal = false;
@@ -144,12 +151,16 @@ selectedImage: string | null = null;
     private router: Router
   ) { }
 
-  ngOnInit(): void {
-    this.loadPosts();
-    this.loadProvinceStats();
-    this.loadCommunityStats();
-    this.loadAvailableProvinces();
+ngOnInit(): void {
+  this.loadPosts();
+  this.loadProvinceStats();
+  this.loadCommunityStats();
+  this.loadAvailableProvinces();
+  
+  if (this.isAuthenticated()) {
+    this.loadUserJoinedProvinces();
   }
+}
 
 private getAuthHeaders(): HttpHeaders {
   const token = this.authService.getValidToken();
@@ -167,11 +178,12 @@ private getAuthHeaders(): HttpHeaders {
 }
   // API Calls
   loadPosts(): void {
-    this.isLoading = true;
-    let params = new HttpParams()
-      .set('page', this.currentPage.toString())
-      .set('pageSize', this.pageSize.toString())
-      .set('sortBy', this.getSortByParam());
+      this.isLoading = true;
+  let params = new HttpParams()
+    .set('page', this.currentPage.toString())
+    .set('pageSize', this.pageSize.toString())
+    .set('sortBy', this.getSortByParam());
+
 
     // Add filters if selected
     if (this.selectedTopic && this.selectedTopic !== 'All Topics') {
@@ -186,32 +198,33 @@ private getAuthHeaders(): HttpHeaders {
       params = params.set('type', this.getPostTypeFromTab());
     }
 
-    this.http.get<PostDto[]>('https://localhost:7142/api/community/posts', { 
-      params, 
-      headers: this.getAuthHeaders(),
-      observe: 'response' 
-    })
-      .pipe(
-        catchError(error => {
-          console.error('Error loading posts:', error);
-          this.isLoading = false;
-          return throwError(() => error);
-        })
-      )
-      .subscribe(response => {
+   this.http.get<PostDto[]>('https://localhost:7142/api/community/posts', { 
+    params, 
+    headers: this.getAuthHeaders(),
+    observe: 'response' 
+  })
+    .pipe(
+      catchError(error => {
+        console.error('Error loading posts:', error);
         this.isLoading = false;
-        if (response.body) {
-          this.posts = response.body;
-          this.filteredPosts = this.posts;
-          
-          // Get pagination headers
-          const totalCount = response.headers.get('X-Total-Count');
-          if (totalCount) {
-            this.totalPostsCount = parseInt(totalCount, 10);
-          }
+        return throwError(() => error);
+      })
+    )
+    .subscribe(response => {
+      this.isLoading = false;
+      if (response.body) {
+        this.posts = response.body;
+        this.filteredPosts = this.posts;
+        this.checkUserLikeStatus(); // Add this line
+        
+        // Get pagination headers
+        const totalCount = response.headers.get('X-Total-Count');
+        if (totalCount) {
+          this.totalPostsCount = parseInt(totalCount, 10);
         }
-      });
-  }
+      }
+    });
+}
 
   loadProvincePosts(province: string): void {
     this.isLoading = true;
@@ -235,22 +248,60 @@ private getAuthHeaders(): HttpHeaders {
         this.provincePosts = posts;
       });
   }
+loadPostDetails(id: string): void {
+  this.http.get<PostDto>(`https://localhost:7142/api/community/posts/${id}`, { 
+    headers: this.getAuthHeaders() 
+  })
+    .pipe(
+      catchError(error => {
+        console.error('Error loading post details:', error);
+        return throwError(() => error);
+      })
+    )
+    .subscribe(post => {
+      this.selectedPost = post;
+      this.loadComments(id);
+      
+      // Check if user liked this post
+      if (this.authService.isAuthenticated()) {
+        this.http.get<boolean>(`https://localhost:7142/api/community/posts/${id}/userlike`, {
+          headers: this.getAuthHeaders()
+        }).subscribe({
+          next: (userLiked) => {
+            if (userLiked) {
+              this.userLikedPosts.add(id);
+            } else {
+              this.userLikedPosts.delete(id);
+            }
+          },
+          error: (error) => {
+            console.error('Error checking like status:', error);
+          }
+        });
+      }
+    });
+}
+isProvinceJoined(province: string): boolean {
+  return this.userJoinedProvinces.has(province);
+}
+loadUserJoinedProvinces(): void {
+  if (!this.authService.isAuthenticated()) return;
 
-  loadPostDetails(id: string): void {
-    this.http.get<PostDto>(`https://localhost:7142/api/community/posts/${id}`, { 
-      headers: this.getAuthHeaders() 
-    })
-      .pipe(
-        catchError(error => {
-          console.error('Error loading post details:', error);
-          return throwError(() => error);
-        })
-      )
-      .subscribe(post => {
-        this.selectedPost = post;
-        this.loadComments(id);
-      });
-  }
+  this.http.get<string[]>('https://localhost:7142/api/community/provinces/joined', { 
+    headers: this.getAuthHeaders() 
+  })
+    .pipe(
+      catchError(error => {
+        console.error('Error loading joined provinces:', error);
+        return throwError(() => error);
+      })
+    )
+    .subscribe(provinces => {
+      // Clear and repopulate the set
+      this.userJoinedProvinces.clear();
+      provinces.forEach(province => this.userJoinedProvinces.add(province));
+    });
+}
 
   loadComments(postId: string): void {
     this.http.get<CommentDto[]>(`https://localhost:7142/api/community/posts/${postId}/comments`, { 
@@ -378,43 +429,70 @@ private getAuthHeaders(): HttpHeaders {
     });
 }
 
-  likePost(postId: string): void {
-    if (!this.authService.isAuthenticated()) {
-      this.redirectToLogin();
-      return;
-    }
-
-    this.http.post(`https://localhost:7142/api/community/posts/${postId}/like`, {}, { 
-      headers: this.getAuthHeaders() 
-    })
-      .pipe(
-        catchError(error => {
-          console.error('Error liking post:', error);
-          if (error.status === 401) {
-            this.handleUnauthorizedError();
-          }
-          return throwError(() => error);
-        })
-      )
-      .subscribe((response: any) => {
-        // Update the post in the appropriate list
-        if (this.showProvinceView) {
-          const postIndex = this.provincePosts.findIndex(p => p.id === postId);
-          if (postIndex !== -1) {
-            this.provincePosts[postIndex].likes = response.likes;
-          }
-        } else {
-          const postIndex = this.posts.findIndex(p => p.id === postId);
-          if (postIndex !== -1) {
-            this.posts[postIndex].likes = response.likes;
-          }
-        }
-        
-        if (this.selectedPost && this.selectedPost.id === postId) {
-          this.selectedPost.likes = response.likes;
-        }
-      });
+ likePost(postId: string, event?: MouseEvent): void {
+  if (!this.authService.isAuthenticated()) {
+    this.redirectToLogin();
+    return;
   }
+
+  // Prevent double clicks
+  if (this.likeAnimations.has(postId)) return;
+  
+  // Add animation class
+  this.likeAnimations.add(postId);
+  if (event) {
+    const button = event.target as HTMLElement;
+    button.classList.add('liking');
+  }
+
+  this.http.post(`https://localhost:7142/api/community/posts/${postId}/like`, {}, { 
+    headers: this.getAuthHeaders() 
+  })
+    .pipe(
+      catchError(error => {
+        console.error('Error liking post:', error);
+        if (error.status === 401) {
+          this.handleUnauthorizedError();
+        }
+        this.likeAnimations.delete(postId);
+        return throwError(() => error);
+      })
+    )
+    .subscribe((response: any) => {
+      // Remove animation after a delay
+      setTimeout(() => {
+        this.likeAnimations.delete(postId);
+        if (event) {
+          const button = event.target as HTMLElement;
+          button.classList.remove('liking');
+        }
+      }, 1000);
+
+      // Update user liked status based on response
+      if (response.userLiked) {
+        this.userLikedPosts.add(postId);
+      } else {
+        this.userLikedPosts.delete(postId);
+      }
+
+      // Update the post in the appropriate list with the new like count
+      if (this.showProvinceView) {
+        const postIndex = this.provincePosts.findIndex(p => p.id === postId);
+        if (postIndex !== -1) {
+          this.provincePosts[postIndex].likes = response.likes;
+        }
+      } else {
+        const postIndex = this.posts.findIndex(p => p.id === postId);
+        if (postIndex !== -1) {
+          this.posts[postIndex].likes = response.likes;
+        }
+      }
+      
+      if (this.selectedPost && this.selectedPost.id === postId) {
+        this.selectedPost.likes = response.likes;
+      }
+    });
+}
 
   createComment(comment: CreateCommentDto): void {
     if (!this.authService.isAuthenticated()) {
@@ -447,35 +525,91 @@ private getAuthHeaders(): HttpHeaders {
 getProvinceStats(province: string): ProvinceStatsDto | undefined {
   return this.provinceStats.find(p => p.province === province);
 }
-
-  joinProvince(province: string): void {
-    if (!this.authService.isAuthenticated()) {
-      this.redirectToLogin();
-      return;
-    }
-
-    const joinDto: JoinProvinceDto = { province };
-
-    this.http.post('https://localhost:7142/api/community/provinces/join', joinDto, {
-      headers: this.getAuthHeaders()
-    })
-      .pipe(
-        catchError(error => {
-          console.error('Error joining province:', error);
-          if (error.status === 401) {
-            this.handleUnauthorizedError();
-          }
-          return throwError(() => error);
-        })
-      )
-      .subscribe(() => {
-        // Load the province view
-        this.showProvinceView = true;
-        this.selectedProvinceGroup = province;
-        this.loadProvincePosts(province);
-        this.loadProvinceStats();
-      });
+joinProvince(province: string): void {
+  if (!this.authService.isAuthenticated()) {
+    this.redirectToLogin();
+    return;
   }
+
+  const joinDto = { province };
+
+  this.http.post('https://localhost:7142/api/community/provinces/join', joinDto, {
+    headers: this.getAuthHeaders()
+  })
+    .pipe(
+      catchError(error => {
+        console.error('Error joining province:', error);
+        if (error.status === 401) {
+          this.handleUnauthorizedError();
+        }
+        return throwError(() => error);
+      })
+    )
+    .subscribe({
+      next: (response: any) => {
+        console.log('Successfully joined province:', response);
+        
+        // Add to user's joined provinces
+        this.userJoinedProvinces.add(province);
+        
+        // If we're not already in the province view, load it
+        if (!this.showProvinceView) {
+          this.showProvinceView = true;
+          this.selectedProvinceGroup = province;
+          this.loadProvincePosts(province);
+        }
+        
+        // Reload province stats to update member counts
+        this.loadProvinceStats();
+      },
+      error: (error) => {
+        console.error('Failed to join province:', error);
+        alert('Failed to join province. Please try again.');
+      }
+    });
+}
+
+// Add a method to leave a province
+leaveProvince(province: string): void {
+  if (!this.authService.isAuthenticated()) {
+    this.redirectToLogin();
+    return;
+  }
+
+  this.http.post('https://localhost:7142/api/community/provinces/leave', { province }, {
+    headers: this.getAuthHeaders()
+  })
+    .pipe(
+      catchError(error => {
+        console.error('Error leaving province:', error);
+        if (error.status === 401) {
+          this.handleUnauthorizedError();
+        }
+        return throwError(() => error);
+      })
+    )
+    .subscribe({
+      next: (response: any) => {
+        console.log('Successfully left province:', response);
+        
+        // Remove from user's joined provinces
+        this.userJoinedProvinces.delete(province);
+        
+        // If we're currently viewing this province, go back to main view
+        if (this.showProvinceView && this.selectedProvinceGroup === province) {
+          this.backToGroups();
+        }
+        
+        // Reload province stats
+        this.loadProvinceStats();
+      },
+      error: (error) => {
+        console.error('Failed to leave province:', error);
+        alert('Failed to leave province. Please try again.');
+      }
+    });
+}
+
 
   // Helper methods
   private getSortByParam(): string {
@@ -486,8 +620,7 @@ getProvinceStats(province: string): ProvinceStatsDto | undefined {
     }
   }
 
-
-  getImageUrl(imageUrl: string): string {
+getImageUrl(imageUrl: string): string {
   if (!imageUrl) return '';
   
   // If URL is already absolute, return as-is
@@ -495,8 +628,21 @@ getProvinceStats(province: string): ProvinceStatsDto | undefined {
     return imageUrl;
   }
   
-  // For relative URLs, prepend the API base URL
-  return `https://localhost:7142${imageUrl}`;
+  if (imageUrl.includes('://')) {
+    return imageUrl;
+  }
+  
+  return `https://localhost:7142${imageUrl.startsWith('/') ? '' : '/'}${imageUrl}`;
+}
+
+
+handleImageError(event: any): void {
+  event.target.style.display = 'none';
+  // Show the fallback div
+  const fallback = event.target.nextElementSibling;
+  if (fallback && fallback.classList.contains('fallback-profile')) {
+    fallback.style.display = 'flex';
+  }
 }
 
   private getPostTypeFromTab(): string {
@@ -726,5 +872,24 @@ loadAvailableProvinces(): void {
 @HostListener('document:keydown.escape')
 onEscapeKey(): void {
   this.selectedImage = null;
+}
+
+checkUserLikeStatus(): void {
+  if (!this.authService.isAuthenticated()) return;
+
+  this.posts.forEach(post => {
+    this.http.get<boolean>(`https://localhost:7142/api/community/posts/${post.id}/userlike`, {
+      headers: this.getAuthHeaders()
+    }).subscribe({
+      next: (userLiked) => {
+        if (userLiked) {
+          this.userLikedPosts.add(post.id);
+        }
+      },
+      error: (error) => {
+        console.error('Error checking like status:', error);
+      }
+    });
+  });
 }
 }
