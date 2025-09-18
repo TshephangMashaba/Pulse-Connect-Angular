@@ -2,7 +2,7 @@
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" *ngIf="!isLoading; else loadingTemplate">
   <!-- Welcome Section -->
-  <div class="bg-gradient-to-r from-green-600 to-green-700 rounded-2xl p-6 text-white mb-8">
+  <div class="bg-gradient-to-r from-green-600 to-blue-600 rounded-2xl p-6 text-white mb-8">
     <div class="flex flex-col md:flex-row md:items-center md:justify-between">
       <div>
         <h1 class="text-2xl font-bold mb-2">Welcome back, {{userName}}!</h1>
@@ -12,7 +12,7 @@
         </p>
       </div>
       <div class="mt-4 md:mt-0">
-        <a routerLink="/courses" class="px-4 py-2 bg-white text-green-700 rounded-lg font-medium hover:bg-gray-100 transition-colors inline-block">
+        <a routerLink="/courses" class="px-4 py-2 bg-clip-text text-transparent text-green-700 rounded-lg font-medium hover:bg-gray-100 transition-colors inline-block">
           View All Courses
         </a>
       </div>
