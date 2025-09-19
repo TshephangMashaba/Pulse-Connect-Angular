@@ -1,15 +1,13 @@
-
 <app-user-nav></app-user-nav>
 
-  <!-- courses.component.html -->
+<!-- courses.component.html -->
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8  ">
     <!-- Page Header -->
     <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
         <div>
-         
-                <h1 class="text-3xl font-bold text-gray-800 bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
-Health & Safety Courses
-        </h1>
+            <h1 class="text-3xl font-bold text-gray-800 bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
+                Health & Safety Courses
+            </h1>
             <p class="text-gray-600">Access free, culturally relevant health education in multiple formats</p>
         </div>
         <div class="mt-4 md:mt-0">
@@ -25,7 +23,10 @@ Health & Safety Courses
         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
     </div>
 
-
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        {{ errorMessage }}
+    </div>
 
     <!-- Content when loaded -->
     <div *ngIf="!isLoading && !errorMessage">
@@ -36,67 +37,51 @@ Health & Safety Courses
                 <a href="#" class="text-sm text-green-600 hover:text-green-700 font-medium">View All</a>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Course Cards for enrolled courses -->
-                <div *ngFor="let enrollment of myCourses" class="bg-white rounded-xl shadow-sm overflow-hidden course-card transition-all duration-300 hover:shadow-md">
-                    <div class="p-6">
-                        <div class="flex items-start">
-                            <div class="flex-shrink-0 bg-green-100 p-3 rounded-lg mr-4">
-                                <i class="fas fa-book text-green-600 text-xl"></i>
-                            </div>
-                            <div class="flex-1">
-                                <h3 class="font-bold text-lg mb-1">{{ enrollment.courseTitle }}</h3>
-                                <p class="text-sm text-gray-500 mb-3">Progress: {{ enrollment.completedChapters }}/{{ enrollment.totalChapters }} chapters</p>
-                                <div class="flex items-center">
-                                    <div class="w-full bg-gray-200 rounded-full h-2 mr-3">
-                                        <div class="bg-green-500 h-2 rounded-full" [style.width]="enrollment.progressPercentage + '%'"></div>
-                                    </div>
-                                    <span class="text-xs text-gray-500">{{ enrollment.progressPercentage }}% complete</span>
-                                </div>
-                            </div>
+     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Course Cards for enrolled courses -->
+    <div *ngFor="let enrollment of myCourses" class="bg-white rounded-xl shadow-sm overflow-hidden course-card transition-all duration-300 hover:shadow-md">
+        <div class="h-40 bg-cover bg-center" [style.background-image]="'url(' + getCourseImageById(enrollment.courseId) + ')'"></div>
+        <div class="p-6">
+            <div class="flex items-start">
+                <div class="flex-shrink-0 bg-green-100 p-3 rounded-lg mr-4">
+                    <i class="fas fa-book text-green-600 text-xl"></i>
+                </div>
+                <div class="flex-1">
+                    <h3 class="font-bold text-lg mb-1">{{ enrollment.courseTitle }}</h3>
+                    <p class="text-sm text-gray-500 mb-3">Progress: {{ enrollment.completedChapters }}/{{ enrollment.totalChapters }} chapters</p>
+                    <div class="flex items-center">
+                        <div class="w-full bg-gray-200 rounded-full h-2 mr-3">
+                            <div class="h-2 rounded-full" [class]="getProgressColorClass(enrollment.progressPercentage)" [style.width]="enrollment.progressPercentage + '%'"></div>
                         </div>
-                        <div class="mt-4 flex justify-between">
-                            <button (click)="unenrollFromCourse(enrollment.courseId)" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors text-sm">
-                                Unenroll
-                            </button>
-                            <button (click)="continueLearning(enrollment.courseId)" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm">
-                                Continue Learning
-                            </button>
-                        </div>
+                        <span class="text-xs text-gray-500">{{ enrollment.progressPercentage }}% complete</span>
                     </div>
                 </div>
             </div>
+            <div class="mt-4 flex justify-between">
+                <button (click)="unenrollFromCourse(enrollment.courseId)" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors text-sm">
+                    Unenroll
+                </button>
+                <button (click)="continueLearning(enrollment.courseId)" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm">
+                    Continue Learning
+                </button>
+            </div>
         </div>
+    </div>
+</div>
 
         <!-- All Courses Section -->
         <div class="mb-8">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-xl font-bold text-gray-800">Available Courses</h2>
                 <div class="flex items-center space-x-2">
-                    <span class="text-sm text-gray-600">Filter:</span>
-                    <select class="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
-                        <option>All Levels</option>
-                        <option>Beginner</option>
-                        <option>Intermediate</option>
-                    </select>
-                    <select class="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
-                        <option>All Formats</option>
-                        <option>Text</option>
-                        <option>Video</option>
-                        <option>Audio</option>
-                    </select>
+                  
                 </div>
             </div>
             
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Course Cards for all courses -->
                 <div *ngFor="let course of allCourses" class="bg-white rounded-xl shadow-sm overflow-hidden course-card transition-all duration-300 hover:shadow-md">
-                    <div class="h-40 bg-green-100 flex items-center justify-center relative">
-                        <i class="fas fa-book text-5xl text-green-600"></i>
-                        <div class="absolute top-2 left-2">
-                            <span class="text-xs px-2 py-1 bg-white text-gray-800 rounded-full shadow-sm">Beginner</span>
-                        </div>
-                    </div>
+                    <div class="h-40 bg-cover bg-center" [style.background-image]="'url(' + getCourseImage(course) + ')'"></div>
                     <div class="p-6">
                         <div class="flex justify-between items-start mb-2">
                             <h3 class="font-bold text-lg">{{ course.title }}</h3>
@@ -109,18 +94,16 @@ Health & Safety Courses
                                 <span>{{ course.estimatedDuration }}h</span>
                             </div>
                             <div>
-                             <div>
-          <button *ngIf="!isEnrolled(course.id)" 
-                  (click)="enrollInCourse(course.id)"
-                  class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm">
-            Enroll Now
-          </button>
-          <button *ngIf="isEnrolled(course.id)" 
-                  (click)="viewCourse(course.id)" 
-                  class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm">
-            View Course
-          </button>
-        </div>
+                                <button *ngIf="!isEnrolled(course.id)" 
+                                        (click)="enrollInCourse(course.id)"
+                                        class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm">
+                                    Enroll Now
+                                </button>
+                                <button *ngIf="isEnrolled(course.id)" 
+                                        (click)="viewCourse(course.id)" 
+                                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm">
+                                    View Course
+                                </button>
                             </div>
                         </div>
                     </div>

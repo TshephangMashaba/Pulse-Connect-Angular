@@ -1,4 +1,3 @@
-// courses.component.ts
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CourseService, Course, Enrollment } from '../services/course.service';
@@ -17,15 +16,69 @@ export class CoursesComponent implements OnInit {
   isLoading = true;
   errorMessage = '';
 
+  // Direct mapping of course titles to specific health/medical images
+  courseImageMap: {[key: string]: string} = {
+    'HIV Awareness': 'https://images.pexels.com/photos/7155276/pexels-photo-7155276.jpeg', // Red ribbon for HIV awareness
+    'Climate Change, Disasters, and Community Resilience': 'https://images.pexels.com/photos/7640744/pexels-photo-7640744.jpeg', // Community health
+    'Diabetes Awareness': 'https://images.pexels.com/photos/4056725/pexels-photo-4056725.jpeg', // Blood sugar test
+    'Community Safety, Violence Prevention, and Mental Wellbeing': 'https://images.pexels.com/photos/5699456/pexels-photo-5699456.jpeg', // Community safety/mental health
+    'Farm Safety and Occupational Health': 'https://images.pexels.com/photos/7366318/pexels-photo-7366318.jpeg', // Farm with medical symbol
+    'Digital Safety': 'https://images.pexels.com/photos/5380642/pexels-photo-5380642.jpeg', // Digital safety
+    'Cancer Awareness': 'https://images.pexels.com/photos/5726708/pexels-photo-5726708.jpeg', // Cancer awareness ribbon
+    'Tuberculosis Education': 'https://images.pexels.com/photos/7155279/pexels-photo-7155279.jpeg', // TB education with lungs visual
+    'Birth Control Education': 'https://images.pexels.com/photos/7615478/pexels-photo-7615478.jpeg' // Birth control pills
+  };
+
+  defaultImage = 'https://images.pexels.com/photos/4167688/pexels-photo-4167688.jpeg'; // Generic medical image
+
   constructor(
     private courseService: CourseService,
     private authService: AuthService,
     private router: Router,
-     private alertService: AlertService
+    private alertService: AlertService
   ) { }
 
   ngOnInit() {
     this.loadCourses();
+  }
+
+  // Simple algorithm to get course image based on exact title match
+  getCourseImage(course: Course): string {
+    if (course.thumbnailUrl) {
+      return course.thumbnailUrl;
+    }
+
+    // Return the specific image for this course title if it exists
+    if (this.courseImageMap[course.title]) {
+      return this.courseImageMap[course.title];
+    }
+    
+    // Fallback to default image
+    return this.defaultImage;
+  }
+
+  // Get course image by ID (for enrolled courses)
+  getCourseImageById(courseId: string): string {
+    const course = this.allCourses.find(c => c.id === courseId);
+    if (course) {
+      return this.getCourseImage(course);
+    }
+    return this.defaultImage;
+  }
+
+  // Get progress bar color class based on completion percentage
+  getProgressColorClass(percentage: number): string {
+    if (percentage < 25) {
+      return 'bg-red-500'; // Red for less than 25%
+    } else if (percentage < 50) {
+      return 'bg-orange-500'; // Orange for 25-49%
+    } else if (percentage < 80) {
+      return 'bg-green-500'; // Green for 50-79%
+    } else if (percentage < 100) {
+      return 'bg-green-600'; // Dark green for 80-99%
+    } else {
+      return 'bg-green-800'; // Very dark green for 100%
+    }
   }
 
   loadCourses() {
@@ -56,8 +109,6 @@ export class CoursesComponent implements OnInit {
         // Check if it's an authentication error
         if (error.status === 401) {
           this.errorMessage = 'Please log in to view your courses';
-          // You might want to redirect to login page
-          // this.router.navigate(['/login']);
         } else {
           this.errorMessage = 'Failed to load your courses';
         }
@@ -95,7 +146,7 @@ export class CoursesComponent implements OnInit {
     });
   }
 
-async unenrollFromCourse(courseId: string) {
+  async unenrollFromCourse(courseId: string) {
     const confirmed = await this.alertService.confirm('Are you sure you want to unenroll from this course?');
     
     if (confirmed) {
@@ -113,9 +164,7 @@ async unenrollFromCourse(courseId: string) {
     }
   }
 
-
   viewCourse(courseId: string) {
-    // FIXED: Changed from '/courses' to '/course'
     this.router.navigate(['/course', courseId]);
   }
 

@@ -240,7 +240,8 @@ export class CourseManagementComponent implements OnInit {
   isUploading = false;
   selectedChapterForEdit: Chapter | null = null;
   private objectUrls: string[] = [];
-
+tinymceEditor: any = null;
+isEditorInitialized = false;
   constructor(
     private http: HttpClient,
     private authService: AuthService,
@@ -382,21 +383,33 @@ async deleteCourse(courseId: string): Promise<void> {
   }
   
 
-  editChapter(chapter: Chapter): void {
-    this.selectedChapterForEdit = { ...chapter };
-    this.chapterForm = {
-      title: chapter.title,
-       content: chapter.content,
-      order: chapter.order,
-      mediaUrl: chapter.mediaUrl,
-      mediaType: chapter.mediaType
-    };
+editChapter(chapter: Chapter): void {
+  this.selectedChapterForEdit = { ...chapter };
+  this.chapterForm = {
+    title: chapter.title,
+    content: chapter.content,
+    order: chapter.order,
+    mediaUrl: chapter.mediaUrl,
+    mediaType: chapter.mediaType
+  };
+  
+  // Update TinyMCE editor content if it's initialized
+  if (this.tinymceEditor && this.isEditorInitialized) {
+    setTimeout(() => {
+      this.tinymceEditor.setContent(this.chapterForm.content || '');
+    }, 100);
   }
+}
 
-  cancelEditChapter(): void {
-    this.selectedChapterForEdit = null;
-    this.resetChapterForm();
+cancelEditChapter(): void {
+  this.selectedChapterForEdit = null;
+  this.resetChapterForm();
+  
+  // Clear editor content
+  if (this.tinymceEditor && this.isEditorInitialized) {
+    this.tinymceEditor.setContent('');
   }
+}
   
 addChapter(courseId: string): void {
   this.isLoading = true;
@@ -779,13 +792,12 @@ updateChapter(): void {
       }
     });
   }
-
-  viewQuestions(course: Course): void {
-    this.selectedCourse = course;
-    this.loadTest(course.id);
-    this.showQuizModal = true;
-    this.showAddQuestionsModal = true;
-  }
+viewQuestions(course: Course): void {
+  this.selectedCourse = course;
+  this.loadTest(course.id);
+  this.showQuizModal = true;
+  this.showAddQuestionsModal = true;
+}
 
   // Modal Management
   openCourseModal(course?: Course): void {
@@ -1043,4 +1055,14 @@ updateChapter(): void {
       this.showCreateTestModal = false;
     }
   }
+  initEditor(editor: any): void {
+  this.tinymceEditor = editor;
+  this.isEditorInitialized = true;
+  
+  // Set initial content if editing an existing chapter
+  if (this.selectedChapterForEdit && this.chapterForm.content) {
+    editor.setContent(this.chapterForm.content);
+  }
+}
+
 }

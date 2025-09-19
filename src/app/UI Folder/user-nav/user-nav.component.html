@@ -7,7 +7,7 @@
                 <img class="h-10 w-auto" src="/Pulse Connect.png" alt="Pulse Connect">
             </div>
             
-            <!-- Center: Navigation Links -->
+            <!-- Center: Navigation Links (Desktop) -->
             <div class="hidden md:flex justify-center flex-1">
                 <div class="flex space-x-8">
                     <a href="/my-dashboard" [ngClass]="{'border-green-500': isActive('/my-dashboard'), 'border-transparent': !isActive('/my-dashboard'), 'text-gray-900': isActive('/my-dashboard'), 'text-gray-500': !isActive('/my-dashboard'), 'hover:border-gray-300 hover:text-gray-700': true}" class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
@@ -96,6 +96,36 @@
         </div>
     </div>
 </nav>
+
+<!-- Mobile Bottom Navigation -->
+<div class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
+    <div class="flex justify-around items-center h-16">
+        <a href="/my-dashboard" 
+           [ngClass]="{'text-green-600': isActive('/my-dashboard'), 'text-gray-500': !isActive('/my-dashboard')}" 
+           class="flex flex-col items-center justify-center w-full h-full">
+            <i class="fas fa-home text-lg mb-1"></i>
+            <span class="text-xs">Dashboard</span>
+        </a>
+        <a href="/courses" 
+           [ngClass]="{'text-green-600': isActive('/courses'), 'text-gray-500': !isActive('/courses')}" 
+           class="flex flex-col items-center justify-center w-full h-full">
+            <i class="fas fa-book-open text-lg mb-1"></i>
+            <span class="text-xs">Courses</span>
+        </a>
+        <a href="/certificates" 
+           [ngClass]="{'text-green-600': isActive('/certificates'), 'text-gray-500': !isActive('/certificates')}" 
+           class="flex flex-col items-center justify-center w-full h-full">
+            <i class="fas fa-certificate text-lg mb-1"></i>
+            <span class="text-xs">Certificates</span>
+        </a>
+        <a href="/community" 
+           [ngClass]="{'text-green-600': isActive('/community'), 'text-gray-500': !isActive('/community')}" 
+           class="flex flex-col items-center justify-center w-full h-full">
+            <i class="fas fa-comments text-lg mb-1"></i>
+            <span class="text-xs">Community</span>
+        </a>
+    </div>
+</div>
 
 <!-- Logout Confirmation Modal -->
 <div id="logout-modal" class="hidden fixed inset-0 z-50 overflow-y-auto">

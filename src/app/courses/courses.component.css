@@ -1,13 +1,4 @@
-        .course-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-        }
-        .category-btn.active {
-            background-color: #059669;
-            color: white;
-        }
-
-        .course-card {
+.course-card {
   transition: all 0.3s ease;
 }
 
@@ -26,4 +17,23 @@
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
+/* Custom progress bar colors */
+.progress-red {
+  background-color: #ef4444;
+}
 
+.progress-orange {
+  background-color: #f97316;
+}
+
+.progress-green {
+  background-color: #22c55e;
+}
+
+.progress-dark-green {
+  background-color: #16a34a;
+}
+
+.progress-complete {
+  background-color: #166534;
+}

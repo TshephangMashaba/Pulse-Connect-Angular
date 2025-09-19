@@ -37,6 +37,13 @@ nav {
     z-index: 50;
 }
 
+/* Mobile bottom navigation styling */
+@media (max-width: 767px) {
+    /* Add padding to the bottom of the page content to avoid overlap with bottom nav */
+    body {
+        padding-bottom: 4rem; /* Adjust based on your bottom nav height */
+    }
+}
 
 /* alert-modal.component.css */
 :host {
@@ -50,7 +57,6 @@ nav {
 /* Ensure modal is properly centered and sized */
 .modal-container {
   width: 100%;
-
   margin: 0 auto;
 }
 
