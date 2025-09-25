@@ -2,8 +2,8 @@
 <app-user-nav></app-user-nav>
 
 <!-- Full Page Loader for Certificate Generation -->
-<div *ngIf="isGenerating" class="fixed inset-0 bg-white z-50 flex items-center justify-center">
-    <div class="bg-white rounded-xl p-8 max-w-md mx-4 text-center shadow-2xl">
+<div *ngIf="isGenerating" class="fixed inset-0 z-50 flex items-center justify-center">
+    <div class="bg-white  p-8 max-w-md mx-4 text-center ">
         <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-green-600 mx-auto mb-4"></div>
         <h3 class="text-xl font-bold text-gray-800 mb-2">Generating Certificate</h3>
         <p class="text-gray-600">Please wait while we prepare your certificate...</p>
