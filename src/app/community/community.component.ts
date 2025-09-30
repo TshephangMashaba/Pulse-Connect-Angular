@@ -92,7 +92,8 @@ export class CommunityComponent implements OnInit {
   activeTab = 'discussions';
   showProvinceView = false;
   selectedProvinceGroup: string = '';
-  
+  // UI state for guidelines modal
+showGuidelinesModal = false;
   // Posts and data
   posts: PostDto[] = [];
   provincePosts: PostDto[] = [];
@@ -892,4 +893,17 @@ checkUserLikeStatus(): void {
     });
   });
 }
+
+
+
+// Community Guidelines Modal methods
+openGuidelinesModal(): void {
+  this.showGuidelinesModal = true;
+}
+
+closeGuidelinesModal(): void {
+  this.showGuidelinesModal = false;
+}
+
+
 }

@@ -73,26 +73,74 @@ export class CourseViewComponent implements OnInit {
    stopTTS() {
     this.ttsService.stop();
   }
-
-  private readChapterContent() {
-    if (!this.currentChapter || !this.chapterContent) return;
-    
-    // Extract text content from HTML
-    const contentElement = this.chapterContent.nativeElement;
-    const textContent = contentElement.textContent || '';
-    
-    if (!textContent.trim()) return;
-    
-    // Get text nodes and their boundaries for highlighting
-    const textNodes: Node[] = [];
-    const wordBoundaries: { node: Node, start: number, end: number }[] = [];
-    let currentIndex = 0;
-    
-    this.collectTextNodes(contentElement, textNodes, wordBoundaries, currentIndex);
-    
-    // Start reading
-    this.ttsService.speak(textContent, textNodes, wordBoundaries);
+// In course-view.component.ts - simplified readChapterContent
+// In course-view.component.ts - update the readChapterContent method
+private readChapterContent() {
+  if (!this.currentChapter || !this.chapterContent) {
+    console.warn('No chapter content available for TTS');
+    return;
   }
+  
+  // Get the HTML content directly from the chapter
+  const htmlContent = this.currentChapter.content;
+  
+  if (!htmlContent || !htmlContent.trim()) {
+    console.warn('Chapter content is empty');
+    return;
+  }
+  
+  console.log('Starting TTS for chapter:', this.currentChapter.title);
+  
+  // Use the HTML content directly - the service will extract text
+  this.ttsService.speak(htmlContent, this.chapterContent.nativeElement);
+}
+
+// Add a test method to verify TTS
+testTTS() {
+  console.log('=== Testing TTS Functionality ===');
+  
+  if (!this.ttsService.isSupported()) {
+    console.error('Speech Synthesis not supported in this browser');
+    this.alertService.error('Text-to-speech is not supported in your browser');
+    return;
+  }
+  
+  // Test with simple text first
+  const testText = 'Text to speech is working correctly. This is a test. If you can hear this, the TTS system is functioning properly.';
+  this.ttsService.speak(testText);
+  
+  console.log('TTS test initiated');
+  
+  // Also test with actual chapter content if available
+  setTimeout(() => {
+    if (this.currentChapter?.content) {
+      console.log('Now testing with actual chapter content...');
+      // Don't auto-start, just log that it's ready
+    }
+  }, 3000);
+}
+
+// Add a method to check TTS status
+checkTTSStatus() {
+  console.log('=== TTS Status Check ===');
+  console.log('TTS Supported:', this.ttsService.isSupported());
+  console.log('Is Speaking:', this.isPlaying);
+  console.log('Current Chapter:', this.currentChapter?.title);
+  console.log('Chapter Content Available:', !!this.currentChapter?.content);
+  console.log('Content Length:', this.currentChapter?.content?.length || 0);
+  console.log('Available Voices:', this.ttsService.getVoices().length);
+  
+  if (this.ttsService.isSupported()) {
+    this.alertService.info('TTS is supported and ready to use');
+  } else {
+    this.alertService.error('TTS not supported in this browser. Please use Chrome, Edge, or Safari.');
+  }
+}
+
+// In course-view.component.ts
+get isTTSSupported(): boolean {
+  return this.ttsService.isSupported();
+}
 
    private collectTextNodes(
     element: Node, 
@@ -390,6 +438,7 @@ getScore(testResult: any): number {
       });
     }
   }
+
 
   
 }

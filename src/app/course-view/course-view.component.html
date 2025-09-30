@@ -111,26 +111,58 @@
                 <p class="text-sm text-gray-500">Lesson {{ chapters.indexOf(currentChapter) + 1 }} of {{ chapters.length }}</p>
             </div>
 
-            <div class="flex items-center space-x-2" *ngIf="currentChapter.content">
-                <button (click)="toggleTTS()" 
-                        [class.bg-green-600]="isPlaying"
-                        [class.bg-gray-200]="!isPlaying"
-                        [class.text-white]="isPlaying"
-                        [class.text-gray-700]="!isPlaying"
-                        class="p-2 rounded-full hover:bg-green-500 hover:text-white transition-colors"
-                        [title]="isPlaying ? 'Pause reading' : 'Start reading'">
-                    <i class="fas" [class.fa-pause]="isPlaying" [class.fa-play]="!isPlaying"></i>
-                </button>
-                <button (click)="stopTTS()" 
-                        class="p-2 rounded-full bg-gray-200 text-gray-700 hover:bg-red-500 hover:text-white transition-colors"
-                        title="Stop reading">
-                    <i class="fas fa-stop"></i>
-                </button>
-                <div class="flex items-center ml-2 text-sm text-gray-500" *ngIf="isPlaying">
-                    <i class="fas fa-volume-up mr-1"></i>
-                    Reading...
-                </div>
-            </div>
+        <!-- Updated TTS Controls in your HTML template -->
+<div class="flex items-center space-x-2" *ngIf="currentChapter?.content">
+  <button (click)="toggleTTS()" 
+          [class.bg-green-600]="isPlaying"
+          [class.bg-gray-200]="!isPlaying"
+          [class.text-white]="isPlaying"
+          [class.text-gray-700]="!isPlaying"
+          class="p-2 rounded-full hover:bg-green-500 hover:text-white transition-colors flex items-center justify-center w-10 h-10"
+          [title]="isPlaying ? 'Pause reading' : 'Start reading'"
+          [disabled]="!currentChapter.content">
+    <i class="fas text-sm" [class.fa-pause]="isPlaying" [class.fa-play]="!isPlaying"></i>
+  </button>
+  
+  <button (click)="stopTTS()" 
+          class="p-2 rounded-full bg-gray-200 text-gray-700 hover:bg-red-500 hover:text-white transition-colors flex items-center justify-center w-10 h-10"
+          title="Stop reading">
+    <i class="fas fa-stop text-sm"></i>
+  </button>
+  
+  <!-- Debug buttons - you can remove these in production -->
+  <button (click)="testTTS()" 
+          class="p-2 rounded-full bg-blue-200 text-blue-700 hover:bg-blue-500 hover:text-white transition-colors flex items-center justify-center w-10 h-10"
+          title="Test TTS">
+    <i class="fas fa-bug text-sm"></i>
+  </button>
+  
+  <button (click)="checkTTSStatus()" 
+          class="p-2 rounded-full bg-purple-200 text-purple-700 hover:bg-purple-500 hover:text-white transition-colors flex items-center justify-center w-10 h-10"
+          title="Check TTS Status">
+    <i class="fas fa-info text-sm"></i>
+  </button>
+  
+  <div class="flex items-center ml-2 text-sm text-gray-500" *ngIf="isPlaying">
+    <i class="fas fa-volume-up mr-1 animate-pulse"></i>
+    <span class="animate-pulse">Reading...</span>
+  </div>
+</div>
+
+<!-- Add a browser compatibility warning -->
+<div *ngIf="!isTTSSupported" class="bg-yellow-100 border-l-4 border-yellow-500 p-4 mb-4 rounded">
+  <div class="flex">
+    <div class="flex-shrink-0">
+      <i class="fas fa-exclamation-triangle text-yellow-400"></i>
+    </div>
+    <div class="ml-3">
+      <p class="text-sm text-yellow-700">
+        <strong>Text-to-speech limitation:</strong> This feature works best in Chrome, Edge, and Safari browsers. 
+        Some browsers may have limited support for speech synthesis.
+      </p>
+    </div>
+  </div>
+</div>
         </div>
                 <div class="p-6">
                     <!-- Media content based on type -->

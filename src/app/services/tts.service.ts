@@ -1,4 +1,4 @@
-// tts.service.ts
+// tts.service.ts - Fixed version with HTML parsing
 import { Injectable, NgZone } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
@@ -9,9 +9,7 @@ export class TextToSpeechService {
   private speechSynthesis: SpeechSynthesis;
   private utterance: SpeechSynthesisUtterance | null = null;
   private isSpeaking = new BehaviorSubject<boolean>(false);
-  private currentText = '';
-  private textNodes: Node[] = [];
-  private wordBoundaries: { node: Node, start: number, end: number }[] = [];
+  private currentElement: HTMLElement | null = null;
 
   constructor(private ngZone: NgZone) {
     this.speechSynthesis = window.speechSynthesis;
@@ -21,30 +19,51 @@ export class TextToSpeechService {
   private setupUtterance() {
     this.utterance = new SpeechSynthesisUtterance();
     this.utterance.onend = () => this.ngZone.run(() => this.onEnd());
-    this.utterance.onerror = () => this.ngZone.run(() => this.onEnd());
+    this.utterance.onerror = (error) => this.ngZone.run(() => this.onError(error));
     this.utterance.onboundary = (event) => this.ngZone.run(() => this.onBoundary(event));
   }
 
-  speak(text: string, textNodes: Node[] = [], wordBoundaries: any[] = []) {
-    if (!this.utterance) return;
+  speak(text: string, element?: HTMLElement) {
+    if (!this.utterance || !this.isSupported()) {
+      console.warn('TTS not supported or utterance not available');
+      return;
+    }
     
     this.stop();
     
-    this.currentText = text;
-    this.textNodes = textNodes;
-    this.wordBoundaries = wordBoundaries;
+    // Store reference to element for highlighting
+    this.currentElement = element || null;
     
-    this.utterance.text = text;
-    this.utterance.rate = 1.0;
+    // Clean the text - remove HTML tags and extract plain text
+    const cleanText = this.extractTextFromHTML(text);
+    
+    if (!cleanText.trim()) {
+      console.warn('No text content to speak');
+      return;
+    }
+    
+    // Highlight the element if provided
+    if (this.currentElement) {
+      this.highlightElement(this.currentElement);
+    }
+    
+    this.utterance.text = cleanText;
+    this.utterance.rate = 0.9; // Slightly slower for better comprehension
     this.utterance.pitch = 1.0;
     this.utterance.volume = 1.0;
     
-    this.speechSynthesis.speak(this.utterance);
-    this.isSpeaking.next(true);
+    try {
+      this.speechSynthesis.speak(this.utterance);
+      this.isSpeaking.next(true);
+      console.log('TTS started speaking:', cleanText.substring(0, 100) + '...');
+    } catch (error) {
+      console.error('Error starting TTS:', error);
+      this.isSpeaking.next(false);
+    }
   }
 
   pause() {
-    if (this.speechSynthesis.speaking) {
+    if (this.speechSynthesis.speaking && !this.speechSynthesis.paused) {
       this.speechSynthesis.pause();
       this.isSpeaking.next(false);
     }
@@ -64,47 +83,72 @@ export class TextToSpeechService {
   }
 
   private onEnd() {
+    console.log('TTS finished speaking');
+    this.removeHighlights();
+    this.isSpeaking.next(false);
+  }
+
+  private onError(error: SpeechSynthesisErrorEvent) {
+    console.error('TTS error:', error);
     this.removeHighlights();
     this.isSpeaking.next(false);
   }
 
   private onBoundary(event: SpeechSynthesisEvent) {
-    this.removeHighlights();
-    
-    if (event.name === 'word' && this.wordBoundaries.length > 0) {
-      const charIndex = event.charIndex;
-      const boundary = this.wordBoundaries.find(b => 
-        charIndex >= b.start && charIndex < b.end
-      );
-      
-      if (boundary) {
-        this.highlightNode(boundary.node);
-      }
-    }
+    // Optional: Implement word-by-word highlighting here if needed
+    console.log('TTS boundary:', event);
   }
 
-  private highlightNode(node: Node) {
-    if (node.parentElement) {
-      const span = document.createElement('span');
-      span.className = 'bg-yellow-200 text-black';
-      node.parentElement.replaceChild(span, node);
-      span.appendChild(node);
-    }
+  // Extract plain text from HTML content
+  private extractTextFromHTML(html: string): string {
+    if (!html) return '';
+    
+    // Create a temporary div to parse HTML
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = html;
+    
+    // Get text content (automatically strips HTML tags)
+    let text = tempDiv.textContent || tempDiv.innerText || '';
+    
+    // Clean up the text
+    text = text
+      .replace(/\s+/g, ' ') // Replace multiple spaces with single space
+      .replace(/\n/g, ' ') // Replace newlines with spaces
+      .trim();
+    
+    return text;
+  }
+
+  private highlightElement(element: HTMLElement) {
+    this.removeHighlights();
+    element.classList.add('tts-highlight');
   }
 
   private removeHighlights() {
-    document.querySelectorAll('span.bg-yellow-200').forEach(element => {
-      const parent = element.parentNode;
-      if (parent) {
-        while (element.firstChild) {
-          parent.insertBefore(element.firstChild, element);
-        }
-        parent.removeChild(element);
-      }
+    if (this.currentElement) {
+      this.currentElement.classList.remove('tts-highlight');
+    }
+    // Also remove any other highlights
+    document.querySelectorAll('.tts-highlight').forEach(el => {
+      el.classList.remove('tts-highlight');
     });
+  }
+
+  isSupported(): boolean {
+    return 'speechSynthesis' in window;
+  }
+
+  getVoices(): SpeechSynthesisVoice[] {
+    return this.speechSynthesis.getVoices();
   }
 
   getIsSpeaking() {
     return this.isSpeaking.asObservable();
+  }
+
+  // Test method to verify TTS is working
+  testTTS() {
+    const testText = 'Text to speech is working correctly. This is a test.';
+    this.speak(testText);
   }
 }
