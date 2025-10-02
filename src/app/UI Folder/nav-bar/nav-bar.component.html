@@ -12,22 +12,30 @@
       <div class="hidden md:flex md:items-center md:space-x-6">
         <ul class="flex space-x-8">
           <li>
-            <a href="/home" class="border-green-500 text-green-700 px-3 py-2 border-b-2 text-sm font-medium transition-colors duration-200">
+            <a 
+              href="/home" 
+              [class]="isActive('/home') ? 'border-green-500 text-green-700 px-3 py-2 border-b-2 text-sm font-medium transition-colors duration-200' : 'border-transparent text-gray-600 hover:border-green-300 hover:text-green-700 px-3 py-2 border-b-2 text-sm font-medium transition-colors duration-200'">
               Home
             </a>
           </li>
           <li>
-            <a href="/pulse-discovery" class="border-transparent text-gray-600 hover:border-green-300 hover:text-green-700 px-3 py-2 border-b-2 text-sm font-medium transition-colors duration-200">
-             Pulse Discovery
+            <a 
+              href="/pulse-discovery" 
+              [class]="isActive('/pulse-discovery') ? 'border-green-500 text-green-700 px-3 py-2 border-b-2 text-sm font-medium transition-colors duration-200' : 'border-transparent text-gray-600 hover:border-green-300 hover:text-green-700 px-3 py-2 border-b-2 text-sm font-medium transition-colors duration-200'">
+              Pulse Discovery
             </a>
           </li>
           <li>
-            <a href="/courses-enroll" class="border-transparent text-gray-600 hover:border-green-300 hover:text-green-700 px-3 py-2 border-b-2 text-sm font-medium transition-colors duration-200">
+            <a 
+              href="/courses-enroll" 
+              [class]="isActive('/courses-enroll') ? 'border-green-500 text-green-700 px-3 py-2 border-b-2 text-sm font-medium transition-colors duration-200' : 'border-transparent text-gray-600 hover:border-green-300 hover:text-green-700 px-3 py-2 border-b-2 text-sm font-medium transition-colors duration-200'">
               Courses
             </a>
           </li>
           <li>
-            <a href="/contact" class="border-transparent text-gray-600 hover:border-green-300 hover:text-green-700 px-3 py-2 border-b-2 text-sm font-medium transition-colors duration-200">
+            <a 
+              href="/contact" 
+              [class]="isActive('/contact') ? 'border-green-500 text-green-700 px-3 py-2 border-b-2 text-sm font-medium transition-colors duration-200' : 'border-transparent text-gray-600 hover:border-green-300 hover:text-green-700 px-3 py-2 border-b-2 text-sm font-medium transition-colors duration-200'">
               Contact Us
             </a>
           </li>
@@ -59,16 +67,28 @@
   <!-- Mobile menu -->
   <div class="md:hidden bg-white/95 backdrop-blur-md absolute top-16 left-0 right-0" [class.hidden]="!isMobileMenuOpen">
     <div class="pt-2 pb-3 space-y-1 px-4">
-      <a href="/home" class="bg-green-50 border-green-500 text-green-700 block px-4 py-3 border-l-4 text-base font-medium rounded-md" (click)="closeMobileMenu()">
+      <a 
+        href="/home" 
+        [class]="isActive('/home') ? 'bg-green-50 border-green-500 text-green-700 block px-4 py-3 border-l-4 text-base font-medium rounded-md' : 'border-transparent text-gray-600 hover:bg-green-50 hover:border-green-300 hover:text-green-700 block px-4 py-3 border-l-4 text-base font-medium rounded-md transition-colors'"
+        (click)="closeMobileMenu()">
         Home
       </a>
-      <a href="/community" class="border-transparent text-gray-600 hover:bg-green-50 hover:border-green-300 hover:text-green-700 block px-4 py-3 border-l-4 text-base font-medium rounded-md transition-colors" (click)="closeMobileMenu()">
-        Community
+      <a 
+        href="/pulse-discovery" 
+        [class]="isActive('/pulse-discovery') ? 'bg-green-50 border-green-500 text-green-700 block px-4 py-3 border-l-4 text-base font-medium rounded-md' : 'border-transparent text-gray-600 hover:bg-green-50 hover:border-green-300 hover:text-green-700 block px-4 py-3 border-l-4 text-base font-medium rounded-md transition-colors'"
+        (click)="closeMobileMenu()">
+        Pulse Discovery
       </a>
-      <a href="/courses" class="border-transparent text-gray-600 hover:bg-green-50 hover:border-green-300 hover:text-green-700 block px-4 py-3 border-l-4 text-base font-medium rounded-md transition-colors" (click)="closeMobileMenu()">
+      <a 
+        href="/courses-enroll" 
+        [class]="isActive('/courses-enroll') ? 'bg-green-50 border-green-500 text-green-700 block px-4 py-3 border-l-4 text-base font-medium rounded-md' : 'border-transparent text-gray-600 hover:bg-green-50 hover:border-green-300 hover:text-green-700 block px-4 py-3 border-l-4 text-base font-medium rounded-md transition-colors'"
+        (click)="closeMobileMenu()">
         Courses
       </a>
-      <a href="/contact" class="border-transparent text-gray-600 hover:bg-green-50 hover:border-green-300 hover:text-green-700 block px-4 py-3 border-l-4 text-base font-medium rounded-md transition-colors" (click)="closeMobileMenu()">
+      <a 
+        href="/contact" 
+        [class]="isActive('/contact') ? 'bg-green-50 border-green-500 text-green-700 block px-4 py-3 border-l-4 text-base font-medium rounded-md' : 'border-transparent text-gray-600 hover:bg-green-50 hover:border-green-300 hover:text-green-700 block px-4 py-3 border-l-4 text-base font-medium rounded-md transition-colors'"
+        (click)="closeMobileMenu()">
         Contact Us
       </a>
     </div>
