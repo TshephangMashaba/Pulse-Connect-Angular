@@ -24,18 +24,43 @@
       </div>
     </div>
   </div>
-  
   <!-- Loading Screen -->
-  <div *ngIf="isLoading" class="loading-screen">
-    <div class="loader-content">
-      <div class="loader"></div>
-      <h2>Loading The Pulse Game</h2>
-      <p>Health Knowledge Collector</p>
-      <div class="loading-facts">
-        <p>{{ loadingFacts[currentLoadingFact] }}</p>
+<div *ngIf="isLoading" class="loading-screen">
+  <div class="loader-content">
+    <!-- Circular Snake Animation in Loader -->
+    <div class="circular-snake-loader">
+      <div class="circular-track">
+        <div class="circular-snake">
+          <div class="snake-segment circular-head"></div>
+          <div class="snake-segment circular-body"></div>
+          <div class="snake-segment circular-body"></div>
+          <div class="snake-segment circular-body"></div>
+          <div class="snake-segment circular-body"></div>
+          <div class="snake-segment circular-tail"></div>
+        </div>
+      </div>
+      <div class="floating-health-items">
+        <div class="health-orb fruit">🍎</div>
+        <div class="health-orb vegetable">🥦</div>
+        <div class="health-orb vitamin">💊</div>
+        <div class="health-orb water">💧</div>
+        <div class="health-orb exercise">🏃</div>
+      </div>
+      <div class="pulse-effects">
+        <div class="pulse-ring"></div>
+        <div class="pulse-ring"></div>
+        <div class="pulse-ring"></div>
       </div>
     </div>
+    
+    <h2>Loading The Pulse Game</h2>
+    <p>Health Knowledge Collector</p>
+    <div class="loading-facts">
+      <p>{{ loadingFacts[currentLoadingFact] }}</p>
+    </div>
   </div>
+</div>
+
 <!-- Start Menu Modal -->
 <div *ngIf="!isLoading && !gameStarted && !gameOver" class="start-menu-modal">
   <div class="modal-backdrop"></div>

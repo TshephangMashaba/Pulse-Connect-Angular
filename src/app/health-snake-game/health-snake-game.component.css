@@ -218,7 +218,6 @@
 .start-menu-modal .modal-content {
   position: relative;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.98) 100%);
-  border-radius: 24px;
   padding: 40px;
   max-width: 1000px;
   width: 100%;
@@ -827,7 +826,6 @@
   background: rgba(26, 54, 93, 0.95);
   backdrop-filter: blur(20px);
   padding: 35px;
-  border-radius: 20px;
   text-align: center;
   max-width: 480px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
@@ -1750,5 +1748,457 @@
     width: 3px;
     height: 3px;
     box-shadow: 6px 0 0 white;
+  }
+}
+
+/* Circular Snake Loader Animation */
+.circular-snake-loader {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  margin: 0 auto 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.circular-track {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  border: 2px dashed rgba(0, 204, 13, 0.3);
+  border-radius: 50%;
+  animation: trackRotate 8s linear infinite;
+}
+
+.circular-snake {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform-origin: center;
+  display: flex;
+  align-items: center;
+  transform: translate(-50%, -50%) rotate(0deg);
+  animation: snakeOrbit 6s linear infinite;
+}
+
+.circular-head {
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(135deg, #00ee0f 0%, #00cc0d 100%);
+  border-radius: 50%;
+  box-shadow: 
+    0 0 15px rgba(0, 204, 13, 0.8),
+    0 0 30px rgba(0, 204, 13, 0.4);
+  animation: headPulse 2s ease-in-out infinite;
+  position: relative;
+  z-index: 10;
+}
+
+.circular-head::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 4px;
+  height: 4px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 8px 0 0 white;
+  animation: eyeBlink 3s ease-in-out infinite;
+}
+
+.circular-body {
+  width: 16px;
+  height: 16px;
+  background: linear-gradient(135deg, #00cc0d 0%, #00a80b 100%);
+  border-radius: 50%;
+  margin-left: -4px;
+  box-shadow: 0 0 10px rgba(0, 204, 13, 0.6);
+  animation: bodyGlow 2s ease-in-out infinite;
+  animation-delay: calc(var(--body-index, 0) * 0.15s);
+}
+
+.circular-tail {
+  width: 12px;
+  height: 12px;
+  background: linear-gradient(135deg, #008809 0%, #006707 100%);
+  border-radius: 50%;
+  margin-left: -4px;
+  box-shadow: 0 0 8px rgba(0, 204, 13, 0.4);
+  animation: tailFade 2s ease-in-out infinite;
+}
+
+/* Floating Health Items */
+.floating-health-items {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.health-orb {
+  position: absolute;
+  font-size: 20px;
+  filter: drop-shadow(0 0 10px currentColor);
+  animation: orbFloat 4s ease-in-out infinite;
+  z-index: 5;
+}
+
+.health-orb.fruit {
+  top: 15%;
+  left: 50%;
+  color: #ff6b6b;
+  animation-delay: 0s;
+}
+
+.health-orb.vegetable {
+  top: 50%;
+  left: 85%;
+  color: #4caf50;
+  animation-delay: 0.8s;
+}
+
+.health-orb.vitamin {
+  top: 85%;
+  left: 50%;
+  color: #00cc0d;
+  animation-delay: 1.6s;
+}
+
+.health-orb.water {
+  top: 50%;
+  left: 15%;
+  color: #2196f3;
+  animation-delay: 2.4s;
+}
+
+.health-orb.exercise {
+  top: 25%;
+  left: 25%;
+  color: #4caf50;
+  animation-delay: 3.2s;
+}
+
+/* Pulse Effects */
+.pulse-effects {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.pulse-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 180px;
+  height: 180px;
+  border: 2px solid rgba(0, 204, 13, 0.1);
+  border-radius: 50%;
+  animation: pulseExpand 3s linear infinite;
+}
+
+.pulse-ring:nth-child(2) {
+  animation-delay: 1s;
+}
+
+.pulse-ring:nth-child(3) {
+  animation-delay: 2s;
+}
+
+/* Animations */
+@keyframes snakeOrbit {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  25% {
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
+  50% {
+    transform: translate(-50%, -50%) rotate(180deg);
+  }
+  75% {
+    transform: translate(-50%, -50%) rotate(270deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes trackRotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes headPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 
+      0 0 15px rgba(0, 204, 13, 0.8),
+      0 0 30px rgba(0, 204, 13, 0.4);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 
+      0 0 25px rgba(0, 204, 13, 1),
+      0 0 40px rgba(0, 204, 13, 0.6);
+  }
+}
+
+@keyframes bodyGlow {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 10px rgba(0, 204, 13, 0.6);
+  }
+  50% {
+    opacity: 0.7;
+    box-shadow: 0 0 15px rgba(0, 204, 13, 0.8);
+  }
+}
+
+@keyframes tailFade {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.9);
+  }
+}
+
+@keyframes eyeBlink {
+  0%, 90%, 100% {
+    opacity: 1;
+  }
+  95% {
+    opacity: 0.3;
+  }
+}
+
+@keyframes orbFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg) scale(1);
+    filter: drop-shadow(0 0 10px currentColor);
+  }
+  25% {
+    transform: translateY(-8px) rotate(90deg) scale(1.1);
+    filter: drop-shadow(0 0 15px currentColor);
+  }
+  50% {
+    transform: translateY(0) rotate(180deg) scale(1);
+    filter: drop-shadow(0 0 12px currentColor);
+  }
+  75% {
+    transform: translateY(-5px) rotate(270deg) scale(1.05);
+    filter: drop-shadow(0 0 13px currentColor);
+  }
+}
+
+@keyframes pulseExpand {
+  0% {
+    width: 180px;
+    height: 180px;
+    opacity: 1;
+    border-color: rgba(0, 204, 13, 0.3);
+  }
+  100% {
+    width: 250px;
+    height: 250px;
+    opacity: 0;
+    border-color: rgba(0, 204, 13, 0);
+  }
+}
+
+/* Collection Effects */
+.collection-burst {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background: radial-gradient(circle, rgba(0, 204, 13, 0.8) 0%, rgba(0, 204, 13, 0) 70%);
+  border-radius: 50%;
+  opacity: 0;
+  animation: collectionFlash 6s linear infinite;
+}
+
+@keyframes collectionFlash {
+  /* Collection moments synchronized with snake position */
+  12%, 13% { /* Top */
+    opacity: 1;
+    transform: scale(1);
+    top: 15%;
+    left: 50%;
+  }
+  13.5%, 14% {
+    opacity: 0;
+    transform: scale(2);
+  }
+  
+  37%, 38% { /* Right */
+    opacity: 1;
+    transform: scale(1);
+    top: 50%;
+    left: 85%;
+  }
+  38.5%, 39% {
+    opacity: 0;
+    transform: scale(2);
+  }
+  
+  62%, 63% { /* Bottom */
+    opacity: 1;
+    transform: scale(1);
+    top: 85%;
+    left: 50%;
+  }
+  63.5%, 64% {
+    opacity: 0;
+    transform: scale(2);
+  }
+  
+  87%, 88% { /* Left */
+    opacity: 1;
+    transform: scale(1);
+    top: 50%;
+    left: 15%;
+  }
+  88.5%, 89% {
+    opacity: 0;
+    transform: scale(2);
+  }
+  
+  0%, 11%, 36%, 61%, 86%, 100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+}
+
+/* Enhanced loader styles */
+.loader-content h2 {
+  font-size: 2.5em;
+  margin-bottom: 15px;
+  background: linear-gradient(135deg, #00cc0d, #00ee0f);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 0 20px rgba(0, 204, 13, 0.5);
+  animation: titleGlow 3s ease-in-out infinite;
+}
+
+@keyframes titleGlow {
+  0%, 100% {
+    text-shadow: 0 0 20px rgba(0, 204, 13, 0.5);
+  }
+  50% {
+    text-shadow: 0 0 30px rgba(0, 204, 13, 0.8), 0 0 40px rgba(0, 204, 13, 0.3);
+  }
+}
+
+/* Responsive circular loader */
+@media (max-width: 768px) {
+  .circular-snake-loader {
+    width: 160px;
+    height: 160px;
+    margin-bottom: 30px;
+  }
+  
+  .circular-track {
+    width: 130px;
+    height: 130px;
+  }
+  
+  .circular-head {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .circular-body {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .circular-tail {
+    width: 10px;
+    height: 10px;
+  }
+  
+  .health-orb {
+    font-size: 18px;
+  }
+  
+  .pulse-ring {
+    width: 150px;
+    height: 150px;
+  }
+  
+  @keyframes pulseExpand {
+    0% {
+      width: 150px;
+      height: 150px;
+    }
+    100% {
+      width: 200px;
+      height: 200px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .circular-snake-loader {
+    width: 140px;
+    height: 140px;
+    margin-bottom: 25px;
+  }
+  
+  .circular-track {
+    width: 110px;
+    height: 110px;
+  }
+  
+  .circular-head {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .circular-body {
+    width: 12px;
+    height: 12px;
+  }
+  
+  .circular-tail {
+    width: 8px;
+    height: 8px;
+  }
+  
+  .health-orb {
+    font-size: 16px;
+  }
+  
+  .pulse-ring {
+    width: 130px;
+    height: 130px;
+  }
+  
+  @keyframes pulseExpand {
+    0% {
+      width: 130px;
+      height: 130px;
+    }
+    100% {
+      width: 170px;
+      height: 170px;
+    }
+  }
+  
+  .loader-content h2 {
+    font-size: 2em;
   }
 }

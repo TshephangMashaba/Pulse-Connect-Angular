@@ -129,12 +129,12 @@ export class HealthSnakeGameComponent implements OnInit {
   startLoadingScreen() {
     this.loadingInterval = setInterval(() => {
       this.currentLoadingFact = (this.currentLoadingFact + 1) % this.loadingFacts.length;
-    }, 3000);
+    }, 6000);
 
     setTimeout(() => {
       this.isLoading = false;
       clearInterval(this.loadingInterval);
-    }, 5000);
+    }, 6000);
   }
 
   @HostListener('window:keydown', ['$event'])
