@@ -37,6 +37,7 @@ import { TruncatePipe } from './truncate.pipe';
 import { EditorModule } from '@tinymce/tinymce-angular';
 import { TinymceDirective } from './tinymce.directive';
 import { PulseDiscoveryComponent } from './pulse-discovery/pulse-discovery.component';
+import { HealthSnakeGameComponent } from './health-snake-game/health-snake-game.component';
 
 
 @NgModule({
@@ -66,7 +67,8 @@ import { PulseDiscoveryComponent } from './pulse-discovery/pulse-discovery.compo
     UsersManagementComponent,
     AnalyticsComponent,
     TruncatePipe,
-    PulseDiscoveryComponent
+    PulseDiscoveryComponent,
+    HealthSnakeGameComponent
   ],
   imports: [
   BrowserModule,

@@ -1,0 +1,328 @@
+<div class="game-container">
+  <!-- Top Header Section -->
+  <div class="game-header-container">
+    <div class="header-left">
+      <button (click)="returnHome()" class="home-button">
+        <span>🏠 Home</span>
+      </button>
+      &nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+    <h1 class="pulse-connect-heading">Pulse Game - Play. Eat. Grow. Learn.</h1>
+    <!-- Compact Score Cards -->
+    <div class="compact-score-cards">
+      <div class="compact-score-item">
+        <span class="compact-score-label">Score</span>
+        <span class="compact-score-value">{{ score }}</span>
+      </div>
+      <div class="compact-score-item">
+        <span class="compact-score-label">Health Items</span>
+        <span class="compact-score-value">{{ healthItemsCollected }}</span>
+      </div>
+      <div class="compact-score-item">
+        <span class="compact-score-label">Snake Length</span>
+        <span class="compact-score-value">{{ snake.length }}</span>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Loading Screen -->
+  <div *ngIf="isLoading" class="loading-screen">
+    <div class="loader-content">
+      <div class="loader"></div>
+      <h2>Loading The Pulse Game</h2>
+      <p>Health Knowledge Collector</p>
+      <div class="loading-facts">
+        <p>{{ loadingFacts[currentLoadingFact] }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Start Menu Modal -->
+  <div *ngIf="!isLoading && !gameStarted && !gameOver" class="start-menu-modal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Pulse Game - Play. Eat. Grow. Learn.</h2>
+        <p class="modal-subtitle">Learn health facts while playing an engaging snake game</p>
+      </div>
+
+      <div class="modal-body">
+        <div class="instructions-section">
+          <h3>How to Play</h3>
+          <div class="instructions-grid">
+            <div class="instruction-card">
+              <div class="instruction-icon">🎮</div>
+              <div class="instruction-text">
+                <strong>Control Your Snake</strong>
+                <p>Use Arrow Keys to move your health snake around the board</p>
+              </div>
+            </div>
+            <div class="instruction-card">
+              <div class="instruction-icon">🍎</div>
+              <div class="instruction-text">
+                <strong>Collect Health Items</strong>
+                <p>Gather fruits, vegetables, and other healthy items to earn points</p>
+              </div>
+            </div>
+            <div class="instruction-card">
+              <div class="instruction-icon">💡</div>
+              <div class="instruction-text">
+                <strong>Learn Health Facts</strong>
+                <p>Discover valuable health information with every item you collect</p>
+              </div>
+            </div>
+            <div class="instruction-card">
+              <div class="instruction-icon">⚠️</div>
+              <div class="instruction-text">
+                <strong>Avoid Obstacles</strong>
+                <p>Don't hit walls or yourself - stay healthy and keep growing!</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Items Guide Section Added -->
+        <div class="items-guide-section">
+          <h3>Health Items Guide</h3>
+          <div class="items-grid">
+            <div class="item-card" *ngFor="let type of itemTypes">
+              <span class="item-emoji">{{ type.icon }}</span>
+              <div class="item-info">
+                <strong>{{ type.name }}</strong>
+                <span class="item-points">+{{ type.points }} pts</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="difficulty-section">
+          <h3>Select Difficulty Level</h3>
+          <div class="difficulty-options">
+            <button 
+              [class.active]="gameSpeed === 200"
+              (click)="setDifficulty('EASY')"
+              class="difficulty-btn easy">
+              <span class="difficulty-icon">😊</span>
+              <span class="difficulty-text">
+                <strong>Easy</strong>
+                <small>Slow pace, perfect for beginners</small>
+              </span>
+            </button>
+            <button 
+              [class.active]="gameSpeed === 150"
+              (click)="setDifficulty('MEDIUM')"
+              class="difficulty-btn medium">
+              <span class="difficulty-icon">😐</span>
+              <span class="difficulty-text">
+                <strong>Medium</strong>
+                <small>Balanced speed for regular players</small>
+              </span>
+            </button>
+            <button 
+              [class.active]="gameSpeed === 100"
+              (click)="setDifficulty('HARD')"
+              class="difficulty-btn hard">
+              <span class="difficulty-icon">😎</span>
+              <span class="difficulty-text">
+                <strong>Hard</strong>
+                <small>Fast pace for expert players</small>
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <div class="start-action">
+          <button class="start-journey-btn pulse" (click)="startGame()">
+            <span class="btn-icon">🌟</span>
+            <span class="btn-text">Start Health Journey</span>
+            <span class="btn-arrow">→</span>
+          </button>
+          <p class="game-tip">Pro Tip: Press SPACE to pause the game anytime!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Game Layout (shown when game starts) -->
+  <div class="game-layout" *ngIf="!isLoading && gameStarted">
+    <!-- Left Sidebar - Controls & Stats -->
+    <div class="sidebar left-sidebar">
+      <div class="controls-section">
+        <h4>🎮 Controls</h4>
+        <div class="control-item">
+          <span class="key">↑</span>
+          <span>Move Up</span>
+        </div>
+        <div class="control-item">
+          <span class="key">↓</span>
+          <span>Move Down</span>
+        </div>
+        <div class="control-item">
+          <span class="key">←</span>
+          <span>Move Left</span>
+        </div>
+        <div class="control-item">
+          <span class="key">→</span>
+          <span>Move Right</span>
+        </div>
+        <div class="control-item">
+          <span class="key">SPACE</span>
+          <span>Pause Game</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Game Area -->
+    <div class="main-game-area">
+      <!-- Game Board -->
+      <div class="game-board-container">
+        <div class="game-board" [style.width.px]="boardSize" [style.height.px]="boardSize">
+          <!-- Grid Background -->
+          <div class="grid-background"></div>
+          
+          <!-- Snake -->
+          <div 
+            *ngFor="let segment of snake; let i = index"
+            class="snake-segment"
+            [class.snake-head]="i === 0"
+            [class.snake-tail]="i === snake.length - 1"
+            [style.left.px]="segment.x * cellSize"
+            [style.top.px]="segment.y * cellSize">
+          </div>
+          
+          <!-- Health Items -->
+          <div 
+            *ngFor="let item of healthItems"
+            class="health-item"
+            [class]="'health-item-' + item.type"
+            [style.left.px]="item.position.x * cellSize"
+            [style.top.px]="item.position.y * cellSize">
+            <span class="item-emoji">{{ item.icon }}</span>
+            <div class="item-glow"></div>
+          </div>
+        </div>
+
+        <!-- Game Status -->
+        <div class="game-status" *ngIf="!gameOver">
+          <div class="status-item">
+            <span>Direction: {{ direction }}</span>
+          </div>
+          <div class="status-item">
+            <span>Speed: {{ gameSpeed }}ms</span>
+          </div>
+          <div class="status-item">
+            <span>Items on Board: {{ healthItems.length }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Sidebar - Recent Facts & Progress -->
+    <div class="sidebar right-sidebar">
+      <div class="facts-section">
+        <h4>💡 Recent Health Facts</h4>
+        <div class="facts-list">
+          <div *ngFor="let fact of recentFacts" class="fact-item">
+            <span class="fact-icon">{{ fact.icon }}</span>
+            <span class="fact-text">{{ fact.message }}</span>
+          </div>
+          <div *ngIf="recentFacts.length === 0" class="no-facts">
+            Collect health items to discover facts!
+          </div>
+        </div>
+      </div>
+
+      <div class="progress-section">
+        <h4>📊 Progress</h4>
+        <div class="progress-item">
+          <span>Items Collected</span>
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="getCollectionProgress()"></div>
+          </div>
+          <span>{{ healthItemsCollected }}/50</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Game Over Modal -->
+  <div *ngIf="gameOver" class="game-over-modal">
+    <div class="modal-content">
+      <div class="result-icon">💔</div>
+      <h3>Game Over!</h3>
+      <div class="final-stats">
+        <div class="stat">
+          <span class="stat-label">Final Score</span>
+          <span class="stat-value">{{ score }}</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Health Items</span>
+          <span class="stat-value">{{ healthItemsCollected }}</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Snake Length</span>
+          <span class="stat-value">{{ snake.length }}</span>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button class="play-again-btn" (click)="startGame()">
+          <span>Play Again</span>
+        </button>
+        <button class="menu-btn" (click)="returnToMenu()">
+          <span>Main Menu</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Health Info Popup -->
+  <div *ngIf="showHealthPopup" class="health-popup">
+    <div class="popup-content">
+      <div class="popup-header">
+        <span class="popup-icon">{{ currentHealthItem?.icon }}</span>
+        <h4>{{ getPopupTitle(currentHealthItem?.type) }}</h4>
+      </div>
+      <p class="health-message">{{ currentHealthItem?.message }}</p>
+      <div class="points-earned">
+        +{{ currentHealthItem?.points }} Health Points!
+      </div>
+      <button class="continue-btn" (click)="closePopup()">
+        Continue Journey
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Pause Modal -->
+<div *ngIf="isPaused && gameStarted && !gameOver" class="pause-modal">
+  <div class="modal-content">
+    <div class="result-icon">⏸️</div>
+    <h3>Game Paused</h3>
+    <div class="final-stats">
+      <div class="stat">
+        <span class="stat-label">Current Score</span>
+        <span class="stat-value">{{ score }}</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Health Items</span>
+        <span class="stat-value">{{ healthItemsCollected }}</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Snake Length</span>
+        <span class="stat-value">{{ snake.length }}</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Game Speed</span>
+        <span class="stat-value">{{ getDifficultyText() }}</span>
+      </div>
+    </div>
+    <div class="action-buttons">
+      <button class="continue-btn" (click)="togglePause()">
+        Continue Game
+      </button>
+      <button class="menu-btn" (click)="returnToMenu()">
+        Main Menu
+      </button>
+    </div>
+  </div>
+</div>

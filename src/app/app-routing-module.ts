@@ -18,6 +18,7 @@ import { AdminSettingsComponent } from './admin-settings/admin-settings.componen
 import { UsersManagementComponent } from './users-management/users-management.component';
 import { AnalyticsComponent } from './analytics/analytics.component';
 import { PulseDiscoveryComponent } from './pulse-discovery/pulse-discovery.component';
+import { HealthSnakeGameComponent } from './health-snake-game/health-snake-game.component';
 
 const routes: Routes = [
   { 
@@ -95,6 +96,10 @@ const routes: Routes = [
 {
   path: 'pulse-discovery',
   component: PulseDiscoveryComponent
+},
+{
+  path: 'pulse-game',
+  component: HealthSnakeGameComponent
 }
 
 

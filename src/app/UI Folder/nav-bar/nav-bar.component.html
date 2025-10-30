@@ -32,6 +32,14 @@
               Courses
             </a>
           </li>
+          <!-- New Health Game Navigation Item -->
+          <li>
+            <a 
+              href="/pulse-game" 
+              [class]="isActive('/pulse-game') ? 'border-green-500 text-green-700 px-3 py-2 border-b-2 text-sm font-medium transition-colors duration-200' : 'border-transparent text-gray-600 hover:border-green-300 hover:text-green-700 px-3 py-2 border-b-2 text-sm font-medium transition-colors duration-200'">
+              Pulse Game
+            </a>
+          </li>
           <li>
             <a 
               href="/contact" 
@@ -84,6 +92,13 @@
         [class]="isActive('/courses-enroll') ? 'bg-green-50 border-green-500 text-green-700 block px-4 py-3 border-l-4 text-base font-medium rounded-md' : 'border-transparent text-gray-600 hover:bg-green-50 hover:border-green-300 hover:text-green-700 block px-4 py-3 border-l-4 text-base font-medium rounded-md transition-colors'"
         (click)="closeMobileMenu()">
         Courses
+      </a>
+      <!-- New Health Game Mobile Navigation Item -->
+      <a 
+        href="/pulse-game" 
+        [class]="isActive('/health-game') ? 'bg-green-50 border-green-500 text-green-700 block px-4 py-3 border-l-4 text-base font-medium rounded-md' : 'border-transparent text-gray-600 hover:bg-green-50 hover:border-green-300 hover:text-green-700 block px-4 py-3 border-l-4 text-base font-medium rounded-md transition-colors'"
+        (click)="closeMobileMenu()">
+        Pulse Game
       </a>
       <a 
         href="/contact" 
