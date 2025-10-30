@@ -36,113 +36,187 @@
       </div>
     </div>
   </div>
+<!-- Start Menu Modal -->
+<div *ngIf="!isLoading && !gameStarted && !gameOver" class="start-menu-modal">
+  <div class="modal-backdrop"></div>
+  <div class="modal-content">
+    <div class="modal-header">
+      <button class="modal-home-button" (click)="returnHome()">
+        <span>🏠 Return to Home</span>
+      </button>
+      <br>
+      <h2>Pulse Game - Play. Eat. Grow. Learn.</h2>
+      <p class="modal-subtitle">Learn health facts while playing an engaging snake game</p>
+      
+       <!-- Snake Animation -->
+      <div class="snake-animation-container">
+        <div class="demo-snake">
+          <div class="snake-segment demo-head"></div>
+          <div class="snake-segment demo-body"></div>
+          <div class="snake-segment demo-body"></div>
+          <div class="snake-segment demo-body"></div>
+          <div class="snake-segment demo-tail"></div>
+        </div>
+        <div class="demo-items">
+          <div class="demo-item apple" data-item="apple">🍎</div>
+          <div class="demo-item broccoli" data-item="broccoli">🥦</div>
+          <div class="demo-item vitamin" data-item="vitamin">💊</div>
+        </div>
+        <div class="eating-effect" id="eatingEffect"></div>
+      </div>
+  
+    </div>
 
-  <!-- Start Menu Modal -->
-  <div *ngIf="!isLoading && !gameStarted && !gameOver" class="start-menu-modal">
-    <div class="modal-backdrop"></div>
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>Pulse Game - Play. Eat. Grow. Learn.</h2>
-        <p class="modal-subtitle">Learn health facts while playing an engaging snake game</p>
+    <div class="modal-body">
+      <div class="instructions-section">
+        <h3>How to Play</h3>
+        <div class="instructions-grid">
+          <div class="instruction-card">
+            <div class="instruction-icon">🎮</div>
+            <div class="instruction-text">
+              <strong>Control Your Snake</strong>
+              <p>Use Arrow Keys to move your health snake around the board</p>
+            </div>
+          </div>
+          <div class="instruction-card">
+            <div class="instruction-icon">🍎</div>
+            <div class="instruction-text">
+              <strong>Collect Health Items</strong>
+              <p>Gather fruits, vegetables, and other healthy items to earn points</p>
+            </div>
+          </div>
+          <div class="instruction-card">
+            <div class="instruction-icon">💡</div>
+            <div class="instruction-text">
+              <strong>Learn Health Facts</strong>
+              <p>Discover valuable health information with every item you collect</p>
+            </div>
+          </div>
+          <div class="instruction-card">
+            <div class="instruction-icon">⚠️</div>
+            <div class="instruction-text">
+              <strong>Avoid Obstacles</strong>
+              <p>Don't hit walls or yourself - stay healthy and keep growing!</p>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="modal-body">
-        <div class="instructions-section">
-          <h3>How to Play</h3>
-          <div class="instructions-grid">
-            <div class="instruction-card">
-              <div class="instruction-icon">🎮</div>
-              <div class="instruction-text">
-                <strong>Control Your Snake</strong>
-                <p>Use Arrow Keys to move your health snake around the board</p>
-              </div>
+      <!-- Controls Section -->
+      <div class="controls-section">
+        <h3>🎮 Game Controls</h3>
+        <div class="controls-grid">
+          <div class="control-card">
+            <div class="control-keys">
+              <span class="key">↑</span>
             </div>
-            <div class="instruction-card">
-              <div class="instruction-icon">🍎</div>
-              <div class="instruction-text">
-                <strong>Collect Health Items</strong>
-                <p>Gather fruits, vegetables, and other healthy items to earn points</p>
-              </div>
+            <div class="control-text">
+              <strong>Move Up</strong>
+              <p>Navigate your snake upward</p>
             </div>
-            <div class="instruction-card">
-              <div class="instruction-icon">💡</div>
-              <div class="instruction-text">
-                <strong>Learn Health Facts</strong>
-                <p>Discover valuable health information with every item you collect</p>
-              </div>
+          </div>
+          <div class="control-card">
+            <div class="control-keys">
+              <span class="key">↓</span>
             </div>
-            <div class="instruction-card">
-              <div class="instruction-icon">⚠️</div>
-              <div class="instruction-text">
-                <strong>Avoid Obstacles</strong>
-                <p>Don't hit walls or yourself - stay healthy and keep growing!</p>
-              </div>
+            <div class="control-text">
+              <strong>Move Down</strong>
+              <p>Navigate your snake downward</p>
+            </div>
+          </div>
+          <div class="control-card">
+            <div class="control-keys">
+              <span class="key">←</span>
+            </div>
+            <div class="control-text">
+              <strong>Move Left</strong>
+              <p>Navigate your snake left</p>
+            </div>
+          </div>
+          <div class="control-card">
+            <div class="control-keys">
+              <span class="key">→</span>
+            </div>
+            <div class="control-text">
+              <strong>Move Right</strong>
+              <p>Navigate your snake right</p>
+            </div>
+          </div>
+          <div class="control-card">
+            <div class="control-keys">
+              <span class="key space">SPACE</span>
+            </div>
+            <div class="control-text">
+              <strong>Pause Game</strong>
+              <p>Pause/resume the game anytime</p>
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- Items Guide Section Added -->
-        <div class="items-guide-section">
-          <h3>Health Items Guide</h3>
-          <div class="items-grid">
-            <div class="item-card" *ngFor="let type of itemTypes">
-              <span class="item-emoji">{{ type.icon }}</span>
-              <div class="item-info">
-                <strong>{{ type.name }}</strong>
-                <span class="item-points">+{{ type.points }} pts</span>
-              </div>
+      <!-- Items Guide Section -->
+      <div class="items-guide-section">
+        <h3>Health Items Guide</h3>
+        <div class="items-grid">
+          <div class="item-card" *ngFor="let type of itemTypes">
+            <span class="item-emoji">{{ type.icon }}</span>
+            <div class="item-info">
+              <strong>{{ type.name }}</strong>
+              <span class="item-points">+{{ type.points }} pts</span>
             </div>
           </div>
         </div>
+      </div>
 
-        <div class="difficulty-section">
-          <h3>Select Difficulty Level</h3>
-          <div class="difficulty-options">
-            <button 
-              [class.active]="gameSpeed === 200"
-              (click)="setDifficulty('EASY')"
-              class="difficulty-btn easy">
-              <span class="difficulty-icon">😊</span>
-              <span class="difficulty-text">
-                <strong>Easy</strong>
-                <small>Slow pace, perfect for beginners</small>
-              </span>
-            </button>
-            <button 
-              [class.active]="gameSpeed === 150"
-              (click)="setDifficulty('MEDIUM')"
-              class="difficulty-btn medium">
-              <span class="difficulty-icon">😐</span>
-              <span class="difficulty-text">
-                <strong>Medium</strong>
-                <small>Balanced speed for regular players</small>
-              </span>
-            </button>
-            <button 
-              [class.active]="gameSpeed === 100"
-              (click)="setDifficulty('HARD')"
-              class="difficulty-btn hard">
-              <span class="difficulty-icon">😎</span>
-              <span class="difficulty-text">
-                <strong>Hard</strong>
-                <small>Fast pace for expert players</small>
-              </span>
-            </button>
-          </div>
-        </div>
-
-        <div class="start-action">
-          <button class="start-journey-btn pulse" (click)="startGame()">
-            <span class="btn-icon">🌟</span>
-            <span class="btn-text">Start Health Journey</span>
-            <span class="btn-arrow">→</span>
+      <div class="difficulty-section">
+        <h3>Select Difficulty Level</h3>
+        <div class="difficulty-options">
+          <button 
+            [class.active]="gameSpeed === 200"
+            (click)="setDifficulty('EASY')"
+            class="difficulty-btn easy">
+            <span class="difficulty-icon">😊</span>
+            <span class="difficulty-text">
+              <strong>Easy</strong>
+              <small>Slow pace, perfect for beginners</small>
+            </span>
           </button>
-          <p class="game-tip">Pro Tip: Press SPACE to pause the game anytime!</p>
+          <button 
+            [class.active]="gameSpeed === 150"
+            (click)="setDifficulty('MEDIUM')"
+            class="difficulty-btn medium">
+            <span class="difficulty-icon">😐</span>
+            <span class="difficulty-text">
+              <strong>Medium</strong>
+              <small>Balanced speed for regular players</small>
+            </span>
+          </button>
+          <button 
+            [class.active]="gameSpeed === 100"
+            (click)="setDifficulty('HARD')"
+            class="difficulty-btn hard">
+            <span class="difficulty-icon">😎</span>
+            <span class="difficulty-text">
+              <strong>Hard</strong>
+              <small>Fast pace for expert players</small>
+            </span>
+          </button>
         </div>
+      </div>
+
+      <div class="start-action">
+        <button class="start-journey-btn pulse" (click)="startGame()">
+          <span class="btn-icon">🌟</span>
+          <span class="btn-text">Start Health Journey</span>
+          <span class="btn-arrow">→</span>
+        </button>
+        <p class="game-tip">Pro Tip: Press SPACE to pause the game anytime!</p>
       </div>
     </div>
   </div>
+</div>
 
+  <!-- Rest of your game layout remains the same -->
   <!-- Game Layout (shown when game starts) -->
   <div class="game-layout" *ngIf="!isLoading && gameStarted">
     <!-- Left Sidebar - Controls & Stats -->

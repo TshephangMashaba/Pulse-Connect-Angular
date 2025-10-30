@@ -97,7 +97,7 @@
   text-align: center;
   min-width: 80px;
   border: 1px solid rgba(255, 255, 255, 0.12);
-
+  backdrop-filter: blur(10px);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
   transition: all 0.3s ease;
 }
@@ -212,13 +212,13 @@
   right: 0;
   bottom: 0;
   background: rgba(10, 25, 41, 0.95);
-
+  backdrop-filter: blur(10px);
 }
 
 .start-menu-modal .modal-content {
   position: relative;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.98) 100%);
-
+  border-radius: 24px;
   padding: 40px;
   max-width: 1000px;
   width: 100%;
@@ -820,7 +820,7 @@
   align-items: center;
   justify-content: center;
   z-index: 1000;
- 
+  backdrop-filter: blur(5px);
 }
 
 .modal-content, .popup-content {
@@ -1142,5 +1142,613 @@
   
   .stat-value {
     font-size: 1.5em;
+  }
+}
+
+/* Modal Home Button */
+.modal-home-button {
+  position: absolute;
+  top: 25px;
+  left: 25px;
+  padding: 10px 20px;
+  background: rgba(76, 175, 80, 0.1);
+  color: #4CAF50;
+  border: 2px solid #4CAF50;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.modal-home-button:hover {
+  background: #4CAF50;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+/* Controls Section in Modal */
+.controls-section {
+  margin-bottom: 40px;
+}
+
+.controls-section h3 {
+  text-align: center;
+  font-size: 1.5em;
+  margin-bottom: 25px;
+  color: #2d3748;
+  font-weight: 600;
+}
+
+.controls-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.control-card {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 204, 13, 0.1);
+  transition: all 0.3s ease;
+}
+
+.control-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(0, 204, 13, 0.15);
+  border-color: rgba(0, 204, 13, 0.3);
+}
+
+.control-keys {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  min-width: 60px;
+}
+
+.control-keys .key {
+  background: rgba(0, 204, 13, 0.15);
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-weight: 700;
+  color: #00cc0d;
+  border: 2px solid rgba(0, 204, 13, 0.3);
+  font-family: 'Courier New', monospace;
+  font-size: 1.1em;
+  min-width: 50px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 204, 13, 0.2);
+}
+
+.control-keys .key.space {
+  font-size: 0.9em;
+  padding: 12px 8px;
+  min-width: 80px;
+}
+
+.control-text strong {
+  display: block;
+  font-size: 1.1em;
+  margin-bottom: 6px;
+  color: #2d3748;
+  font-weight: 600;
+}
+
+.control-text p {
+  margin: 0;
+  color: #666;
+  line-height: 1.4;
+  font-size: 0.9em;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .modal-home-button {
+    position: relative;
+    top: 0;
+    left: 0;
+    margin-bottom: 20px;
+    align-self: center;
+  }
+  
+  .modal-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .controls-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .control-card {
+    padding: 15px;
+  }
+  
+  .control-keys {
+    min-width: 50px;
+  }
+  
+  .control-keys .key {
+    padding: 10px 14px;
+    font-size: 1em;
+  }
+  
+  .control-keys .key.space {
+    font-size: 0.85em;
+    padding: 10px 6px;
+    min-width: 70px;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-home-button {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+  
+  .controls-grid {
+    gap: 10px;
+  }
+  
+  .control-card {
+    padding: 12px;
+    gap: 12px;
+  }
+  
+  .control-keys .key {
+    padding: 8px 12px;
+    font-size: 0.9em;
+  }
+  
+  .control-keys .key.space {
+    font-size: 0.8em;
+    padding: 8px 4px;
+    min-width: 60px;
+  }
+}
+
+/* Snake Animation */
+.snake-animation-container {
+  position: relative;
+  width: 100%;
+  height: 120px;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border-radius: 16px;
+  margin: 25px 0;
+  border: 2px solid rgba(0, 204, 13, 0.2);
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.demo-snake {
+  position: absolute;
+  top: 50%;
+  left: -60px;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  animation: snakeMove 12s ease-in-out infinite;
+  z-index: 10;
+}
+
+.snake-segment {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  margin-right: 2px;
+  transition: all 0.3s ease;
+}
+
+.demo-head {
+  background: linear-gradient(135deg, #00ee0f 0%, #00cc0d 100%);
+  border-radius: 6px;
+  box-shadow: 0 0 8px rgba(0, 204, 13, 0.6);
+  z-index: 3;
+  position: relative;
+}
+
+.demo-head::after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 4px;
+  height: 4px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 8px 0 0 white;
+}
+
+.demo-body {
+  background: linear-gradient(135deg, #00cc0d 0%, #00a80b 100%);
+  box-shadow: 0 0 6px rgba(0, 204, 13, 0.4);
+  z-index: 2;
+}
+
+.demo-tail {
+  background: linear-gradient(135deg, #008809 0%, #006707 100%);
+  box-shadow: 0 0 4px rgba(0, 204, 13, 0.3);
+  z-index: 1;
+}
+
+.demo-items {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.demo-item {
+  position: absolute;
+  font-size: 24px;
+  filter: drop-shadow(0 0 8px currentColor);
+  animation: itemFloat 4s ease-in-out infinite;
+  z-index: 5;
+  transition: all 0.3s ease;
+}
+
+.demo-item.apple {
+  top: 25%;
+  left: 30%;
+  color: #ff6b6b;
+  animation-delay: 0s;
+}
+
+.demo-item.broccoli {
+  top: 60%;
+  left: 60%;
+  color: #4caf50;
+  animation-delay: 1.3s;
+}
+
+.demo-item.vitamin {
+  top: 35%;
+  left: 80%;
+  color: #00cc0d;
+  animation-delay: 2.6s;
+}
+
+/* Eating Effect */
+.eating-effect {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 204, 13, 0.4) 0%, rgba(0, 204, 13, 0) 70%);
+  pointer-events: none;
+  opacity: 0;
+  z-index: 4;
+  animation: eatingPulse 12s ease-in-out infinite;
+}
+
+/* Animations */
+@keyframes snakeMove {
+  0% {
+    left: -60px;
+    transform: translateY(-50%) scaleX(1);
+  }
+  /* Approach apple */
+  8% {
+    left: 25%;
+    transform: translateY(-50%) scaleX(1);
+  }
+  /* Eat apple */
+  10% {
+    left: 27%;
+    transform: translateY(-50%) scaleX(1);
+  }
+  12% {
+    left: 29%;
+    transform: translateY(-50%) scaleX(1);
+  }
+  /* Move to broccoli */
+  20% {
+    left: 45%;
+    transform: translateY(-40%) scaleX(1);
+  }
+  /* Eat broccoli */
+  22% {
+    left: 47%;
+    transform: translateY(-40%) scaleX(1);
+  }
+  24% {
+    left: 49%;
+    transform: translateY(-40%) scaleX(1);
+  }
+  /* Move to vitamin */
+  32% {
+    left: 65%;
+    transform: translateY(-60%) scaleX(1);
+  }
+  /* Eat vitamin */
+  34% {
+    left: 67%;
+    transform: translateY(-60%) scaleX(1);
+  }
+  36% {
+    left: 69%;
+    transform: translateY(-60%) scaleX(1);
+  }
+  /* Reach end and turn around */
+  44% {
+    left: 85%;
+    transform: translateY(-50%) scaleX(1);
+  }
+  46% {
+    transform: translateY(-50%) scaleX(-1);
+  }
+  /* Return journey - approach vitamin */
+  54% {
+    left: 69%;
+    transform: translateY(-60%) scaleX(-1);
+  }
+  /* Eat vitamin on return */
+  56% {
+    left: 67%;
+    transform: translateY(-60%) scaleX(-1);
+  }
+  58% {
+    left: 65%;
+    transform: translateY(-60%) scaleX(-1);
+  }
+  /* Move to broccoli */
+  66% {
+    left: 49%;
+    transform: translateY(-40%) scaleX(-1);
+  }
+  /* Eat broccoli on return */
+  68% {
+    left: 47%;
+    transform: translateY(-40%) scaleX(-1);
+  }
+  70% {
+    left: 45%;
+    transform: translateY(-40%) scaleX(-1);
+  }
+  /* Move to apple */
+  78% {
+    left: 29%;
+    transform: translateY(-50%) scaleX(-1);
+  }
+  /* Eat apple on return */
+  80% {
+    left: 27%;
+    transform: translateY(-50%) scaleX(-1);
+  }
+  82% {
+    left: 25%;
+    transform: translateY(-50%) scaleX(-1);
+  }
+  /* Return to start */
+  90% {
+    left: 10%;
+    transform: translateY(-50%) scaleX(-1);
+  }
+  92% {
+    transform: translateY(-50%) scaleX(1);
+  }
+  100% {
+    left: -60px;
+    transform: translateY(-50%) scaleX(1);
+  }
+}
+
+@keyframes itemFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+  25% {
+    transform: translateY(-8px) rotate(5deg) scale(1.1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: translateY(-4px) rotate(-5deg) scale(1);
+    opacity: 1;
+  }
+  75% {
+    transform: translateY(-6px) rotate(3deg) scale(1.05);
+    opacity: 0.95;
+  }
+}
+
+@keyframes eatingPulse {
+  /* Apple eating moments */
+  10%, 11% {
+    opacity: 1;
+    transform: scale(1);
+    left: 28%;
+    top: 25%;
+  }
+  11.5%, 12% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+  
+  /* Broccoli eating moments */
+  22%, 23% {
+    opacity: 1;
+    transform: scale(1);
+    left: 48%;
+    top: 60%;
+  }
+  23.5%, 24% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+  
+  /* Vitamin eating moments - first pass */
+  34%, 35% {
+    opacity: 1;
+    transform: scale(1);
+    left: 68%;
+    top: 35%;
+  }
+  35.5%, 36% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+  
+  /* Vitamin eating moments - return pass */
+  56%, 57% {
+    opacity: 1;
+    transform: scale(1);
+    left: 68%;
+    top: 35%;
+  }
+  57.5%, 58% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+  
+  /* Broccoli eating moments - return pass */
+  68%, 69% {
+    opacity: 1;
+    transform: scale(1);
+    left: 48%;
+    top: 60%;
+  }
+  69.5%, 70% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+  
+  /* Apple eating moments - return pass */
+  80%, 81% {
+    opacity: 1;
+    transform: scale(1);
+    left: 28%;
+    top: 25%;
+  }
+  81.5%, 82% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+  
+  /* Default state - hidden */
+  0%, 9%, 21%, 33%, 45%, 55%, 67%, 79%, 90%, 100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+}
+
+/* Item collection effect */
+.demo-item.collected {
+  animation: itemCollected 0.6s ease-out forwards;
+}
+
+@keyframes itemCollected {
+  0% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.3) rotate(180deg);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(0) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .snake-animation-container {
+    height: 100px;
+    margin: 20px 0;
+  }
+  
+  .snake-segment {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .demo-item {
+    font-size: 20px;
+  }
+  
+  .eating-effect {
+    width: 25px;
+    height: 25px;
+  }
+  
+  @keyframes snakeMove {
+    0% { left: -50px; transform: translateY(-50%) scaleX(1); }
+    8% { left: 20%; transform: translateY(-50%) scaleX(1); }
+    10% { left: 22%; transform: translateY(-50%) scaleX(1); }
+    12% { left: 24%; transform: translateY(-50%) scaleX(1); }
+    20% { left: 40%; transform: translateY(-40%) scaleX(1); }
+    22% { left: 42%; transform: translateY(-40%) scaleX(1); }
+    24% { left: 44%; transform: translateY(-40%) scaleX(1); }
+    32% { left: 60%; transform: translateY(-60%) scaleX(1); }
+    34% { left: 62%; transform: translateY(-60%) scaleX(1); }
+    36% { left: 64%; transform: translateY(-60%) scaleX(1); }
+    44% { left: 80%; transform: translateY(-50%) scaleX(1); }
+    46% { transform: translateY(-50%) scaleX(-1); }
+    54% { left: 64%; transform: translateY(-60%) scaleX(-1); }
+    56% { left: 62%; transform: translateY(-60%) scaleX(-1); }
+    58% { left: 60%; transform: translateY(-60%) scaleX(-1); }
+    66% { left: 44%; transform: translateY(-40%) scaleX(-1); }
+    68% { left: 42%; transform: translateY(-40%) scaleX(-1); }
+    70% { left: 40%; transform: translateY(-40%) scaleX(-1); }
+    78% { left: 24%; transform: translateY(-50%) scaleX(-1); }
+    80% { left: 22%; transform: translateY(-50%) scaleX(-1); }
+    82% { left: 20%; transform: translateY(-50%) scaleX(-1); }
+    90% { left: 5%; transform: translateY(-50%) scaleX(-1); }
+    92% { transform: translateY(-50%) scaleX(1); }
+    100% { left: -50px; transform: translateY(-50%) scaleX(1); }
+  }
+  
+  @keyframes eatingPulse {
+    /* Adjusted positions for mobile */
+    10%, 11% { left: 23%; top: 25%; }
+    22%, 23% { left: 43%; top: 60%; }
+    34%, 35% { left: 63%; top: 35%; }
+    56%, 57% { left: 63%; top: 35%; }
+    68%, 69% { left: 43%; top: 60%; }
+    80%, 81% { left: 23%; top: 25%; }
+  }
+}
+
+@media (max-width: 480px) {
+  .snake-animation-container {
+    height: 80px;
+    margin: 15px 0;
+  }
+  
+  .snake-segment {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .demo-item {
+    font-size: 18px;
+  }
+  
+  .eating-effect {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .demo-head::after {
+    top: 3px;
+    left: 3px;
+    width: 3px;
+    height: 3px;
+    box-shadow: 6px 0 0 white;
   }
 }
