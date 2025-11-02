@@ -183,106 +183,168 @@
 </section>
 
 <!-- Add this section after the Hero Section and before the About Section -->
-
-<!-- The Pulse Game Section -->
-<section class="game-section py-20 bg-gradient-to-br from-red-50 to-white">
-  <div class="container mx-auto max-w-6xl px-4">
+<!-- Enhanced Pulse Game Section with Blue/Green Theme -->
+<section class="game-section py-20 bg-gradient-to-br from-blue-50 to-green-50 relative overflow-hidden">
+  <!-- Background Elements -->
+  <div class="absolute inset-0 opacity-10">
+    <div class="absolute top-10 left-10 w-20 h-20 bg-blue-300 rounded-full blur-xl"></div>
+    <div class="absolute bottom-10 right-10 w-32 h-32 bg-green-300 rounded-full blur-xl"></div>
+    <div class="absolute top-1/2 left-1/3 w-16 h-16 bg-teal-300 rounded-full blur-xl"></div>
+  </div>
+  
+  <div class="container mx-auto max-w-6xl px-4 relative z-10">
     <div class="text-center mb-16">
-      <span class="inline-block px-4 py-2 bg-red-100 text-red-600 rounded-full text-sm font-semibold mb-4">INTERACTIVE LEARNING</span>
-      <h2 class="text-4xl font-bold text-gray-800 mb-4">The Pulse Game</h2>
-      <div class="w-24 h-1 bg-red-500 mx-auto mb-6"></div>
+      <span class="inline-block px-4 py-2 bg-blue-100 text-blue-600 rounded-full text-sm font-semibold mb-4 shadow-sm">INTERACTIVE LEARNING</span>
+      <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">The Pulse Game</h2>
+      <div class="w-24 h-1 bg-gradient-to-r from-blue-500 to-green-500 mx-auto mb-6"></div>
       <p class="text-xl text-gray-600 max-w-3xl mx-auto">
         Learn health facts while playing an engaging snake game - collect health items and grow your knowledge!
       </p>
     </div>
 
-    <div class="grid md:grid-cols-2 gap-12 items-center mb-12">
+    <div class="grid lg:grid-cols-2 gap-12 items-center mb-16">
       <!-- Game Description -->
-      <div class="space-y-6">
-        <h3 class="text-2xl font-semibold text-gray-800 mb-4">Health Knowledge Collector</h3>
-        <p class="text-gray-600">
-          The Pulse Game transforms health education into an interactive experience. Navigate your health snake to collect valuable health items, each revealing important health facts while you play.
-        </p>
-        
-        <div class="space-y-4">
-          <div class="flex items-start">
-            <div class="bg-red-100 p-2 rounded-lg mr-4">
-              <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+      <div class="space-y-8">
+        <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
+          <h3 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+            <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-green-500 rounded-lg flex items-center justify-center mr-3">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
             </div>
-            <div>
-              <h4 class="font-medium text-gray-800">Interactive Learning</h4>
-              <p class="text-gray-600 text-sm">Discover health facts as you collect different health items</p>
-            </div>
-          </div>
+            Health Knowledge Collector
+          </h3>
+          <p class="text-gray-600 mb-6">
+            The Pulse Game transforms health education into an interactive experience. Navigate your health snake to collect valuable health items, each revealing important health facts while you play.
+          </p>
           
-          <div class="flex items-start">
-            <div class="bg-green-100 p-2 rounded-lg mr-4">
-              <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-              </svg>
+          <div class="space-y-4">
+            <div class="flex items-start">
+              <div class="bg-blue-100 p-2 rounded-lg mr-4 flex-shrink-0">
+                <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+              </div>
+              <div>
+                <h4 class="font-semibold text-gray-800">Interactive Learning</h4>
+                <p class="text-gray-600 text-sm">Discover health facts as you collect different health items</p>
+              </div>
             </div>
-            <div>
-              <h4 class="font-medium text-gray-800">Multiple Difficulty Levels</h4>
-              <p class="text-gray-600 text-sm">Choose from Easy, Medium, or Hard to match your skill level</p>
+            
+            <div class="flex items-start">
+              <div class="bg-green-100 p-2 rounded-lg mr-4 flex-shrink-0">
+                <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                </svg>
+              </div>
+              <div>
+                <h4 class="font-semibold text-gray-800">Multiple Difficulty Levels</h4>
+                <p class="text-gray-600 text-sm">Choose from Easy, Medium, or Hard to match your skill level</p>
+              </div>
             </div>
-          </div>
-          
-          <div class="flex items-start">
-            <div class="bg-blue-100 p-2 rounded-lg mr-4">
-              <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
-              </svg>
-            </div>
-            <div>
-              <h4 class="font-medium text-gray-800">Progress Tracking</h4>
-              <p class="text-gray-600 text-sm">Monitor your score, health items collected, and snake length</p>
+            
+            <div class="flex items-start">
+              <div class="bg-teal-100 p-2 rounded-lg mr-4 flex-shrink-0">
+                <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                </svg>
+              </div>
+              <div>
+                <h4 class="font-semibold text-gray-800">Progress Tracking</h4>
+                <p class="text-gray-600 text-sm">Monitor your score, health items collected, and snake length</p>
+              </div>
             </div>
           </div>
         </div>
         
+        <!-- Stats Section -->
+        <div class="grid grid-cols-3 gap-4">
+          <div class="bg-white p-4 rounded-xl shadow-sm text-center border border-gray-100">
+            <div class="text-2xl font-bold text-blue-500">3</div>
+            <div class="text-xs text-gray-600">Difficulty Levels</div>
+          </div>
+          <div class="bg-white p-4 rounded-xl shadow-sm text-center border border-gray-100">
+            <div class="text-2xl font-bold text-green-500">10+</div>
+            <div class="text-xs text-gray-600">Health Items</div>
+          </div>
+          <div class="bg-white p-4 rounded-xl shadow-sm text-center border border-gray-100">
+            <div class="text-2xl font-bold text-teal-500">100+</div>
+            <div class="text-xs text-gray-600">Health Facts</div>
+          </div>
+        </div>
+        
         <!-- Access Game Button -->
-        <div class="pt-6">
-          <a href="/pulse-game" class="inline-flex items-center px-6 py-3 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 transition-colors shadow-lg hover:shadow-xl">
+        <div class="pt-4">
+          <a href="/pulse-game" class="inline-flex items-center px-6 py-4 bg-gradient-to-r from-blue-500 to-green-500 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-green-600 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
             Play The Pulse Game
           </a>
+          <p class="text-sm text-gray-500 mt-2">Free to play - No registration required</p>
         </div>
       </div>
       
-      <!-- Game Preview Image -->
+      <!-- Game Preview with Video/GIF -->
       <div class="relative">
-        <div class="bg-white p-4 rounded-xl shadow-lg border border-gray-100">
-          <div class="aspect-video bg-gradient-to-br from-red-100 to-green-100 rounded-lg flex items-center justify-center">
-            <div class="text-center">
-              <div class="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
+        <div class="bg-gradient-to-br from-blue-500 to-green-500 p-1 rounded-2xl shadow-2xl transform hover:scale-[1.02] transition-transform duration-300">
+          <div class="bg-white rounded-xl overflow-hidden">
+            <!-- Game Video/GIF Placeholder -->
+            <div class="aspect-video bg-gradient-to-br from-gray-900 to-gray-700 flex items-center justify-center relative overflow-hidden">
+              <!-- Your game GIF/video goes here -->
+            <div id="game-preview" class="w-full h-full">
+
+  <video class="w-full h-full object-cover" autoplay muted loop playsinline>
+    <source src="/path-to-your-game.mp4" type="video/mp4">
+    <source src="/path-to-your-game.webm" type="video/webm">
+    Your browser does not support the video tag.
+  </video>
+
+</div>
+              
+              <!-- Play Button Overlay -->
+              <div class="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 hover: transition-opacity cursor-pointer" id="play-overlay">
+              
               </div>
-              <h4 class="font-bold text-gray-700">The Pulse Game</h4>
-              <p class="text-sm text-gray-500 mt-2">Health Knowledge Collector</p>
+            </div>
+            
+            <!-- Game Controls -->
+            <div class="p-4 bg-gray-50 border-t border-gray-200">
+              <div class="flex justify-between items-center">
+                <div class="flex space-x-2">
+                  <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">Educational</span>
+                  <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">Health</span>
+                  <span class="bg-teal-100 text-teal-800 text-xs px-2 py-1 rounded">Snake Game</span>
+                </div>
+               
+              </div>
             </div>
           </div>
         </div>
-        <div class="absolute -top-4 -right-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-medium">
-          New!
+        
+        <!-- Floating Elements -->
+        <div class="absolute -top-4 -right-4 bg-gradient-to-r from-blue-500 to-green-500 text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg z-20">
+          New & Improved!
+        </div>
+        
+        <div class="absolute -bottom-4 -left-4 bg-white border border-gray-200 shadow-lg rounded-lg p-3 z-20">
+          <div class="flex items-center">
+            <div class="w-3 h-3 bg-green-500 rounded-full mr-2 animate-pulse"></div>
+            <span class="text-xs font-medium text-gray-700">Live Demo</span>
+          </div>
         </div>
       </div>
     </div>
     
     <!-- Feature Cards -->
-    <div class="grid md:grid-cols-2 gap-8 mt-12">
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
       <!-- Feature Card 1 -->
-      <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-red-500 hover:shadow-md transition-shadow">
+      <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-blue-500 hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
         <div class="flex items-center mb-4">
-          <div class="bg-red-100 p-3 rounded-lg mr-4">
-            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="bg-blue-100 p-3 rounded-lg mr-4 group-hover:scale-110 transition-transform">
+            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
             </svg>
           </div>
@@ -294,9 +356,9 @@
       </div>
       
       <!-- Feature Card 2 -->
-      <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-green-500 hover:shadow-md transition-shadow">
+      <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-green-500 hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
         <div class="flex items-center mb-4">
-          <div class="bg-green-100 p-3 rounded-lg mr-4">
+          <div class="bg-green-100 p-3 rounded-lg mr-4 group-hover:scale-110 transition-transform">
             <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
             </svg>
@@ -306,6 +368,56 @@
         <p class="text-gray-600">
           Track your progress with scores, health items collected, and snake length. Challenge yourself with different difficulty levels and learn while having fun.
         </p>
+      </div>
+      
+      <!-- Feature Card 3 -->
+      <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-teal-500 hover:shadow-md transition-all duration-300 group hover:-translate-y-1">
+        <div class="flex items-center mb-4">
+          <div class="bg-teal-100 p-3 rounded-lg mr-4 group-hover:scale-110 transition-transform">
+            <svg class="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800">Health Knowledge</h3>
+        </div>
+        <p class="text-gray-600">
+          Learn important health facts about prevention, treatment, and healthy living practices while enjoying the classic snake game experience.
+        </p>
+      </div>
+    </div>
+    
+    <!-- How to Play Section -->
+    <div class="mt-16 bg-gradient-to-r from-blue-50 to-green-50 rounded-2xl p-8 border border-blue-100">
+      <h3 class="text-2xl font-bold text-center mb-8 text-gray-800">How to Play</h3>
+      <div class="grid md:grid-cols-4 gap-6">
+        <div class="text-center">
+          <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+            <span class="text-blue-600 font-bold">1</span>
+          </div>
+          <h4 class="font-semibold text-gray-800 mb-2">Choose Difficulty</h4>
+          <p class="text-sm text-gray-600">Select Easy, Medium, or Hard level</p>
+        </div>
+        <div class="text-center">
+          <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+            <span class="text-green-600 font-bold">2</span>
+          </div>
+          <h4 class="font-semibold text-gray-800 mb-2">Navigate Snake</h4>
+          <p class="text-sm text-gray-600">Use arrow keys to move your snake</p>
+        </div>
+        <div class="text-center">
+          <div class="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-3">
+            <span class="text-teal-600 font-bold">3</span>
+          </div>
+          <h4 class="font-semibold text-gray-800 mb-2">Collect Items</h4>
+          <p class="text-sm text-gray-600">Gather health items to grow and learn</p>
+        </div>
+        <div class="text-center">
+          <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-3">
+            <span class="text-emerald-600 font-bold">4</span>
+          </div>
+          <h4 class="font-semibold text-gray-800 mb-2">Learn & Progress</h4>
+          <p class="text-sm text-gray-600">Read health facts and track your score</p>
+        </div>
       </div>
     </div>
   </div>
