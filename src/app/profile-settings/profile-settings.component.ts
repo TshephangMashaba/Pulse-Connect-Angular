@@ -90,66 +90,41 @@ export class ProfileSettingsComponent implements OnInit {
 
   const formData = new FormData();
   
-  // Ensure we're adding non-empty values
-  if (this.profile.firstName && this.profile.firstName.trim()) {
-    formData.append('FirstName', this.profile.firstName.trim());
-    console.log('Added FirstName:', this.profile.firstName.trim());
-  }
-  if (this.profile.lastName && this.profile.lastName.trim()) {
-    formData.append('LastName', this.profile.lastName.trim());
-    console.log('Added LastName:', this.profile.lastName.trim());
-  }
+  // Add all fields including empty ones for optional fields
+  formData.append('FirstName', this.profile.firstName.trim());
+  formData.append('LastName', this.profile.lastName.trim());
   
-  // Only append optional fields if they have values
+  // Append optional fields only if they have values
   if (this.profile.phoneNumber && this.profile.phoneNumber.trim()) {
     formData.append('PhoneNumber', this.profile.phoneNumber.trim());
-    console.log('Added PhoneNumber:', this.profile.phoneNumber.trim());
   }
+  
   if (this.profile.dateOfBirth) {
     formData.append('DateOfBirth', this.profile.dateOfBirth);
-    console.log('Added DateOfBirth:', this.profile.dateOfBirth);
   }
+  
   if (this.profile.address && this.profile.address.trim()) {
     formData.append('Address', this.profile.address.trim());
-    console.log('Added Address:', this.profile.address.trim());
   }
+  
   if (this.profile.race && this.profile.race.trim()) {
     formData.append('Race', this.profile.race.trim());
-    console.log('Added Race:', this.profile.race.trim());
   }
+  
   if (this.profile.gender && this.profile.gender.trim()) {
     formData.append('Gender', this.profile.gender.trim());
-    console.log('Added Gender:', this.profile.gender.trim());
   }
   
   if (this.selectedFile) {
     formData.append('ProfilePicture', this.selectedFile, this.selectedFile.name);
-    console.log('Added ProfilePicture:', this.selectedFile.name, 'Size:', this.selectedFile.size);
-  } else {
-    console.log('No profile picture selected');
   }
 
-  console.log('Final FormData entries:');
-  for (let [key, value] of (formData as any).entries()) {
-    if (value instanceof File) {
-      console.log(`${key}: File(${value.name}, ${value.size} bytes)`);
-    } else {
-      console.log(`${key}: ${value}`);
-    }
-  }
-
-  // Create HttpHeaders object properly - don't use plain object
   const token = this.authService.getValidToken();
   let httpHeaders = new HttpHeaders();
   
   if (token) {
     httpHeaders = httpHeaders.set('Authorization', `Bearer ${token}`);
-    console.log('Added Authorization header with token:', token.substring(0, 20) + '...');
-  } else {
-    console.error('No valid token found!');
   }
-
-  console.log('Making request to:', `${this.authService.apiUrl}/api/Account/profile`);
 
   this.http.put(`${this.authService.apiUrl}/api/Account/profile`, formData, {
     headers: httpHeaders
@@ -157,6 +132,13 @@ export class ProfileSettingsComponent implements OnInit {
     next: (response: any) => {
       console.log('Success response:', response);
       this.successMessage = response.Message || 'Profile updated successfully';
+      
+      // Update the profile picture URL if provided
+      if (response.ProfilePictureUrl) {
+        this.profile.profilePicture = response.ProfilePictureUrl;
+      }
+      
+      // Refresh user data
       this.authService.refreshUserData().subscribe();
       this.selectedFile = null;
       this.isLoading = false;
@@ -165,18 +147,14 @@ export class ProfileSettingsComponent implements OnInit {
       console.error('Full error response:', err);
       console.error('Error details:', err.error);
       
-      // Extract validation errors from the response
       if (err.error && err.error.errors) {
-        const validationErrors = err.error.errors;
-        
-        // Handle different error formats
-        if (Array.isArray(validationErrors)) {
-          this.errorMessage = validationErrors.join(', ');
-        } else if (typeof validationErrors === 'object') {
+        if (Array.isArray(err.error.errors)) {
+          this.errorMessage = err.error.errors.join(', ');
+        } else if (typeof err.error.errors === 'object') {
           const errorMessages: string[] = [];
-          for (const key in validationErrors) {
-            if (validationErrors.hasOwnProperty(key)) {
-              const messages = validationErrors[key];
+          for (const key in err.error.errors) {
+            if (err.error.errors.hasOwnProperty(key)) {
+              const messages = err.error.errors[key];
               if (Array.isArray(messages)) {
                 errorMessages.push(...messages);
               } else {
@@ -184,14 +162,10 @@ export class ProfileSettingsComponent implements OnInit {
               }
             }
           }
-          this.errorMessage = errorMessages.join(', ') || 'Validation failed';
+          this.errorMessage = errorMessages.join(', ');
         }
-      } else if (err.error?.title) {
-        this.errorMessage = err.error.title;
       } else if (err.error?.message) {
         this.errorMessage = err.error.message;
-      } else if (typeof err.error === 'string') {
-        this.errorMessage = err.error;
       } else {
         this.errorMessage = 'Failed to update profile. Please try again.';
       }
@@ -200,6 +174,7 @@ export class ProfileSettingsComponent implements OnInit {
     }
   });
 }
+
   changePassword() {
     if (this.isLoading) return;
     this.isLoading = true;
