@@ -291,24 +291,22 @@
       <div class="relative">
         <div class="bg-gradient-to-br from-blue-500 to-green-500 p-1 rounded-2xl shadow-2xl transform hover:scale-[1.02] transition-transform duration-300">
           <div class="bg-white rounded-xl overflow-hidden">
-            <!-- Game Video/GIF Placeholder -->
-            <div class="aspect-video bg-gradient-to-br from-gray-900 to-gray-700 flex items-center justify-center relative overflow-hidden">
-              <!-- Your game GIF/video goes here -->
-            <div id="game-preview" class="w-full h-full">
+          <!-- Game GIF Section -->
+<div class="aspect-video bg-gradient-to-br from-gray-900 to-gray-700 flex items-center justify-center relative overflow-hidden">
+  <!-- Your game GIF goes here -->
+  <div id="game-preview" class="w-full h-full">
+    <img 
+      src="/path-to-your-game.gif" 
+      alt="Pulse Game gameplay demonstration" 
+      class="w-full h-full object-cover"
+    >
+  </div>
+  
+  <!-- Play Button Overlay -->
+  <div class="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 hover: transition-opacity duration-300 cursor-pointer" id="play-overlay">
 
-  <video class="w-full h-full object-cover" autoplay muted loop playsinline>
-    <source src="/path-to-your-game.mp4" type="video/mp4">
-    <source src="/path-to-your-game.webm" type="video/webm">
-    Your browser does not support the video tag.
-  </video>
-
+  </div>
 </div>
-              
-              <!-- Play Button Overlay -->
-              <div class="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 hover: transition-opacity cursor-pointer" id="play-overlay">
-              
-              </div>
-            </div>
             
             <!-- Game Controls -->
             <div class="p-4 bg-gray-50 border-t border-gray-200">

@@ -1,4 +1,35 @@
 <div class="game-container">
+
+   <div *ngIf="!isCompatibleDevice" class="device-warning-modal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+      <div class="warning-icon">📱</div>
+      <h2>Device Not Supported</h2>
+      <div class="warning-message">
+        <p>The Pulse Game is designed to be played on <strong>Laptop or Desktop computers</strong> for the best experience.</p>
+        <p>Please switch to a computer with a keyboard to enjoy the game!</p>
+      </div>
+      <div class="device-reasons">
+        <div class="reason-item">
+          <span class="reason-icon">⌨️</span>
+          <span>Requires keyboard controls</span>
+        </div>
+        <div class="reason-item">
+          <span class="reason-icon">🖥️</span>
+          <span>Optimized for larger screens</span>
+        </div>
+        <div class="reason-item">
+          <span class="reason-icon">🎮</span>
+          <span>Better gaming experience</span>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button class="home-btn" (click)="returnHome()">
+          <span>🏠 Return to Home</span>
+        </button>
+      </div>
+    </div>
+  </div>
   <!-- Top Header Section -->
   <div class="game-header-container">
     <div class="header-left">

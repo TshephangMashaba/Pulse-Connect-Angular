@@ -121,10 +121,15 @@ export class HealthSnakeGameComponent implements OnInit {
       { type: 'safety', icon: '🚭', message: 'Avoiding smoking reduces risk of lung cancer and heart disease.', points: 30, color: '#78909c' }
     ];
 
-  ngOnInit() {
-    // Simulate loading screen
+ngOnInit() {
+  // Check if device is compatible
+  this.isCompatibleDevice = !this.isMobileOrTablet();
+  
+  // Only show loading screen if device is compatible
+  if (this.isCompatibleDevice) {
     this.startLoadingScreen();
   }
+}
 
   startLoadingScreen() {
     this.loadingInterval = setInterval(() => {
@@ -162,6 +167,11 @@ export class HealthSnakeGameComponent implements OnInit {
   }
 
   startGame() {
+
+    if (!this.isCompatibleDevice) {
+    return;
+  }
+
     this.gameStarted = true;
     this.isPaused = false;
     // Reset game state
@@ -367,4 +377,27 @@ export class HealthSnakeGameComponent implements OnInit {
     default: return 'Custom';
   }
 }
+
+// Add this method to your HealthSnakeGameComponent class
+isMobileOrTablet(): boolean {
+  // User agent detection
+  const userAgent = navigator.userAgent.toLowerCase();
+  const isMobile = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent);
+  const isTablet = /(ipad|tablet|playbook|silk)|(android(?!.*mobile))/i.test(userAgent);
+  
+  // Touch screen detection
+  const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  
+  // Screen size detection
+  const isSmallScreen = window.innerWidth <= 1024;
+  const isSmallHeight = window.innerHeight <= 768;
+  
+  // Combined detection - consider it mobile/tablet if multiple conditions match
+  const mobileIndicators = [isMobile, isTablet, hasTouch, isSmallScreen].filter(Boolean).length;
+  
+  return mobileIndicators >= 2;
+}
+
+// Add this property to track device compatibility
+isCompatibleDevice = true;
 }
