@@ -48,7 +48,7 @@ export interface AchievementData {
   providedIn: 'root'
 })
 export class CertificateService {
-  private apiUrl = 'https://localhost:7142/api/certificates';
+  private apiUrl = 'https://pulse-connect-api.onrender.com/api/certificates';
 
   constructor(
     private http: HttpClient, 
@@ -66,7 +66,7 @@ export class CertificateService {
 
 getMyCertificates(): Observable<Certificate[]> {
   const headers = this.getHeaders();
-  return this.http.get<Certificate[]>(`https://localhost:7142/api/certificates/my-certificates`, {
+  return this.http.get<Certificate[]>(`https://pulse-connect-api.onrender.com/api/certificates/my-certificates`, {
     headers: headers
   });
 }

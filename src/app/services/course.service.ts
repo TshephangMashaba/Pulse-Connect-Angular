@@ -88,7 +88,7 @@ export interface Chapter {
   providedIn: 'root'
 })
 export class CourseService {
-  private apiUrl = 'https://localhost:7142/api/course';
+  private apiUrl = 'https://pulse-connect-api.onrender.com/api/course';
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
@@ -212,7 +212,7 @@ submitTest(testData: any): Observable<any> {
 generateCertificate(testAttemptId: string): Observable<any> {
   const headers = this.getAuthHeaders();
   // CORRECT ENDPOINT: Use the certificates controller, not course
-  return this.http.post(`https://localhost:7142/api/certificates/generate`, {
+  return this.http.post(`https://pulse-connect-api.onrender.com/api/certificates/generate`, {
     testAttemptId: testAttemptId,
     sendEmail: true
   }, {
@@ -224,7 +224,7 @@ generateCertificate(testAttemptId: string): Observable<any> {
 
 getCourseCertificates(courseId: string): Observable<any[]> {
   const headers = this.getAuthHeaders();
-  return this.http.get<any[]>(`https://localhost:7142/api/certificates/course/${courseId}`, {
+  return this.http.get<any[]>(`https://pulse-connect-api.onrender.com/api/certificates/course/${courseId}`, {
     headers: headers
   });
 }

@@ -199,7 +199,7 @@ private getAuthHeaders(): HttpHeaders {
       params = params.set('type', this.getPostTypeFromTab());
     }
 
-   this.http.get<PostDto[]>('https://localhost:7142/api/community/posts', { 
+   this.http.get<PostDto[]>('https://pulse-connect-api.onrender.com/api/community/posts', { 
     params, 
     headers: this.getAuthHeaders(),
     observe: 'response' 
@@ -233,7 +233,7 @@ private getAuthHeaders(): HttpHeaders {
       .set('province', province)
       .set('sortBy', 'newest');
 
-    this.http.get<PostDto[]>('https://localhost:7142/api/community/posts', { 
+    this.http.get<PostDto[]>('https://pulse-connect-api.onrender.com/api/community/posts', { 
       params, 
       headers: this.getAuthHeaders()
     })
@@ -250,7 +250,7 @@ private getAuthHeaders(): HttpHeaders {
       });
   }
 loadPostDetails(id: string): void {
-  this.http.get<PostDto>(`https://localhost:7142/api/community/posts/${id}`, { 
+  this.http.get<PostDto>(`https://pulse-connect-api.onrender.com/api/community/posts/${id}`, { 
     headers: this.getAuthHeaders() 
   })
     .pipe(
@@ -265,7 +265,7 @@ loadPostDetails(id: string): void {
       
       // Check if user liked this post
       if (this.authService.isAuthenticated()) {
-        this.http.get<boolean>(`https://localhost:7142/api/community/posts/${id}/userlike`, {
+        this.http.get<boolean>(`https://pulse-connect-api.onrender.com/api/community/posts/${id}/userlike`, {
           headers: this.getAuthHeaders()
         }).subscribe({
           next: (userLiked) => {
@@ -288,7 +288,7 @@ isProvinceJoined(province: string): boolean {
 loadUserJoinedProvinces(): void {
   if (!this.authService.isAuthenticated()) return;
 
-  this.http.get<string[]>('https://localhost:7142/api/community/provinces/joined', { 
+  this.http.get<string[]>('https://pulse-connect-api.onrender.com/api/community/provinces/joined', { 
     headers: this.getAuthHeaders() 
   })
     .pipe(
@@ -305,7 +305,7 @@ loadUserJoinedProvinces(): void {
 }
 
   loadComments(postId: string): void {
-    this.http.get<CommentDto[]>(`https://localhost:7142/api/community/posts/${postId}/comments`, { 
+    this.http.get<CommentDto[]>(`https://pulse-connect-api.onrender.com/api/community/posts/${postId}/comments`, { 
       headers: this.getAuthHeaders() 
     })
       .pipe(
@@ -320,7 +320,7 @@ loadUserJoinedProvinces(): void {
   }
 
   loadProvinceStats(): void {
-    this.http.get<ProvinceStatsDto[]>('https://localhost:7142/api/community/provinces/stats', { 
+    this.http.get<ProvinceStatsDto[]>('https://pulse-connect-api.onrender.com/api/community/provinces/stats', { 
       headers: this.getAuthHeaders() 
     })
       .pipe(
@@ -335,7 +335,7 @@ loadUserJoinedProvinces(): void {
   }
 
   loadCommunityStats(): void {
-    this.http.get<CommunityStats>('https://localhost:7142/api/community/stats', { 
+    this.http.get<CommunityStats>('https://pulse-connect-api.onrender.com/api/community/stats', { 
       headers: this.getAuthHeaders() 
     })
       .pipe(
@@ -398,7 +398,7 @@ loadUserJoinedProvinces(): void {
     console.log(`  ${key}:`, value);
   }
 
-  this.http.post<PostDto>('https://localhost:7142/api/community/posts', formData, { 
+  this.http.post<PostDto>('https://pulse-connect-api.onrender.com/api/community/posts', formData, { 
     headers: headers 
   })
     .pipe(
@@ -446,7 +446,7 @@ loadUserJoinedProvinces(): void {
     button.classList.add('liking');
   }
 
-  this.http.post(`https://localhost:7142/api/community/posts/${postId}/like`, {}, { 
+  this.http.post(`https://pulse-connect-api.onrender.com/api/community/posts/${postId}/like`, {}, { 
     headers: this.getAuthHeaders() 
   })
     .pipe(
@@ -501,7 +501,7 @@ loadUserJoinedProvinces(): void {
       return;
     }
 
-    this.http.post<CommentDto>('https://localhost:7142/api/community/comments', comment, { 
+    this.http.post<CommentDto>('https://pulse-connect-api.onrender.com/api/community/comments', comment, { 
       headers: this.getAuthHeaders() 
     })
       .pipe(
@@ -534,7 +534,7 @@ joinProvince(province: string): void {
 
   const joinDto = { province };
 
-  this.http.post('https://localhost:7142/api/community/provinces/join', joinDto, {
+  this.http.post('https://pulse-connect-api.onrender.com/api/community/provinces/join', joinDto, {
     headers: this.getAuthHeaders()
   })
     .pipe(
@@ -577,7 +577,7 @@ leaveProvince(province: string): void {
     return;
   }
 
-  this.http.post('https://localhost:7142/api/community/provinces/leave', { province }, {
+  this.http.post('https://pulse-connect-api.onrender.com/api/community/provinces/leave', { province }, {
     headers: this.getAuthHeaders()
   })
     .pipe(
@@ -633,7 +633,7 @@ getImageUrl(imageUrl: string): string {
     return imageUrl;
   }
   
-  return `https://localhost:7142${imageUrl.startsWith('/') ? '' : '/'}${imageUrl}`;
+  return `https://pulse-connect-api.onrender.com${imageUrl.startsWith('/') ? '' : '/'}${imageUrl}`;
 }
 
 
@@ -852,7 +852,7 @@ closePostModal(): void {
 
 loadAvailableProvinces(): void {
   // Use the API endpoint if available, otherwise use the hardcoded list
-  this.http.get<string[]>('https://localhost:7142/api/community/provinces/available', { 
+  this.http.get<string[]>('https://pulse-connect-api.onrender.com/api/community/provinces/available', { 
     headers: this.getAuthHeaders() 
   }).subscribe({
     next: (provinces) => {
@@ -879,7 +879,7 @@ checkUserLikeStatus(): void {
   if (!this.authService.isAuthenticated()) return;
 
   this.posts.forEach(post => {
-    this.http.get<boolean>(`https://localhost:7142/api/community/posts/${post.id}/userlike`, {
+    this.http.get<boolean>(`https://pulse-connect-api.onrender.com/api/community/posts/${post.id}/userlike`, {
       headers: this.getAuthHeaders()
     }).subscribe({
       next: (userLiked) => {

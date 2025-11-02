@@ -7,7 +7,7 @@ import { catchError, map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class AnalyticsService {
-  private baseUrl = 'https://localhost:7142/api';
+  private baseUrl = 'https://pulse-connect-api.onrender.com/api';
 
   constructor(private http: HttpClient) { }
 

@@ -63,7 +63,7 @@ export class RegisterComponent {
 
       console.log('Sending data:', formData);
 
-      this.http.post('https://localhost:7142/api/Account/register', formData).subscribe({
+      this.http.post('https://pulse-connect-api.onrender.com/api/Account/register', formData).subscribe({
         next: (response: any) => {
           this.isLoading = false;
           

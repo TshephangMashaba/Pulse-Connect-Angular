@@ -102,7 +102,7 @@ export class UsersManagementComponent implements OnInit {
     this.loading = true;
     const headers = this.getAuthHeaders();
     
-    this.http.get<User[]>('https://localhost:7142/api/account/users', { headers }).subscribe({
+    this.http.get<User[]>('https://pulse-connect-api.onrender.com/api/account/users', { headers }).subscribe({
       next: (users) => {
         this.users = users;
         this.filteredUsers = users;
@@ -119,7 +119,7 @@ export class UsersManagementComponent implements OnInit {
   loadAvailableRoles() {
     const headers = this.getAuthHeaders();
     
-    this.http.get<string[]>('https://localhost:7142/api/account/roles', { headers }).subscribe({
+    this.http.get<string[]>('https://pulse-connect-api.onrender.com/api/account/roles', { headers }).subscribe({
       next: (roles) => {
         this.roles = roles;
       },
@@ -234,7 +234,7 @@ export class UsersManagementComponent implements OnInit {
     
     const headers = this.getAuthHeaders();
     
-    this.http.post('https://localhost:7142/api/account/register', this.userObj, { headers }).subscribe({
+    this.http.post('https://pulse-connect-api.onrender.com/api/account/register', this.userObj, { headers }).subscribe({
       next: () => {
         this.closeModals();
         this.loadUsers();
@@ -266,7 +266,7 @@ export class UsersManagementComponent implements OnInit {
       gender: this.selectedUser.gender
     };
     
-    this.http.put(`https://localhost:7142/api/account/users/${this.selectedUser.id}`, updateData, { headers }).subscribe({
+    this.http.put(`https://pulse-connect-api.onrender.com/api/account/users/${this.selectedUser.id}`, updateData, { headers }).subscribe({
       next: () => {
         this.closeModals();
         this.loadUsers();
@@ -287,7 +287,7 @@ export class UsersManagementComponent implements OnInit {
       roles: this.selectedRoles
     };
     
-    this.http.put(`https://localhost:7142/api/account/users/${this.selectedUser.id}/roles`, updateData, { headers }).subscribe({
+    this.http.put(`https://pulse-connect-api.onrender.com/api/account/users/${this.selectedUser.id}/roles`, updateData, { headers }).subscribe({
       next: () => {
         this.closeModals();
         this.loadUsers();
@@ -305,7 +305,7 @@ export class UsersManagementComponent implements OnInit {
     
     const headers = this.getAuthHeaders();
     
-    this.http.post(`https://localhost:7142/api/account/users/${this.selectedUser.id}/toggle-active`, {}, { headers }).subscribe({
+    this.http.post(`https://pulse-connect-api.onrender.com/api/account/users/${this.selectedUser.id}/toggle-active`, {}, { headers }).subscribe({
       next: () => {
         this.closeModals();
         this.loadUsers();
@@ -323,7 +323,7 @@ export class UsersManagementComponent implements OnInit {
     
     const headers = this.getAuthHeaders();
     
-    this.http.delete(`https://localhost:7142/api/account/users/${this.selectedUser.id}`, { headers }).subscribe({
+    this.http.delete(`https://pulse-connect-api.onrender.com/api/account/users/${this.selectedUser.id}`, { headers }).subscribe({
       next: () => {
         this.closeModals();
         this.loadUsers();

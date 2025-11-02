@@ -263,7 +263,7 @@ isEditorInitialized = false;
   // Course Management
 loadCourses(): void {
   this.isLoading = true;
-  this.http.get<Course[]>('https://localhost:7142/api/course', {
+  this.http.get<Course[]>('https://pulse-connect-api.onrender.com/api/course', {
     headers: this.getAuthHeaders()
   }).subscribe({
     next: (courses) => {
@@ -296,7 +296,7 @@ loadCourses(): void {
 
   createCourse(): void {
     this.isLoading = true;
-    this.http.post<Course>('https://localhost:7142/api/course', this.courseForm, {
+    this.http.post<Course>('https://pulse-connect-api.onrender.com/api/course', this.courseForm, {
       headers: this.getAuthHeaders()
     }).subscribe({
       next: (course) => {
@@ -320,7 +320,7 @@ loadCourses(): void {
 
   updateCourse(courseId: string): void {
     this.isLoading = true;
-    this.http.put(`https://localhost:7142/api/course/${courseId}`, this.courseForm, {
+    this.http.put(`https://pulse-connect-api.onrender.com/api/course/${courseId}`, this.courseForm, {
       headers: this.getAuthHeaders()
     }).subscribe({
       next: () => {
@@ -347,7 +347,7 @@ async deleteCourse(courseId: string): Promise<void> {
   }
 
   this.isLoading = true;
-  this.http.delete(`https://localhost:7142/api/course/${courseId}`, {
+  this.http.delete(`https://pulse-connect-api.onrender.com/api/course/${courseId}`, {
     headers: this.getAuthHeaders()
   }).subscribe({
     next: () => {
@@ -366,7 +366,7 @@ async deleteCourse(courseId: string): Promise<void> {
   // Chapter Management
   loadChapters(courseId: string): void {
     this.isLoading = true;
-    this.http.get<Chapter[]>(`https://localhost:7142/api/course/${courseId}/chapters`, {
+    this.http.get<Chapter[]>(`https://pulse-connect-api.onrender.com/api/course/${courseId}/chapters`, {
       headers: this.getAuthHeaders()
     }).subscribe({
       next: (chapters) => {
@@ -430,7 +430,7 @@ addChapter(courseId: string): void {
     formData.append('MediaType', this.chapterForm.mediaType);
   }
 
-  this.http.post(`https://localhost:7142/api/course/${courseId}/chapter`, formData, {
+  this.http.post(`https://pulse-connect-api.onrender.com/api/course/${courseId}/chapter`, formData, {
     headers: new HttpHeaders({
       'Authorization': `Bearer ${this.authService.getValidToken()}`
     })
@@ -499,7 +499,7 @@ updateChapter(): void {
     formData.append('MediaFile', this.selectedFile);
   }
 
-  this.http.put(`https://localhost:7142/api/course/${this.selectedCourse.id}/chapter/${this.selectedChapterForEdit.id}`, 
+  this.http.put(`https://pulse-connect-api.onrender.com/api/course/${this.selectedCourse.id}/chapter/${this.selectedChapterForEdit.id}`, 
     formData, {
     headers: new HttpHeaders({
       'Authorization': `Bearer ${this.authService.getValidToken()}`
@@ -533,7 +533,7 @@ updateChapter(): void {
     if (!this.selectedCourse) return;
 
     this.isLoading = true;
-    this.http.delete(`https://localhost:7142/api/course/${this.selectedCourse.id}/chapter/${chapterId}`, {
+    this.http.delete(`https://pulse-connect-api.onrender.com/api/course/${this.selectedCourse.id}/chapter/${chapterId}`, {
       headers: this.getAuthHeaders()
     }).subscribe({
       next: () => {
@@ -668,7 +668,7 @@ updateChapter(): void {
   // Update your loadTest method
   loadTest(courseId: string): void {
     this.isLoading = true;
-    this.http.get<any>(`https://localhost:7142/api/course/${courseId}/test`, {
+    this.http.get<any>(`https://pulse-connect-api.onrender.com/api/course/${courseId}/test`, {
       headers: this.getAuthHeaders()
     }).subscribe({
       next: (response) => {
@@ -738,7 +738,7 @@ updateChapter(): void {
     }
 
     this.isLoading = true;
-    this.http.post<CourseTest>(`https://localhost:7142/api/course/${courseId}/test`, this.testForm, {
+    this.http.post<CourseTest>(`https://pulse-connect-api.onrender.com/api/course/${courseId}/test`, this.testForm, {
       headers: this.getAuthHeaders()
     }).subscribe({
       next: (test) => {
@@ -763,7 +763,7 @@ updateChapter(): void {
     if (!this.selectedCourseTest) return;
     
     this.isLoading = true;
-    this.http.post<any>(`https://localhost:7142/api/course/${courseId}/test/questions`, this.testForm.questions, {
+    this.http.post<any>(`https://pulse-connect-api.onrender.com/api/course/${courseId}/test/questions`, this.testForm.questions, {
       headers: this.getAuthHeaders()
     }).subscribe({
       next: (response) => {
@@ -1009,7 +1009,7 @@ viewQuestions(course: Course): void {
     this.isLoading = true;
     
     this.http.post<any>( // Use 'any' to handle the simplified response
-      `https://localhost:7142/api/course/${courseId}/test/basic`, 
+      `https://pulse-connect-api.onrender.com/api/course/${courseId}/test/basic`, 
       this.testBasicForm, 
       {
         headers: this.getAuthHeaders()

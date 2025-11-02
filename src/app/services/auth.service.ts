@@ -62,7 +62,7 @@ export const DEFAULT_AVATAR = '/default-profile.png';
   providedIn: 'root'
 })
 export class AuthService {
-  public apiUrl = 'https://localhost:7142';
+  public apiUrl = 'https://pulse-connect-api.onrender.com';
   public currentUserSubject: BehaviorSubject<User | null>;
   public currentUser$: Observable<User | null>;
   public refreshOnboardingSubject = new Subject<void>();

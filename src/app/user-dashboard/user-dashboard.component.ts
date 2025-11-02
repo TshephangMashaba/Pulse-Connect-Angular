@@ -379,7 +379,7 @@ private loadDefaultBadges(): void {
   // API Calls with improved error handling
    loadDashboardStats(): Promise<void> {
     return new Promise((resolve) => {
-      this.http.get<DashboardStatsDTO>('https://localhost:7142/api/userdashboard/stats', { 
+      this.http.get<DashboardStatsDTO>('https://pulse-connect-api.onrender.com/api/userdashboard/stats', { 
         headers: this.getAuthHeaders() 
       })
       .pipe(
@@ -401,7 +401,7 @@ private loadDefaultBadges(): void {
 
   loadRecentActivity(): Promise<void> {
     return new Promise((resolve) => {
-      this.http.get<RecentActivityDTO[]>('https://localhost:7142/api/userdashboard/recent-activity', { 
+      this.http.get<RecentActivityDTO[]>('https://pulse-connect-api.onrender.com/api/userdashboard/recent-activity', { 
         headers: this.getAuthHeaders() 
       })
       .pipe(
@@ -423,7 +423,7 @@ private loadDefaultBadges(): void {
 
   loadMyEnrollments(): Promise<void> {
     return new Promise((resolve) => {
-      this.http.get<EnrollmentDTO[]>('https://localhost:7142/api/course/my-enrollments', { 
+      this.http.get<EnrollmentDTO[]>('https://pulse-connect-api.onrender.com/api/course/my-enrollments', { 
         headers: this.getAuthHeaders() 
       })
       .pipe(
@@ -455,7 +455,7 @@ private loadDefaultBadges(): void {
 
   loadAchievements(): Promise<void> {
     return new Promise((resolve) => {
-      this.http.get<AchievementsDTO>('https://localhost:7142/api/userdashboard/achievements', { 
+      this.http.get<AchievementsDTO>('https://pulse-connect-api.onrender.com/api/userdashboard/achievements', { 
         headers: this.getAuthHeaders() 
       })
       .pipe(
@@ -477,7 +477,7 @@ private loadDefaultBadges(): void {
 
   loadRecommendedCourses(): Promise<void> {
     return new Promise((resolve) => {
-      this.http.get<CourseDTO[]>('https://localhost:7142/api/userdashboard/recommended-courses', { 
+      this.http.get<CourseDTO[]>('https://pulse-connect-api.onrender.com/api/userdashboard/recommended-courses', { 
         headers: this.getAuthHeaders() 
       })
       .pipe(
