@@ -54,9 +54,11 @@ const routes: Routes = [
     component: CoursesComponent
   },
 
-  { path: 'course/:id',
-    component: CourseViewComponent
-  },
+{ 
+  path: 'course/:id',
+  component: CourseViewComponent,
+  data: { preload: false }
+},
   {
     path: 'admin-dashboard',
     component: AdminDashboardComponent
