@@ -1,7 +1,9 @@
 <app-user-nav></app-user-nav>
 
 <!-- courses.component.html -->
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8  ">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+
     <!-- Page Header -->
     <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
         <div>
@@ -21,15 +23,15 @@
     <!-- Loading State -->
     <div *ngIf="isLoading" class="flex justify-center items-center h-64">
         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+        <span class="ml-4 text-gray-600">Loading courses...</span>
     </div>
 
     <!-- Error Message -->
-    <div *ngIf="errorMessage" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+    <div *ngIf="errorMessage && !isLoading" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
         {{ errorMessage }}
     </div>
 
-    <!-- Content when loaded -->
-    <div *ngIf="!isLoading && !errorMessage">
+ 
         <!-- My Courses Section -->
         <div class="mb-8" *ngIf="myCourses.length > 0">
             <div class="flex justify-between items-center mb-4">
@@ -37,43 +39,40 @@
                 <a href="#" class="text-sm text-green-600 hover:text-green-700 font-medium">View All</a>
             </div>
             
-     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <!-- Course Cards for enrolled courses -->
-    <div *ngFor="let enrollment of myCourses" class="bg-white rounded-xl shadow-sm overflow-hidden course-card transition-all duration-300 hover:shadow-md">
-        <div class="h-40 bg-cover bg-center" [style.background-image]="'url(' + getCourseImageById(enrollment.courseId) + ')'"></div>
-        <div class="p-6">
-            <div class="flex items-start">
-                <div class="flex-shrink-0 bg-green-100 p-3 rounded-lg mr-4">
-                    <i class="fas fa-book text-green-600 text-xl"></i>
-                </div>
-                <div class="flex-1">
-                    <h3 class="font-bold text-lg mb-1">{{ enrollment.courseTitle }}</h3>
-                    <p class="text-sm text-gray-500 mb-3">Progress: {{ enrollment.completedChapters }}/{{ enrollment.totalChapters }} chapters</p>
-                    <div class="flex items-center">
-                        <div class="w-full bg-gray-200 rounded-full h-2 mr-3">
-                            <div class="h-2 rounded-full" [class]="getProgressColorClass(enrollment.progressPercentage)" [style.width]="enrollment.progressPercentage + '%'"></div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Course Cards for enrolled courses -->
+                <div *ngFor="let enrollment of myCourses" class="bg-white rounded-xl shadow-sm overflow-hidden course-card transition-all duration-300 hover:shadow-md">
+                    <div class="h-40 bg-cover bg-center" [style.background-image]="'url(' + getCourseImageById(enrollment.courseId) + ')'"></div>
+                    <div class="p-6">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 bg-green-100 p-3 rounded-lg mr-4">
+                                <i class="fas fa-book text-green-600 text-xl"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="font-bold text-lg mb-1">{{ enrollment.courseTitle }}</h3>
+                                <p class="text-sm text-gray-500 mb-3">Progress: {{ enrollment.completedChapters }}/{{ enrollment.totalChapters }} chapters</p>
+                                <div class="flex items-center">
+                                    <div class="w-full bg-gray-200 rounded-full h-2 mr-3">
+                                        <div class="h-2 rounded-full" [class]="getProgressColorClass(enrollment.progressPercentage)" [style.width]="enrollment.progressPercentage + '%'"></div>
+                                    </div>
+                                    <span class="text-xs text-gray-500">{{ enrollment.progressPercentage }}% complete</span>
+                                </div>
+                            </div>
                         </div>
-                        <span class="text-xs text-gray-500">{{ enrollment.progressPercentage }}% complete</span>
+                        <div class="mt-4 flex justify-between">
+                            <button (click)="continueLearning(enrollment.courseId)" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm">
+                                Continue Learning
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="mt-4 flex justify-between">
-               
-                <button (click)="continueLearning(enrollment.courseId)" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm">
-                    Continue Learning
-                </button>
-            </div>
         </div>
-    </div>
-</div>
 
         <!-- All Courses Section -->
         <div class="mb-8">
             <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-bold text-gray-800">Available Courses</h2>
-                <div class="flex items-center space-x-2">
-                  
-                </div>
+                <h2 class="text-xl font-bold text-gray-800">Available Courses ({{allCourses.length}})</h2>
             </div>
             
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -109,4 +108,3 @@
             </div>
         </div>
     </div>
-</div>

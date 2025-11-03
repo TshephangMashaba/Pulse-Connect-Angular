@@ -18,22 +18,22 @@ export class CoursesComponent implements OnInit {
 
   // Direct mapping of course titles to specific health/medical images
   courseImageMap: {[key: string]: string} = {
-    'HIV Awareness': 'https://images.pexels.com/photos/7155276/pexels-photo-7155276.jpeg', // Red ribbon for HIV awareness
-    'Climate Change, Disasters, and Community Resilience': 'https://images.pexels.com/photos/7640744/pexels-photo-7640744.jpeg', // Community health
-    'Diabetes Awareness': 'https://images.pexels.com/photos/4056725/pexels-photo-4056725.jpeg', // Blood sugar test
-    'Community Safety, Violence Prevention, and Mental Wellbeing': 'https://images.pexels.com/photos/5699456/pexels-photo-5699456.jpeg', // Community safety/mental health
-    'Farm Safety and Occupational Health': 'https://images.pexels.com/photos/7366318/pexels-photo-7366318.jpeg', // Farm with medical symbol
-    'Digital Safety': 'https://images.pexels.com/photos/5380642/pexels-photo-5380642.jpeg', // Digital safety
-    'Cancer Awareness': 'https://images.pexels.com/photos/5726708/pexels-photo-5726708.jpeg', // Cancer awareness ribbon
-    'Tuberculosis Education': 'https://images.pexels.com/photos/7155279/pexels-photo-7155279.jpeg', // TB education with lungs visual
-    'Birth Control Education': 'https://images.pexels.com/photos/7615478/pexels-photo-7615478.jpeg' // Birth control pills
+    'HIV Awareness': 'https://images.pexels.com/photos/7155276/pexels-photo-7155276.jpeg',
+    'Climate Change, Disasters, and Community Resilience': 'https://images.pexels.com/photos/7640744/pexels-photo-7640744.jpeg',
+    'Diabetes Awareness': 'https://images.pexels.com/photos/4056725/pexels-photo-4056725.jpeg',
+    'Community Safety, Violence Prevention, and Mental Wellbeing': 'https://images.pexels.com/photos/5699456/pexels-photo-5699456.jpeg',
+    'Farm Safety and Occupational Health': 'https://images.pexels.com/photos/7366318/pexels-photo-7366318.jpeg',
+    'Digital Safety': 'https://images.pexels.com/photos/5380642/pexels-photo-5380642.jpeg',
+    'Cancer Awareness': 'https://images.pexels.com/photos/5726708/pexels-photo-5726708.jpeg',
+    'Tuberculosis Education': 'https://images.pexels.com/photos/7155279/pexels-photo-7155279.jpeg',
+    'Birth Control Education': 'https://images.pexels.com/photos/7615478/pexels-photo-7615478.jpeg'
   };
 
-  defaultImage = 'https://images.pexels.com/photos/4167688/pexels-photo-4167688.jpeg'; // Generic medical image
+  defaultImage = 'https://images.pexels.com/photos/4167688/pexels-photo-4167688.jpeg';
 
   constructor(
     private courseService: CourseService,
-    private authService: AuthService,
+    public authService: AuthService,
     private router: Router,
     private alertService: AlertService
   ) { }
@@ -69,55 +69,74 @@ export class CoursesComponent implements OnInit {
   // Get progress bar color class based on completion percentage
   getProgressColorClass(percentage: number): string {
     if (percentage < 25) {
-      return 'bg-red-500'; // Red for less than 25%
+      return 'bg-red-500';
     } else if (percentage < 50) {
-      return 'bg-orange-500'; // Orange for 25-49%
+      return 'bg-orange-500';
     } else if (percentage < 80) {
-      return 'bg-green-500'; // Green for 50-79%
+      return 'bg-green-500';
     } else if (percentage < 100) {
-      return 'bg-green-600'; // Dark green for 80-99%
+      return 'bg-green-600';
     } else {
-      return 'bg-green-800'; // Very dark green for 100%
+      return 'bg-green-800';
     }
   }
 
-  loadCourses() {
-    this.isLoading = true;
-    
-    // Load all available courses
-    this.courseService.getCourses().subscribe({
-      next: (courses) => {
-        this.allCourses = courses;
+  // In your CoursesComponent - update the loadCourses method:
+loadCourses() {
+  this.isLoading = true;
+  this.errorMessage = '';
+  
+  console.log('🔍 CoursesComponent: Starting to load courses...');
+  console.log('🔍 Is user authenticated?', this.authService.isAuthenticated());
+
+  this.courseService.getCourses().subscribe({
+    next: (courses) => {
+      console.log('✅ CoursesComponent: Courses loaded successfully', courses);
+      console.log('✅ Number of courses:', courses.length);
+      this.allCourses = courses;
+      
+      // Only load enrolled courses if user is authenticated
+      if (this.authService.isAuthenticated()) {
+        console.log('🔍 User is authenticated, loading enrolled courses...');
         this.loadMyCourses();
-      },
-      error: (error) => {
-        console.error('Error loading courses:', error);
-        this.errorMessage = 'Failed to load courses';
-        this.isLoading = false;
+      } else {
+        console.log('🔍 User not authenticated, showing all courses only');
+        this.isLoading = false; // Stop loading if not authenticated
       }
-    });
-  }
+    },
+    error: (error) => {
+      console.error('❌ CoursesComponent: Error loading courses:', error);
+      console.error('❌ Error status:', error.status);
+      console.error('❌ Error message:', error.message);
+      this.errorMessage = 'Failed to load courses. Please try again.';
+      this.isLoading = false;
+    }
+  });
+}
 
-  loadMyCourses() {
-    this.courseService.getMyCourses().subscribe({
-      next: (enrollments) => {
-        this.myCourses = enrollments;
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Error loading my courses:', error);
-        // Check if it's an authentication error
-        if (error.status === 401) {
-          this.errorMessage = 'Please log in to view your courses';
-        } else {
-          this.errorMessage = 'Failed to load your courses';
-        }
-        this.myCourses = [];
-        this.isLoading = false;
+loadMyCourses() {
+  console.log('🔍 Loading enrolled courses...');
+  
+  this.courseService.getMyCourses().subscribe({
+    next: (enrollments) => {
+      console.log('✅ Enrolled courses loaded:', enrollments);
+      console.log('✅ Number of enrolled courses:', enrollments.length);
+      this.myCourses = enrollments;
+      this.isLoading = false;
+    },
+    error: (error) => {
+      console.error('❌ Error loading enrolled courses:', error);
+      console.error('❌ Error status:', error.status);
+      if (error.status === 401) {
+        this.errorMessage = 'Please log in to view your enrollment status.';
+      } else {
+        this.errorMessage = 'Failed to load enrollment status.';
       }
-    });
-  }
-
+      this.myCourses = [];
+      this.isLoading = false;
+    }
+  });
+}
   async enrollInCourse(courseId: string) {
     // Check if user is authenticated first
     if (!this.authService.isAuthenticated()) {
