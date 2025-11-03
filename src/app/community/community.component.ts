@@ -177,29 +177,29 @@ private getAuthHeaders(): HttpHeaders {
 
   return headers;
 }
-  // API Calls
-  loadPosts(): void {
-      this.isLoading = true;
+  
+// Update your loadPosts method to filter content
+loadPosts(): void {
+  this.isLoading = true;
   let params = new HttpParams()
     .set('page', this.currentPage.toString())
     .set('pageSize', this.pageSize.toString())
     .set('sortBy', this.getSortByParam());
 
+  // Add filters if selected
+  if (this.selectedTopic && this.selectedTopic !== 'All Topics') {
+    params = params.set('topic', this.selectedTopic);
+  }
+  
+  if (this.selectedProvince && this.selectedProvince !== 'All Provinces') {
+    params = params.set('province', this.selectedProvince);
+  }
+  
+  if (this.activeTab !== 'discussions') {
+    params = params.set('type', this.getPostTypeFromTab());
+  }
 
-    // Add filters if selected
-    if (this.selectedTopic && this.selectedTopic !== 'All Topics') {
-      params = params.set('topic', this.selectedTopic);
-    }
-    
-    if (this.selectedProvince && this.selectedProvince !== 'All Provinces') {
-      params = params.set('province', this.selectedProvince);
-    }
-    
-    if (this.activeTab !== 'discussions') {
-      params = params.set('type', this.getPostTypeFromTab());
-    }
-
-   this.http.get<PostDto[]>('https://pulse-connect-api.onrender.com/api/community/posts', { 
+  this.http.get<PostDto[]>('https://pulse-connect-api.onrender.com/api/community/posts', { 
     params, 
     headers: this.getAuthHeaders(),
     observe: 'response' 
@@ -214,9 +214,10 @@ private getAuthHeaders(): HttpHeaders {
     .subscribe(response => {
       this.isLoading = false;
       if (response.body) {
-        this.posts = response.body;
+        // Filter out inappropriate posts
+        this.posts = this.filterPosts(response.body);
         this.filteredPosts = this.posts;
-        this.checkUserLikeStatus(); // Add this line
+        this.checkUserLikeStatus();
         
         // Get pagination headers
         const totalCount = response.headers.get('X-Total-Count');
@@ -226,6 +227,7 @@ private getAuthHeaders(): HttpHeaders {
       }
     });
 }
+
 
   loadProvincePosts(province: string): void {
     this.isLoading = true;
@@ -915,5 +917,279 @@ closeGuidelinesModal(): void {
   this.showGuidelinesModal = false;
 }
 
+// Add these properties to your component class
+private inappropriateWords = [
+  // Profanity and offensive language
+  'fuck', 'shit', 'bitch', 'asshole', 'bastard', 'dick', 'pussy', 'cunt',
+  'whore', 'slut', 'nigger', 'nigga', 'chink', 'spic', 'kike', 'fag', 'faggot',
+  'retard', 'retarded', 'moron', 'idiot', 'stupid',
+  
+  // Hate speech and discrimination
+  'kill all', 'death to', 'exterminate', 'annihilate', 'wipe out',
+  'superior race', 'inferior race', 'racial purity',
+  'women belong', 'women should', 'feminazi',
+  'all men are', 'men are trash',
+  'lgbtq should', 'gays are', 'transgender mental illness',
+  
+  // Violence and threats
+  'i will kill', 'i will hurt', 'i will harm', 'i will attack',
+  'die', 'death threat', 'murder', 'assassinate', 'bomb', 'shoot',
+  'stab', 'beat', 'punch', 'attack', 'harm', 'hurt',
+  
+  // Self-harm and suicide related
+  'i want to die', 'i want to kill myself', 'commit suicide',
+  'end my life', 'end it all', 'better off dead',
+  'cut myself', 'self harm', 'self-harm', 'suicide method',
+  'how to suicide', 'how to kill myself',
+  
+  // Illegal activities
+  'buy drugs', 'sell drugs', 'where to buy', 'illegal drugs',
+  'weed', 'cocaine', 'heroin', 'meth', 'ecstasy',
+  'underage', 'child porn', 'cp', 'lolita',
+  'how to hack', 'how to steal', 'how to scam',
+  
+  // Sexual content
+  'porn', 'pornography', 'xxx', 'adult content', 'nsfw',
+  'sexual act', 'blowjob', 'handjob', 'fingering',
+  'rape', 'molest', 'pedophile', 'incest',
+  
+  // Scams and fraud
+  'get rich quick', 'make money fast', 'pyramid scheme',
+  'ponzi scheme', 'investment scam', 'free money',
+  'win lottery', 'lottery scam', 'inheritance scam'
+];
 
+private triggeringWords = [
+  // Self-harm and suicide
+  'suicide', 'kill myself', 'end my life', 'want to die',
+  'self harm', 'cutting', 'self injury', 'suicidal',
+  'overdose', 'jump off', 'hang myself', 'shoot myself',
+  
+  // Eating disorders
+  'anorexia', 'bulimia', 'binge eating', 'purge',
+  'thinspo', 'pro ana', 'pro mia', 'eating disorder',
+  
+  // Abuse and trauma
+  'abuse', 'rape', 'assault', 'molestation', 'trauma',
+  'ptsd', 'domestic violence', 'child abuse',
+  
+  // Severe mental health
+  'psychosis', 'hallucinations', 'delusions', 'manic episode',
+  'psychotic break', 'nervous breakdown'
+];
+
+private warningWords = [
+  // Moderate severity
+  'depressed', 'anxiety', 'panic attack', 'mental health',
+  'therapy', 'counselor', 'psychiatrist', 'medication',
+  'stress', 'overwhelmed', 'burnout', 'exhausted'
+];
+
+// Content filtering algorithm
+filterInappropriateContent(content: string, title: string = ''): { 
+  isInappropriate: boolean; 
+  severity: 'high' | 'medium' | 'low' | 'none';
+  reasons: string[];
+  filteredContent?: string;
+} {
+  const fullText = (title + ' ' + content).toLowerCase();
+  const reasons: string[] = [];
+  let severity: 'high' | 'medium' | 'low' | 'none' = 'none';
+
+  // Check for inappropriate words
+  const foundInappropriate = this.inappropriateWords.filter(word => 
+    this.containsWord(fullText, word)
+  );
+  
+  // Check for triggering words
+  const foundTriggering = this.triggeringWords.filter(word =>
+    this.containsWord(fullText, word)
+  );
+  
+  // Check for warning words
+  const foundWarning = this.warningWords.filter(word =>
+    this.containsWord(fullText, word)
+  );
+
+  // Determine severity
+  if (foundInappropriate.length > 0 || foundTriggering.length > 0) {
+    severity = 'high';
+    reasons.push(...foundInappropriate.map(word => `Contains inappropriate language: "${word}"`));
+    reasons.push(...foundTriggering.map(word => `Contains triggering content: "${word}"`));
+  } else if (foundWarning.length > 2) {
+    severity = 'medium';
+    reasons.push('Contains multiple mental health related terms that may need moderation');
+  } else if (foundWarning.length > 0) {
+    severity = 'low';
+    reasons.push('Contains mental health related terms');
+  }
+
+  // Additional checks for patterns
+  if (this.containsSuicidalIntent(fullText)) {
+    severity = 'high';
+    reasons.push('Possible suicidal intent detected');
+  }
+
+  if (this.containsThreats(fullText)) {
+    severity = 'high';
+    reasons.push('Contains threats or violent intent');
+  }
+
+  if (this.containsPersonalInformation(fullText)) {
+    severity = 'medium';
+    reasons.push('May contain personal information');
+  }
+
+  return {
+    isInappropriate: severity === 'high',
+    severity,
+    reasons,
+    filteredContent: this.maskSensitiveContent(content, foundInappropriate)
+  };
+}
+
+// Helper method to check if text contains a specific word (whole word match)
+private containsWord(text: string, word: string): boolean {
+  const regex = new RegExp(`\\b${word}\\b`, 'i');
+  return regex.test(text);
+}
+
+// Check for suicidal intent patterns
+private containsSuicidalIntent(text: string): boolean {
+  const suicidalPatterns = [
+    /i (want|wish) to (die|kill myself|end my life)/i,
+    /i'm going to (kill myself|end it all)/i,
+    /(can't|cannot) go on anymore/i,
+    /life is not worth living/i,
+    /no reason to live/i,
+    /better off without me/i
+  ];
+  
+  return suicidalPatterns.some(pattern => pattern.test(text));
+}
+
+// Check for threats
+private containsThreats(text: string): boolean {
+  const threatPatterns = [
+    /i will (kill|hurt|harm|attack) (you|them|him|her)/i,
+    /i'm going to (kill|hurt|harm|attack)/i,
+    /(die|death) to (all|every)/i,
+    /should be (killed|hurt|harmed)/i
+  ];
+  
+  return threatPatterns.some(pattern => pattern.test(text));
+}
+
+// Check for personal information
+private containsPersonalInformation(text: string): boolean {
+  const personalInfoPatterns = [
+    /\b\d{13,16}\b/, // Credit card numbers
+    /\b\d{9,12}\b/, // Possible ID numbers
+    /\b\d{3}-\d{2}-\d{4}\b/, // SSN pattern
+    /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/, // Email
+    /\b\d{10,}\b/ // Phone numbers
+  ];
+  
+  return personalInfoPatterns.some(pattern => pattern.test(text));
+}
+
+// Mask sensitive content
+private maskSensitiveContent(content: string, inappropriateWords: string[]): string {
+  let filteredContent = content;
+  
+  inappropriateWords.forEach(word => {
+    const regex = new RegExp(`\\b${word}\\b`, 'gi');
+    filteredContent = filteredContent.replace(regex, '*'.repeat(word.length));
+  });
+  
+  return filteredContent;
+}
+
+// Enhanced post creation with content filtering
+createPostWithFilter(): void {
+  if (!this.authService.isAuthenticated()) {
+    this.redirectToLogin();
+    return;
+  }
+
+  // Check content before posting
+  const contentCheck = this.filterInappropriateContent(this.newPost.content, this.newPost.title);
+  
+  if (contentCheck.isInappropriate) {
+    this.showContentWarningModal(contentCheck);
+    return;
+  }
+
+  // If content needs filtering but isn't blocked
+  if (contentCheck.filteredContent && contentCheck.filteredContent !== this.newPost.content) {
+    this.newPost.content = contentCheck.filteredContent;
+  }
+
+  this.createPost();
+}
+
+// Show content warning modal
+private showContentWarningModal(contentCheck: any): void {
+  const modal = document.createElement('div');
+  modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+  modal.innerHTML = `
+    <div class="bg-white rounded-xl shadow-lg w-full max-w-md mx-4">
+      <div class="p-6">
+        <div class="flex items-center mb-4">
+          <i class="fas fa-exclamation-triangle text-red-500 text-2xl mr-3"></i>
+          <h2 class="text-xl font-bold">Content Warning</h2>
+        </div>
+        
+        <div class="mb-4">
+          <p class="text-gray-700 mb-3">Your post contains content that may violate our community guidelines:</p>
+          <ul class="list-disc list-inside text-sm text-gray-600 mb-4">
+            ${contentCheck.reasons.map((reason: string) => `<li>${reason}</li>`).join('')}
+          </ul>
+          <p class="text-sm text-red-600 font-medium">
+            Please review and edit your post before submitting.
+          </p>
+        </div>
+        
+        <div class="flex justify-end space-x-3">
+          <button id="editPost" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+            Edit Post
+          </button>
+          <button id="cancelPost" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+            Cancel Post
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  // Add event listeners
+  modal.querySelector('#editPost')?.addEventListener('click', () => {
+    document.body.removeChild(modal);
+  });
+
+  modal.querySelector('#cancelPost')?.addEventListener('click', () => {
+    document.body.removeChild(modal);
+    this.closeModal();
+  });
+
+  // Close modal when clicking outside
+  modal.addEventListener('click', (event) => {
+    if (event.target === modal) {
+      document.body.removeChild(modal);
+    }
+  });
+}
+
+// Filter posts on load (for existing posts)
+filterPosts(posts: PostDto[]): PostDto[] {
+  return posts.filter(post => {
+    const contentCheck = this.filterInappropriateContent(post.content, post.title);
+    return !contentCheck.isInappropriate;
+  });
+}
+
+// Update your createPost method call in the template
+// Change the form submit to use the filtered version
 }

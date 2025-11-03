@@ -140,3 +140,33 @@
     background-position: -200% 0;
   }
 }
+
+/* Content warning modal styles */
+.content-warning-modal {
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+.warning-icon {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Filtered content style */
+.filtered-content {
+  background-color: #fef2f2;
+  border-left: 4px solid #ef4444;
+  padding: 8px 12px;
+  margin: 8px 0;
+  border-radius: 4px;
+}
