@@ -407,16 +407,20 @@
                             </div>
                             
                             <!-- Image gallery -->
-                            <div *ngIf="post.images && post.images.length > 0" class="mb-4">
-                                <div class="grid grid-cols-2 gap-2">
-                                    <div *ngFor="let image of post.images" class="relative">
-                                        <img [src]="getImageUrl(image.imageUrl)" 
-                                             [alt]="image.caption || 'Post image'" 
-                                             class="w-full h-32 object-cover rounded-lg cursor-pointer"
-                                             (click)="openImageModal(getImageUrl(image.imageUrl))">
-                                    </div>
-                                </div>
-                            </div>
+                            <!-- Image gallery -->
+<div *ngIf="post.images && post.images.length > 0" class="mb-4">
+  <div class="grid grid-cols-2 gap-2 image-gallery">
+    <div *ngFor="let image of post.images" class="relative">
+    <img [src]="getImageUrl(image.imageUrl)" 
+     [alt]="image.caption || 'Post image'" 
+     class="w-full rounded-lg cursor-pointer transition-transform hover:scale-105"
+     [class.image-loading]="imageLoadingStates[image.imageUrl]"
+     (load)="onImageLoad(image.imageUrl)"
+     (error)="onImageError(image.imageUrl)"
+     (click)="openImageModal(getImageUrl(image.imageUrl))">
+    </div>
+  </div>
+</div>
                             
                             <h2 class="text-xl font-bold mb-3">{{ post.title }}</h2>
                             <p class="text-gray-700 mb-4">{{ post.content }}</p>
@@ -581,19 +585,22 @@
             <h2 class="text-2xl font-bold mb-3">{{ selectedPost.title }}</h2>
             <p class="text-gray-700 mb-6 whitespace-pre-line">{{ selectedPost.content }}</p>
             
-            <!-- Image gallery -->
-            <div *ngIf="selectedPost.images && selectedPost.images.length > 0" class="mb-6">
-                <h3 class="text-lg font-semibold mb-3">Images</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div *ngFor="let image of selectedPost.images" class="relative">
-                        <img [src]="getImageUrl(image.imageUrl)" 
-                             [alt]="image.caption || 'Post image'" 
-                             class="w-full h-48 object-cover rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
-                             (click)="openImageModal(getImageUrl(image.imageUrl))">
-                        <p *ngIf="image.caption" class="text-sm text-gray-600 mt-1">{{ image.caption }}</p>
-                    </div>
-                </div>
-            </div>
+          <!-- Image gallery -->
+<div *ngIf="selectedPost.images && selectedPost.images.length > 0" class="mb-6">
+  <h3 class="text-lg font-semibold mb-3">Images</h3>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 image-gallery">
+    <div *ngFor="let image of selectedPost.images" class="relative">
+    <img [src]="getImageUrl(image.imageUrl)" 
+     [alt]="image.caption || 'Post image'" 
+     class="w-full rounded-lg cursor-pointer transition-transform hover:scale-105"
+     [class.image-loading]="imageLoadingStates[image.imageUrl]"
+     (load)="onImageLoad(image.imageUrl)"
+     (error)="onImageError(image.imageUrl)"
+     (click)="openImageModal(getImageUrl(image.imageUrl))">
+      <p *ngIf="image.caption" class="text-sm text-gray-600 mt-1">{{ image.caption }}</p>
+    </div>
+  </div>
+</div>
             
             <div class="flex items-center space-x-4 mb-6">
                <button class="flex items-center like-btn" 
@@ -756,12 +763,11 @@
 </div>
     </div>
 </div>
-
 <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50" *ngIf="selectedImage" (click)="selectedImage = null">
-  <div class="max-w-4xl max-h-full" (click)="$event.stopPropagation()">
-    <button (click)="selectedImage = null" class="absolute top-4 right-4 text-white text-2xl z-10">
+  <div class="max-w-4xl max-h-full p-4" (click)="$event.stopPropagation()">
+    <button (click)="selectedImage = null" class="absolute top-4 right-4 text-white text-2xl z-10 bg-black bg-opacity-50 rounded-full w-10 h-10 flex items-center justify-center">
       <i class="fas fa-times"></i>
     </button>
-    <img [src]="selectedImage" class="max-w-full max-h-full object-contain">
+    <img [src]="selectedImage" class="max-w-full max-h-full object-contain modal-image">
   </div>
 </div>

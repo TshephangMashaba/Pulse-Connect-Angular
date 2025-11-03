@@ -894,7 +894,17 @@ checkUserLikeStatus(): void {
   });
 }
 
+// In your component
+imageLoadingStates: { [key: string]: boolean } = {};
 
+onImageLoad(imageUrl: string) {
+  this.imageLoadingStates[imageUrl] = false;
+}
+
+onImageError(imageUrl: string) {
+  this.imageLoadingStates[imageUrl] = false;
+  // Handle error (e.g., show placeholder)
+}
 
 // Community Guidelines Modal methods
 openGuidelinesModal(): void {
