@@ -1,12 +1,13 @@
 <app-admin-nav></app-admin-nav>
 
     <main class="md:ml-64 pt-20">
-        <div class="p-1">
+ 
+
 <div class="max-w-7xl mx-auto px-1 sm:px-6 lg:px-8 py-8">
     <!-- Page Header -->
     <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
         <div>
-            <h1 class="text-3xl font-bold text-gray-800">
+            <h1 class="text-3xl bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent font-bold text-gray-800">
                 {{ showProvinceView ? selectedProvinceGroup + ' Community' : 'Pulse Network Community' }}
             </h1>
             <p class="text-gray-600">
@@ -115,8 +116,151 @@
             <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors" (click)="openModal()">
                 Create a Post
             </button>
+             <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-bold">Community Guidelines</h2>
+                <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                        (click)="openGuidelinesModal()">
+                    <i class="fas fa-book mr-2"></i> View Full Guidelines
+                </button>
+            </div>
         </div>
-    </div>
+        </div>
+
+        <!-- Community Guidelines Section -->
+        <div class="bg-white rounded-xl shadow-sm p-6 mt-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-bold">Community Guidelines</h2>
+                <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                        (click)="openGuidelinesModal()">
+                    <i class="fas fa-book mr-2"></i> View Full Guidelines
+                </button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="flex items-start">
+                    <i class="fas fa-heart text-red-500 mr-3 mt-1"></i>
+                    <div>
+                        <h3 class="font-semibold text-sm">Be Respectful</h3>
+                        <p class="text-xs text-gray-600">Treat all community members with kindness and respect</p>
+                    </div>
+                </div>
+                <div class="flex items-start">
+                    <i class="fas fa-shield-alt text-green-500 mr-3 mt-1"></i>
+                    <div>
+                        <h3 class="font-semibold text-sm">Keep It Safe</h3>
+                        <p class="text-xs text-gray-600">Share health information responsibly and encourage professional medical advice</p>
+                    </div>
+                </div>
+                <div class="flex items-start">
+                    <i class="fas fa-user-secret text-purple-500 mr-3 mt-1"></i>
+                    <div>
+                        <h3 class="font-semibold text-sm">Respect Privacy</h3>
+                        <p class="text-xs text-gray-600">Protect your own and others' personal information</p>
+                    </div>
+                </div>
+                <div class="flex items-start">
+                    <i class="fas fa-ban text-red-500 mr-3 mt-1"></i>
+                    <div>
+                        <h3 class="font-semibold text-sm">No Discrimination</h3>
+                        <p class="text-xs text-gray-600">Zero tolerance for hate speech or discrimination</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Community Guidelines Modal -->
+        <div id="guidelinesModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" *ngIf="showGuidelinesModal" (click)="closeGuidelinesModal()">
+            <div class="bg-white rounded-xl shadow-lg w-full max-w-2xl mx-4 max-h-[80vh] overflow-y-auto" (click)="$event.stopPropagation()">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold">Community Guidelines</h2>
+                        <button (click)="closeGuidelinesModal()" class="text-gray-500 hover:text-gray-700 text-2xl">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="text-lg font-semibold mb-3 flex items-center">
+                                <i class="fas fa-heart text-red-500 mr-2"></i>
+                                Be Respectful and Kind
+                            </h3>
+                            <ul class="text-gray-700 space-y-2 ml-6">
+                                <li>• Treat all community members with dignity and respect</li>
+                                <li>• Use inclusive language and be mindful of different perspectives</li>
+                                <li>• Avoid personal attacks, harassment, or bullying</li>
+                                <li>• Be patient and understanding with those seeking help</li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h3 class="text-lg font-semibold mb-3 flex items-center">
+                                <i class="fas fa-shield-alt text-green-500 mr-2"></i>
+                                Health Information Safety
+                            </h3>
+                            <ul class="text-gray-700 space-y-2 ml-6">
+                                <li>• Share personal experiences responsibly</li>
+                                <li>• Always encourage consulting healthcare professionals</li>
+                                <li>• Do not provide medical diagnoses or treatment advice</li>
+                                <li>• Verify information from credible sources before sharing</li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h3 class="text-lg font-semibold mb-3 flex items-center">
+                                <i class="fas fa-user-secret text-purple-500 mr-2"></i>
+                                Privacy and Confidentiality
+                            </h3>
+                            <ul class="text-gray-700 space-y-2 ml-6">
+                                <li>• Protect your personal health information</li>
+                                <li>• Never share others' private information without consent</li>
+                                <li>• Use anonymous posting when discussing sensitive topics</li>
+                                <li>• Respect the privacy of fellow community members</li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h3 class="text-lg font-semibold mb-3 flex items-center">
+                                <i class="fas fa-ban text-red-500 mr-2"></i>
+                                Zero Tolerance Policy
+                            </h3>
+                            <ul class="text-gray-700 space-y-2 ml-6">
+                                <li>• No discrimination based on race, gender, sexuality, religion, or health status</li>
+                                <li>• No hate speech or offensive language</li>
+                                <li>• No spam, advertising, or promotional content</li>
+                                <li>• No illegal activities or harmful content</li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h3 class="text-lg font-semibold mb-3 flex items-center">
+                                <i class="fas fa-flag text-yellow-500 mr-2"></i>
+                                Reporting and Moderation
+                            </h3>
+                            <ul class="text-gray-700 space-y-2 ml-6">
+                                <li>• Report inappropriate content or behavior immediately</li>
+                                <li>• Moderators will review reports within 24 hours</li>
+                                <li>• Violations may result in warnings, suspensions, or bans</li>
+                                <li>• Appeals can be submitted through the contact form</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 p-4 bg-green-50 border border-green-200 rounded-lg">
+                        <p class="text-sm text-green-800">
+                            <strong>Remember:</strong> This community is a safe space for support, learning, and connection. 
+                            By following these guidelines, you help create a positive environment for everyone.
+                        </p>
+                    </div>
+
+                    <div class="flex justify-end mt-6">
+                        <button (click)="closeGuidelinesModal()" class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                            I Understand
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+  
 
     <!-- Main Community View -->
     <div *ngIf="!showProvinceView">
@@ -204,10 +348,7 @@
                                    (keyup.enter)="applyFilters()">
                             <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
                         </div>
-                        <input type="text" placeholder="Topic (type anything)" 
-                               class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-                               [(ngModel)]="selectedTopic"
-                               (keyup.enter)="applyFilters()">
+                       
                         <select class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                                 [(ngModel)]="selectedSort"
                                 (change)="applyFilters()">
@@ -269,16 +410,20 @@
                             </div>
                             
                             <!-- Image gallery -->
-                            <div *ngIf="post.images && post.images.length > 0" class="mb-4">
-                                <div class="grid grid-cols-2 gap-2">
-                                    <div *ngFor="let image of post.images" class="relative">
-                                        <img [src]="getImageUrl(image.imageUrl)" 
-                                             [alt]="image.caption || 'Post image'" 
-                                             class="w-full h-32 object-cover rounded-lg cursor-pointer"
-                                             (click)="openImageModal(getImageUrl(image.imageUrl))">
-                                    </div>
-                                </div>
-                            </div>
+                            <!-- Image gallery -->
+<div *ngIf="post.images && post.images.length > 0" class="mb-4">
+  <div class="grid grid-cols-2 gap-2 image-gallery">
+    <div *ngFor="let image of post.images" class="relative">
+    <img [src]="getImageUrl(image.imageUrl)" 
+     [alt]="image.caption || 'Post image'" 
+     class="w-full rounded-lg cursor-pointer transition-transform hover:scale-105"
+     [class.image-loading]="imageLoadingStates[image.imageUrl]"
+     (load)="onImageLoad(image.imageUrl)"
+     (error)="onImageError(image.imageUrl)"
+     (click)="openImageModal(getImageUrl(image.imageUrl))">
+    </div>
+  </div>
+</div>
                             
                             <h2 class="text-xl font-bold mb-3">{{ post.title }}</h2>
                             <p class="text-gray-700 mb-4">{{ post.content }}</p>
@@ -304,7 +449,7 @@
                                 </div>
                                 <button class="text-green-600 hover:text-green-700 text-sm font-medium" (click)="loadPostDetails(post.id)">
                                     Join Discussion
-                                </button>z
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -443,19 +588,22 @@
             <h2 class="text-2xl font-bold mb-3">{{ selectedPost.title }}</h2>
             <p class="text-gray-700 mb-6 whitespace-pre-line">{{ selectedPost.content }}</p>
             
-            <!-- Image gallery -->
-            <div *ngIf="selectedPost.images && selectedPost.images.length > 0" class="mb-6">
-                <h3 class="text-lg font-semibold mb-3">Images</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div *ngFor="let image of selectedPost.images" class="relative">
-                        <img [src]="getImageUrl(image.imageUrl)" 
-                             [alt]="image.caption || 'Post image'" 
-                             class="w-full h-48 object-cover rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
-                             (click)="openImageModal(getImageUrl(image.imageUrl))">
-                        <p *ngIf="image.caption" class="text-sm text-gray-600 mt-1">{{ image.caption }}</p>
-                    </div>
-                </div>
-            </div>
+          <!-- Image gallery -->
+<div *ngIf="selectedPost.images && selectedPost.images.length > 0" class="mb-6">
+  <h3 class="text-lg font-semibold mb-3">Images</h3>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 image-gallery">
+    <div *ngFor="let image of selectedPost.images" class="relative">
+    <img [src]="getImageUrl(image.imageUrl)" 
+     [alt]="image.caption || 'Post image'" 
+     class="w-full rounded-lg cursor-pointer transition-transform hover:scale-105"
+     [class.image-loading]="imageLoadingStates[image.imageUrl]"
+     (load)="onImageLoad(image.imageUrl)"
+     (error)="onImageError(image.imageUrl)"
+     (click)="openImageModal(getImageUrl(image.imageUrl))">
+      <p *ngIf="image.caption" class="text-sm text-gray-600 mt-1">{{ image.caption }}</p>
+    </div>
+  </div>
+</div>
             
             <div class="flex items-center space-x-4 mb-6">
                <button class="flex items-center like-btn" 
@@ -525,7 +673,7 @@
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <form (ngSubmit)="createPost()">
+            <form (ngSubmit)="createPostWithFilter()">
                 <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-medium mb-2">Post Type</label>
                     <select class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -618,12 +766,11 @@
 </div>
     </div>
 </div>
-
 <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50" *ngIf="selectedImage" (click)="selectedImage = null">
-  <div class="max-w-4xl max-h-full" (click)="$event.stopPropagation()">
-    <button (click)="selectedImage = null" class="absolute top-4 right-4 text-white text-2xl z-10">
+  <div class="max-w-4xl max-h-full p-4" (click)="$event.stopPropagation()">
+    <button (click)="selectedImage = null" class="absolute top-4 right-4 text-white text-2xl z-10 bg-black bg-opacity-50 rounded-full w-10 h-10 flex items-center justify-center">
       <i class="fas fa-times"></i>
     </button>
-    <img [src]="selectedImage" class="max-w-full max-h-full object-contain">
+    <img [src]="selectedImage" class="max-w-full max-h-full object-contain modal-image">
   </div>
 </div>
